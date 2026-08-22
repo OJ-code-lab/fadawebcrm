@@ -92,7 +92,7 @@ const mainLinks = [
   },
   {
     name: "Services",
-    href: "/service",
+    href: "/nigeria/services",
     icon: BriefcaseBusiness,
   },
   {

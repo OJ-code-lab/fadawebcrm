@@ -1,5 +1,6 @@
 "use client";
 
+import { BookAlert, SquareText } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -18,18 +19,30 @@ export default function CompanyTabs({
 
   return (
     <>
-      <nav className="mb-6 flex gap-4 border-b pb-2 mt-8">
+      <nav className="mb-6 flex gap-6 pb-2 mt-8">
         <Link
           href="/nigeria/company?tab=information"
           className={`pb-1 ${activeTab === "information" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
-          Information
+          <div className="flex gap-2 items-center">
+            <span>
+              {" "}
+              <BookAlert size={15} />{" "}
+            </span>
+            Information{" "}
+          </div>
         </Link>
         <Link
           href="/nigeria/company?tab=mydocument"
           className={`pb-1 ${activeTab === "mydocument" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
-          My Documents
+          <div className="flex gap-2 items-center">
+            <span>
+              {" "}
+              <SquareText size={15} />{" "}
+            </span>
+            My Documents{" "}
+          </div>
         </Link>
       </nav>
 

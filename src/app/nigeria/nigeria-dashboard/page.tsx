@@ -83,7 +83,7 @@ export default function dashboard() {
 
       <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
         <div className="min-w-0">
-          <Card className="h-full min-h-66.75">
+          <Card className="h-full min-h-66.75 py-6 px-8">
             <span className="mb-8 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-light-black">
               {" "}
               <BriefcaseBusinessIcon size={20} />{" "}
@@ -117,7 +117,7 @@ export default function dashboard() {
           </Card>
         </div>
         <div className="min-w-0">
-          <Card className="h-full min-h-66.75">
+          <Card className="h-full min-h-66.75 px-8 py-6">
             <h6 className="mb-5 text-lg font-semibold text-black">Docs</h6>
             <div className="overflow-hidden text-black text-sm">
               <table className="w-full border-separate border-spacing-0">
