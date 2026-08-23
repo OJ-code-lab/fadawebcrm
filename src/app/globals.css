@@ -141,4 +141,7 @@
   html {
     @apply font-sans;
   }
+  input {
+    @apply w-full border border-gray-200 py-2 px-2 bg-zinc-200/15 mt-3 rounded-[8px];
+  }
 }
