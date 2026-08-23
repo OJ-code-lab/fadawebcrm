@@ -8,6 +8,7 @@ import {
   Download,
   ShieldCheck,
 } from "lucide-react";
+import Link from "next/link";
 
 const documents = [
   { type: "Company Documents", date: "26 March, 2026" },
@@ -102,7 +103,9 @@ export default function dashboard() {
                   {" "}
                   <Button className="border-black bg-transparent text-sm font-medium transition-all duration-700 ease-in-out hover:bg-blue-card hover:text-white">
                     {" "}
-                    <span>Check our service</span>{" "}
+                    <Link href="/nigeria/services">
+                      <span>Check our service</span>
+                    </Link>
                     <span>
                       {" "}
                       <ChevronRight size={10} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, Download, Search, X } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -12,6 +12,11 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import Image from "next/image";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 const sections = [
   "All documents",
@@ -29,10 +34,37 @@ type Document = {
   createdAt: string;
 };
 
+const initialDocuments: Document[] = [
+  {
+    id: "tin-document-1",
+    name: "TIN Document",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "tin-document-2",
+    name: "TIN Document",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "tin-document-3",
+    name: "TIN Document",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "tin-document-4",
+    name: "TIN Document",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+];
+
 export default function DocumentSections() {
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
 
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<Document[]>(initialDocuments);
   // const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
@@ -90,7 +122,7 @@ export default function DocumentSections() {
           }
         }}
       >
-        <DrawerContent>
+        <DrawerContent className="p-6">
           <DrawerHeader className="flex flex-row items-center justify-between mt-8">
             <DrawerTitle className="font-bold text-xl">
               {selectedSection}
@@ -100,8 +132,18 @@ export default function DocumentSections() {
               <X size={25} />
             </DrawerClose>
           </DrawerHeader>
+          <InputGroup className=" bg-gray-100/40 py-6 mt-4">
+            <InputGroupInput
+              id="inline-start-input"
+              placeholder="Search"
+              className="mt-0 text-light-black"
+            />
+            <InputGroupAddon align="inline-start">
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
 
-          <div className="p-6">
+          <div className="flex flex-col gap-4 mt-8">
             {
               // loading ? (
               //   <p>Loading documents...</p>
@@ -130,7 +172,17 @@ export default function DocumentSections() {
                 </div>
               ) : (
                 documents.map((document) => (
-                  <div key={document.id}>{document.name}</div>
+                  <Card
+                    key={document.id}
+                    className="flex-row items-center justify-between gap-8 px-4"
+                  >
+                    <span className="font-medium text-base">
+                      {document.name}
+                    </span>
+                    <span className="shrink-0">
+                      <Download className="text-light-black" size={20} />
+                    </span>
+                  </Card>
                 ))
               )
             }

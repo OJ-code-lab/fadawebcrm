@@ -11,7 +11,10 @@ import {
   Settings,
   Gift,
   LogOut,
+  Package,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useOrdersDrawer } from "@/src/app/nigeria/@context/my_order_context";
 // function Navbar() {
 //   const pathname = usePathname();
 //   return (
@@ -100,11 +103,6 @@ const mainLinks = [
     href: "tax",
     icon: ReceiptText,
   },
-  {
-    name: "My Order",
-    href: "order",
-    icon: ShoppingBag,
-  },
 ];
 
 const bottomLinks = [
@@ -127,13 +125,14 @@ const bottomLinks = [
 
 function Navbar() {
   const pathname = usePathname();
+  const { isOrdersOpen, openOrders } = useOrdersDrawer();
   return (
     <nav className="flex flex-row gap-2 bg-transparent lg:flex-col lg:gap-8">
       <div className="hidden px-4 lg:block">
         <Link href="/">LOGO</Link>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-row gap-2 overflow-x-auto font-normal text-xs lg:text-base *:text-light-black lg:flex-col lg:gap-12 lg:overflow-visible">
+      <div className="flex min-w-0 flex-1 flex-row gap-2 overflow-x-auto font-normal text-xs lg:text-base *:text-light-black lg:flex-col lg:overflow-visible">
         <div className="flex shrink-0 flex-row gap-2 lg:flex-col">
           {mainLinks.map((link) => (
             <Link
@@ -152,8 +151,23 @@ function Navbar() {
             </Link>
           ))}
         </div>
+
+        <div>
+          <button
+            onClick={openOrders}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors w-full",
+              isOrdersOpen
+                ? "bg-blue-card text-white"
+                : "text-light-black hover:text-white hover:bg-blue-card",
+            )}
+          >
+            <Package size={20} />
+            My Orders
+          </button>
+        </div>
         {/* Bottom Links */}
-        <div className="flex shrink-0 flex-row gap-2 border-l py-0 pl-2 lg:flex-col lg:gap-2 lg:border-l-0 lg:border-t lg:py-3 lg:pl-0">
+        <div className="flex shrink-0 flex-row gap-2 border-l py-0 pl-2 lg:flex-col lg:mt-12 lg:gap-2 lg:border-l-0 lg:border-t lg:py-3 lg:pl-0">
           {bottomLinks.map((link) => (
             <Link
               key={link.href}
