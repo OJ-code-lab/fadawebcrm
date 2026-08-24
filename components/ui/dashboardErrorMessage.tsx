@@ -9,13 +9,13 @@ function DashboardErrorMessage() {
         <TriangleAlert size={28} />{" "}
       </span>
 
-      <p className=" text-sm lg:text-lg  font-normal text-center lg:text-start">
+      <p className=" text-sm lg:text-lg  font-normal lg:text-start">
         Please provide your company details to access our services seamlessly,
         whether forming a new company or adding existing information.
       </p>
 
       <div>
-        <Button className=" transition-all duration-700 ease-in-out hover:bg-blue-card hover:text-white">
+        <Button className=" transition-all duration-700 ease hover:bg-primary hover:border-none bg-transparent border-black text-sm font-medium rounded-3xl">
           {" "}
           Get started{" "}
         </Button>

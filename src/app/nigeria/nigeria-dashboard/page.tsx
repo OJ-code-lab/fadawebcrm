@@ -101,19 +101,18 @@ export default function dashboard() {
                 </p>
                 <div>
                   {" "}
-                  <Button className="border-black bg-transparent text-sm font-medium transition-all duration-700 ease-in-out hover:bg-blue-card hover:text-white">
-                    {" "}
-                    <Link href="/nigeria/services">
+                  <Link href="/nigeria/services">
+                    <Button className="border-black bg-transparent text-sm font-medium transition-all duration-700 ease-in-out hover:bg-blue-card hover:text-white">
                       <span>Check our service</span>
-                    </Link>
-                    <span>
-                      {" "}
-                      <ChevronRight size={10} />
-                    </span>
-                  </Button>{" "}
+                      <span>
+                        {" "}
+                        <ChevronRight size={10} />
+                      </span>
+                    </Button>{" "}
+                  </Link>
                 </div>
               </div>
-              <div className="inline-flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-blue-card text-white shadow-inner">
+              <div className=" hidden  lg:inline-flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-blue-card text-white shadow-inner">
                 <ShieldCheck size={54} strokeWidth={1.5} />
               </div>
             </div>

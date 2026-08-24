@@ -10,7 +10,7 @@ export default function SecuritySettingsPage() {
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
       <div className="lg:flex-3/5">
-        <Card className="py-6 px-8 border bg-transparent border-gray-100">
+        <Card className="py-6 px-2 lg:px-8 border bg-transparent border-gray-100">
           <div>
             <CardHeader className="font-bold text-2xl text-gray-600">
               My Password
@@ -26,7 +26,7 @@ export default function SecuritySettingsPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Current Password"
-                  className="mt-0 border border-gray-500/30"
+                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none "
                 />
                 <button
                   type="button"
@@ -40,7 +40,7 @@ export default function SecuritySettingsPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="New Password"
-                  className="mt-0 border border-gray-500/30"
+                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none"
                 />
                 <button
                   type="button"
@@ -53,8 +53,8 @@ export default function SecuritySettingsPage() {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter Confirm Pasword"
-                  className="mt-0 border border-gray-500/30"
+                  placeholder="Enter Confirm Password"
+                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none"
                 />
                 <button
                   type="button"
@@ -78,7 +78,7 @@ export default function SecuritySettingsPage() {
         </Card>
       </div>
       <div className=" lg:flex-2/5">
-        <Card className="py-6 px-8 border bg-transparent border-gray-100">
+        <Card className="py-6 lg:px-8 border bg-transparent border-gray-100">
           <CardHeader className="font-bold text-2xl text-gray-600">
             Help and support
           </CardHeader>

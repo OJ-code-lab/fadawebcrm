@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleDollarSign, Download, X } from "lucide-react";
+import { CircleDollarSign, X } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -38,6 +38,108 @@ const documents = [
     type: "PDF",
     createdAt: "2026-01-15",
   },
+  {
+    id: "order-5",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-6",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-7",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-8",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-9",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-10",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-11",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-12",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-13",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-14",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-15",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-16",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-17",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-18",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-19",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-20",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: "order-21",
+    name: "Logo Design",
+    type: "PDF",
+    createdAt: "2026-01-15",
+  },
 ];
 
 function MyOrder() {
@@ -45,7 +147,7 @@ function MyOrder() {
 
   return (
     <Drawer open={isOrdersOpen} onOpenChange={setIsOrdersOpen}>
-      <DrawerContent className="p-6">
+      <DrawerContent className="flex flex-col p-6 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none ">
         <DrawerHeader className="flex flex-row items-center justify-between mt-8">
           <DrawerTitle>My Order</DrawerTitle>
           <DrawerClose>
@@ -53,7 +155,7 @@ function MyOrder() {
           </DrawerClose>
         </DrawerHeader>
 
-        <div className="flex flex-col gap-4 mt-8 px-4">
+        <div className="flex flex-col gap-6 mt-8 px-4 overflow-y-auto flex-1 min-h-0">
           {documents.length === 0 ? (
             <div className="mt-8">
               <div>
@@ -79,7 +181,7 @@ function MyOrder() {
             documents.map((document) => (
               <Card
                 key={document.id}
-                className="flex-row items-center justify-between gap-8 px-4"
+                className="flex-row items-center justify-between gap-8 py-8 px-4"
               >
                 <div className="flex gap-4 items-center">
                   <span className="shrink-0">

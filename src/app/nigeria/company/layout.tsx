@@ -12,7 +12,7 @@ export default function CompanyLayout({
   mydocument,
 }: CompanyLayoutProps) {
   return (
-    <div className="p-6 ">
+    <div className=" lg:p-6 ">
       <DashboardErrorMessage />
 
       <Suspense fallback={<main>{information}</main>}>
