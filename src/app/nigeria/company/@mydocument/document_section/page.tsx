@@ -32,68 +32,55 @@ type Document = {
   name: string;
   type: string;
   createdAt: string;
+  category: Section;
 };
 
+// Section-keyed mock data
 const initialDocuments: Document[] = [
   {
-    id: "tin-document-1",
-    name: "TIN Document",
+    id: "doc-1",
+    name: "Certificate of Incorporation",
     type: "PDF",
     createdAt: "2026-01-15",
+    category: "Company Documents",
   },
   {
-    id: "tin-document-2",
-    name: "TIN Document",
+    id: "doc-2",
+    name: "Memorandum of Association",
     type: "PDF",
     createdAt: "2026-01-15",
+    category: "Company Documents",
   },
   {
-    id: "tin-document-3",
-    name: "TIN Document",
+    id: "doc-4",
+    name: "TIN Registration Clearance",
     type: "PDF",
-    createdAt: "2026-01-15",
+    createdAt: "2026-03-01",
+    category: "Tax",
   },
   {
-    id: "tin-document-4",
-    name: "TIN Document",
+    id: "doc-5",
+    name: "VAT Clearance Certificate",
     type: "PDF",
-    createdAt: "2026-01-15",
+    createdAt: "2026-03-12",
+    category: "Tax",
   },
 ];
 
 export default function DocumentSections() {
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [documents, setDocuments] = useState<Document[]>(initialDocuments);
-  // const [loading, setLoading] = useState(false);
+  // 1. Filter documents by section category
+  const sectionDocuments = initialDocuments.filter((doc) => {
+    if (selectedSection === "All documents") return true;
+    return doc.category === selectedSection;
+  });
 
-  // useEffect(() => {
-  //   if (!selectedSection) return;
-
-  //   async function fetchDocuments() {
-  //     try {
-  //       setLoading(true);
-
-  //       const response = await fetch(
-  //         `/api/documents?section=${encodeURIComponent(selectedSection)}`
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch documents");
-  //       }
-
-  //       const data: Document[] = await response.json();
-
-  //       setDocuments(data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchDocuments();
-  // }, [selectedSection]);
+  // 2. Filter remaining section documents by search term
+  const filteredDocuments = sectionDocuments.filter((doc) =>
+    doc.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <>
@@ -106,7 +93,6 @@ export default function DocumentSections() {
           >
             <div className="flex justify-between text-lg font-medium">
               <p>{section}</p>
-
               <ChevronRight size={18} />
             </div>
           </Card>
@@ -118,24 +104,27 @@ export default function DocumentSections() {
         onOpenChange={(open) => {
           if (!open) {
             setSelectedSection(null);
-            setDocuments([]);
+            setSearchQuery(""); // Clear search query when closing
           }
         }}
       >
-        <DrawerContent className="p-6">
-          <DrawerHeader className="flex flex-row items-center justify-between mt-8">
+        <DrawerContent className="flex flex-col p-6 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none">
+          <DrawerHeader className="flex flex-row items-center justify-between mt-8 shrink-0">
             <DrawerTitle className="font-bold text-xl">
               {selectedSection}
             </DrawerTitle>
 
-            <DrawerClose>
+            <DrawerClose aria-label="Close drawer">
               <X size={25} />
             </DrawerClose>
           </DrawerHeader>
-          <InputGroup className=" bg-gray-100/40 py-6 mt-4">
+
+          <InputGroup className="bg-gray-100/40 py-6 mt-4 shrink-0">
             <InputGroupInput
               id="inline-start-input"
-              placeholder="Search"
+              placeholder="Search documents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="mt-0 text-light-black"
             />
             <InputGroupAddon align="inline-start">
@@ -143,49 +132,46 @@ export default function DocumentSections() {
             </InputGroupAddon>
           </InputGroup>
 
-          <div className="flex flex-col gap-4 mt-8">
-            {
-              // loading ? (
-              //   <p>Loading documents...</p>
-              // )
-              documents.length === 0 ? (
-                <div className=" mt-8 ">
-                  <div>
-                    <Image
-                      src="/img/undraw_file-searching_yska.png"
-                      alt="A person searching through a folder"
-                      width={160}
-                      height={120}
-                      className="mx-auto"
-                    />
-                  </div>
-                  <div className="text-center space-y-4 mt-4">
-                    <p className="font-medium text-xl text-gray-700 ">
-                      No documents available
-                    </p>
-                    <p className="font-medium text-base text-light-black">
-                      There are no documents available in this category. As
-                      documents are added to this section, they will appear
-                      here.
-                    </p>
-                  </div>
+          <div className="flex flex-col gap-4 mt-8 px-1 overflow-y-auto flex-1 min-h-0">
+            {filteredDocuments.length === 0 ? (
+              <div className="mt-8">
+                <div>
+                  <Image
+                    src="/img/undraw_file-searching_yska.png"
+                    alt="A person searching through a folder"
+                    width={160}
+                    height={120}
+                    className="mx-auto"
+                  />
                 </div>
-              ) : (
-                documents.map((document) => (
-                  <Card
-                    key={document.id}
-                    className="flex-row items-center justify-between gap-8 px-4"
+                <div className="text-center space-y-4 mt-4">
+                  <p className="font-medium text-xl text-gray-700">
+                    No documents available
+                  </p>
+                  <p className="font-medium text-base text-light-black">
+                    There are no documents available in this category. As
+                    documents are added to this section, they will appear here.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              filteredDocuments.map((document) => (
+                <Card
+                  key={document.id}
+                  className="flex-row items-center justify-between gap-8 px-4 py-4"
+                >
+                  <span className="font-medium text-base">{document.name}</span>
+                  <a
+                    href={`/api/download/${document.id}`}
+                    download
+                    aria-label={`Download ${document.name}`}
+                    className="shrink-0 cursor-pointer hover:opacity-75 transition-opacity"
                   >
-                    <span className="font-medium text-base">
-                      {document.name}
-                    </span>
-                    <span className="shrink-0">
-                      <Download className="text-light-black" size={20} />
-                    </span>
-                  </Card>
-                ))
-              )
-            }
+                    <Download className="text-light-black" size={20} />
+                  </a>
+                </Card>
+              ))
+            )}
           </div>
         </DrawerContent>
       </Drawer>

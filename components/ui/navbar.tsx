@@ -7,7 +7,6 @@ import {
   Building2,
   BriefcaseBusiness,
   ReceiptText,
-  ShoppingBag,
   Settings,
   Gift,
   LogOut,
@@ -82,6 +81,10 @@ import { useOrdersDrawer } from "@/src/app/nigeria/@context/my_order_context";
 //   );
 // }
 
+interface NavbarProps {
+  className?: string;
+}
+
 const mainLinks = [
   {
     name: "Dashboard",
@@ -123,11 +126,16 @@ const bottomLinks = [
   },
 ];
 
-function Navbar() {
+function Navbar({ className }: NavbarProps) {
   const pathname = usePathname();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
   return (
-    <nav className="flex flex-row gap-2 bg-transparent lg:flex-col lg:gap-8">
+    <nav
+      className={cn(
+        "flex flex-row gap-2 bg-transparent lg:flex-col lg:gap-8",
+        className,
+      )}
+    >
       <div className="hidden px-4 lg:block">
         <Link href="/">LOGO</Link>
       </div>
