@@ -215,6 +215,7 @@ function ServicesPage() {
                 <p className="font-semibold text-xl leading-7 text-black ">
                   $1990.00
                 </p>
+                ``
               </div>
               <hr className="my-8" />
               <div className="flex justify-between items-center text-sm text-light-black">

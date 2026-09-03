@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import GetStartedModal from "@/components/ui/getStartedModal";
 import { TriangleAlert } from "lucide-react";
 
 function DashboardErrorMessage() {
@@ -15,10 +16,11 @@ function DashboardErrorMessage() {
       </p>
 
       <div>
-        <Button className=" transition-all duration-700 ease hover:bg-primary hover:border-none bg-transparent border-black text-sm font-medium rounded-3xl">
-          {" "}
-          Get started{" "}
-        </Button>
+        <GetStartedModal>
+          {/* <Button className="transition-all duration-700 ease hover:bg-primary hover:border-none bg-transparent border-black text-sm font-medium rounded-3xl">
+            Get started
+          </Button> */}
+        </GetStartedModal>
       </div>
     </div>
   );
