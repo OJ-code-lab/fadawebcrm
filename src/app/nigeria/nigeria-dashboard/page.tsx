@@ -101,7 +101,7 @@ export default function dashboard() {
                 </p>
                 <div>
                   {" "}
-                  <Link href="/nigeria/services">
+                  <Link href="/nigeria/nigeria-dashboard/services">
                     <Button className="border-black bg-transparent text-sm font-medium transition-all duration-700 ease-in-out hover:bg-blue-card hover:text-white">
                       <span>Check our service</span>
                       <span>

@@ -11,20 +11,22 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useOrdersDrawer } from "@/src/app/nigeria/@context/my_order_context";
+import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
 
 interface NavbarProps {
   className?: string;
+  country: "nigeria" | "usa";
 }
-function MobileNavbar({ className }: NavbarProps) {
+function MobileNavbar({ className, country }: NavbarProps) {
   const pathname = usePathname();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
+  const dashboardPath = `/${country}/${country === "nigeria" ? "nigeria-dashboard" : "usa-dashboard"}`;
   return (
     <nav className={cn("flex flex-col bg-transparent", className)}>
       <div className="flex flex-col gap-4 py-2 px-4 *:text-light-black font-normal text-xs">
         <div className="flex justify-around gap-2 ">
           <Link
-            href="/nigeria/nigeria-dashboard"
+            href={dashboardPath}
             className={`  flex flex-col gap-1.5 justify-center items-center px-0.5 rounded-[8px]  hover:text-[#6610F2] ${pathname === "/nigeria-dashboard" ? " text-white" : ""} `}
           >
             <span>
@@ -34,7 +36,7 @@ function MobileNavbar({ className }: NavbarProps) {
             <span>Home</span>
           </Link>
           <Link
-            href="/nigeria/company"
+            href={`${dashboardPath}/company`}
             className=" flex flex-col gap-1.5 justify-center items-center px-0.5 rounded-[8px]  hover:text-[#6610F2] "
           >
             <span>
@@ -44,7 +46,7 @@ function MobileNavbar({ className }: NavbarProps) {
             <span>Company</span>
           </Link>
           <Link
-            href="/nigeria/services"
+            href={`${dashboardPath}/services`}
             className=" flex flex-col  gap-1.5 justify-center items-center px-0.5 rounded-[8px]  hover:text-[#6610F2] "
           >
             <span>
@@ -78,7 +80,7 @@ function MobileNavbar({ className }: NavbarProps) {
             <span>My Orders</span>
           </button>
           <Link
-            href="/nigeria/settings"
+            href={`${dashboardPath}/settings`}
             className=" flex flex-col  gap-1.5 justify-center items-center px-0.5 rounded-[8px]  hover:text-[#6610F2] "
           >
             <span>

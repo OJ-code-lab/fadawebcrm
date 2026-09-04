@@ -19,7 +19,7 @@ import Step5Plans from "@/components/register/Step5Plans";
 import ReviewDetails from "@/components/register/ReviewDetails";
 import Step5C from "@/components/register/Step5C";
 
-export default function RegisterPage() {
+export default function UsaRegisterPage() {
   const [currentStep, setCurrentStep] = useState(1);
 
   // Controls the two screens inside Step 1
