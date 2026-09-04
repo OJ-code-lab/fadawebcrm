@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Info, LockKeyhole } from "lucide-react";
+import Link from "next/link";
 
 interface Step5CProps {
   onBack?: () => void;
@@ -449,6 +450,7 @@ export default function Step5C({ onBack }: Step5CProps) {
             By subscribing, you authorize doola to charge you according to the
             terms until you cancel.
           </p>
+          <Link href="/usa/usa-dashboard">Dashboard</Link>
         </section>
       </div>
 

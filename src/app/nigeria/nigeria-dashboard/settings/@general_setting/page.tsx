@@ -6,7 +6,7 @@ import Link from "next/link";
 function generalSettingsPage() {
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
-      <div>
+      <div className=" lg:flex-3/5">
         <Card className="py-6 px-8 border bg-transparent border-gray-100">
           <div>
             <CardHeader className="font-bold text-2xl text-gray-600">
@@ -73,7 +73,7 @@ function generalSettingsPage() {
         </Card>
       </div>
 
-      <div className=" lg:flex-1">
+      <div className=" lg:flex-2/5">
         <Card className="py-6 px-8 border bg-transparent border-gray-100">
           <CardHeader className="font-bold text-2xl text-gray-600">
             Help and support

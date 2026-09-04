@@ -13,7 +13,7 @@ import {
   Package,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useOrdersDrawer } from "@/src/app/nigeria/@context/my_order_context";
+import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
 // function Navbar() {
 //   const pathname = usePathname();
 //   return (
@@ -83,56 +83,32 @@ import { useOrdersDrawer } from "@/src/app/nigeria/@context/my_order_context";
 
 interface NavbarProps {
   className?: string;
+  country: "nigeria" | "usa";
 }
 
-const mainLinks = [
-  {
-    name: "Dashboard",
-    href: "/nigeria/nigeria-dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    name: "Company",
-    href: "/nigeria/company",
-    icon: Building2,
-  },
-  {
-    name: "Services",
-    href: "/nigeria/services",
-    icon: BriefcaseBusiness,
-  },
-  {
-    name: "Tax Compliance",
-    href: "tax",
-    icon: ReceiptText,
-  },
-];
-
-const bottomLinks = [
-  {
-    name: "Settings",
-    href: "settings",
-    icon: Settings,
-  },
-  {
-    name: "Refer & Earn",
-    href: "refer",
-    icon: Gift,
-  },
-  {
-    name: "Logout",
-    href: "logout",
-    icon: LogOut,
-  },
-];
-
-function Navbar({ className }: NavbarProps) {
+function Navbar({ className, country }: NavbarProps) {
   const pathname = usePathname();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
+  const dashboardPath = `/${country}/${country === "nigeria" ? "nigeria-dashboard" : "usa-dashboard"}`;
+  const mainLinks = [
+    { name: "Dashboard", href: dashboardPath, icon: LayoutDashboard },
+    { name: "Company", href: `${dashboardPath}/company`, icon: Building2 },
+    {
+      name: "Services",
+      href: `${dashboardPath}/services`,
+      icon: BriefcaseBusiness,
+    },
+    { name: "Tax Compliance", href: `${dashboardPath}/tax`, icon: ReceiptText },
+  ];
+  const bottomLinks = [
+    { name: "Settings", href: `${dashboardPath}/settings`, icon: Settings },
+    { name: "Refer & Earn", href: `${dashboardPath}/refer`, icon: Gift },
+    { name: "Logout", href: `${dashboardPath}/logout`, icon: LogOut },
+  ];
   return (
     <nav
       className={cn(
-        "flex flex-row gap-2 bg-transparent lg:flex-col lg:gap-8",
+        "flex flex-row gap-2 bg-transparent lg:flex-col lg:gap-18",
         className,
       )}
     >

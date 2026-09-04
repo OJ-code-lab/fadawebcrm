@@ -23,13 +23,13 @@ function SettingsContent({
     <div className=" lg:p-6 ">
       <nav className="mb-6 flex gap-6 pb-2 mt-8">
         <Link
-          href="/nigeria/settings?tab=general_setting"
+          href="/nigeria/nigeria-dashboard/settings?tab=general_setting"
           className={`pb-1 ${activeTab === "general_setting" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
           General
         </Link>
         <Link
-          href="/nigeria/settings?tab=security_setting"
+          href="/nigeria/nigeria-dashboard/settings?tab=security_setting"
           className={`pb-1 ${activeTab === "security_setting" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
           Security

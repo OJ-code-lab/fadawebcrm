@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Geist_Mono, Outfit } from "next/font/google";
 
 import "./globals.css";
+// import { OrdersDrawerProvider } from "./nigeria/@context/my_order_context";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -23,9 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${outfit.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <OrdersDrawerProvider>{children}</OrdersDrawerProvider>
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
