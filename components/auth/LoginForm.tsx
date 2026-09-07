@@ -49,13 +49,13 @@ function LoginForm() {
             </div>
 
             <div className="w-full my-5">
-              <Button className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card hover:text-black">
-                Sign Up
+              <Button className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card">
+                Sign In
               </Button>
             </div>
             <div className="font-normal text-base text-gray-500 text-center">
               <p>
-                Already have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <span>
                   <Link href="/auth/sign-up" className="text-blue-600">
                     {" "}
