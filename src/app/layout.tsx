@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import { OrdersDrawerProvider } from "./nigeria/@context/my_order_context";
+
+import { Geist_Mono, Outfit } from "next/font/google";
 
 const outfit = Outfit({
   variable: "--font-outfit",
