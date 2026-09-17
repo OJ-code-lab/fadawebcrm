@@ -6,7 +6,7 @@ import { OrdersDrawerProvider } from "../../@context/my_order_context";
 
 export default function DashLayout({
   children,
-}: LayoutProps<"/nigeria/nigeria-dashboard">) {
+}: LayoutProps<"/nigeria-dashboard">) {
   return (
     <OrdersDrawerProvider>
       <div className="min-h-screen w-full max-w-8xl mx-auto lg:px-16 lg:py-6 flex flex-col justify-center">

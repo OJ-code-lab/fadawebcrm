@@ -12,12 +12,12 @@ export default function Step1BusinessGoal({
       {/* Heading */}
       <div className="text-center p-2">
         <p className="text-center">Start</p>
-        <h1 className="text-[18px] font-semibold leading-[1.25] tracking-[-0.5px] text-[#172033] mt-5">
-          Where do you want to register your business
+        <h1 className="text-[18px] font-semibold leading-tight tracking-[-0.5px] text-[#172033] mt-5">
+          What type of business do you want to register
         </h1>
 
         <p className="mt-3 text-[12px] leading-5 text-[#667085]">
-          Select the country where you want to establish your business.
+          Select your business types.
         </p>
       </div>
 
@@ -43,7 +43,7 @@ export default function Step1BusinessGoal({
             transition-all
             duration-200
             sm:px-5
-            sm:py-[18px]
+            sm:py-4.5
 
             ${
               value === "new"
@@ -77,7 +77,7 @@ export default function Step1BusinessGoal({
             transition-all
             duration-200
             sm:px-5
-            sm:py-[18px]
+            sm:py-4.5
 
             ${
               value === "existing"

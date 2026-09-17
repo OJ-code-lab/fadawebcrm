@@ -85,7 +85,7 @@ function VerifyEmail() {
         return;
       }
 
-      route.push("/auth/sign-in");
+      route.push("/auth/country");
     } catch (error) {
       console.error("OTP verification error:", error);
       setError(

@@ -5,8 +5,8 @@ import React from "react";
 function ForgotPassword() {
   return (
     <div>
-      {" "}
-      <ForgotPasswordForm /> <Link href="/auth/confirmEmail">confirmEmail</Link>
+      <ForgotPasswordForm />
+      <Link href="/auth/verify-email">Verify Email</Link>
     </div>
   );
 }

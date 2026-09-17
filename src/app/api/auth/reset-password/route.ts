@@ -5,24 +5,35 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { response, data } = await apiFetch("/register", {
+    const { response, data } = await apiFetch("/auth/reset-password", {
       method: "POST",
       headers: {
         "X-API-KEY": process.env.API_KEY || "",
       },
       body: JSON.stringify(body),
     });
-    console.log("Registration response:", response);
+
+    if (!response.ok) {
+      return NextResponse.json(
+        data && typeof data === "object" ? data : {
+          status: false,
+          message: "Unable to reset password.",
+          data: null,
+        },
+        { status: response.status },
+      );
+    }
+
     return NextResponse.json(data, {
       status: response.status,
     });
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("Reset password error:", error);
 
     return NextResponse.json(
       {
         status: false,
-        message: "Something went wrong.",
+        message: error instanceof Error ? error.message : "Something went wrong.",
         error_code: "server_error",
         data: null,
       },

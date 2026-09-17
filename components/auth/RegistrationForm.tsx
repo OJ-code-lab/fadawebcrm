@@ -84,6 +84,10 @@ function RegistrationForm() {
       setIsLoading(false);
     }
   }
+
+  const handleGoogleAuth = () => {
+    window.location.href = "/api/auth/google";
+  };
   return (
     <div className=" max-w-7xl mx-auto my-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center h-screen rounded-4xl p-10 overflow-hidden">
@@ -103,7 +107,10 @@ function RegistrationForm() {
 
       <div className="bg-transparent h-screen grid place-items-center p-4 ">
         <h2 className="font-medium text-base lg:text-3xl text-black">
-          Your business starts here.
+          Your business starts here.{" "}
+          <Button type="button" onClick={handleGoogleAuth}>
+            Continue with Google
+          </Button>
         </h2>
         <p className="bg-gray-200 p-2.5 text-center mt-3 w-full rounded-4xl">
           sign up with Google
