@@ -1,3 +1,5 @@
+import AddBusiness from "./AddBusiness";
+
 function Headers() {
   return (
     <div className="flex justify-between gap-4">
@@ -5,7 +7,7 @@ function Headers() {
         Hello <span>UserName</span>
       </div>
       <div className="flex gap-2 font-semibold text-base">
-        Febtem <span></span>
+        <AddBusiness />
       </div>
     </div>
   );

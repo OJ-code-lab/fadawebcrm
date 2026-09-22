@@ -13,21 +13,22 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    // Return validation/API errors from the backend
     if (!response.ok) {
       return NextResponse.json(
-        data && typeof data === "object" ? data : {
-          status: false,
-          message: "Login failed.",
-          data: null,
-        },
+        data && typeof data === "object"
+          ? data
+          : {
+              status: false,
+              message: "Login failed.",
+              data: null,
+            },
         {
           status: response.status,
         },
       );
     }
 
-    const accessToken = data.data?.access_token;
+    const accessToken = data.data?.login.access_token;
 
     if (!accessToken) {
       return NextResponse.json(

@@ -89,7 +89,7 @@ interface NavbarProps {
 function Navbar({ className, country }: NavbarProps) {
   const pathname = usePathname();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
-  const dashboardPath = `/${country}/${country === "nigeria" ? "nigeria-dashboard" : "usa-dashboard"}`;
+  const dashboardPath = `/${country === "nigeria" ? "nigeria-dashboard" : "usa-dashboard"}`;
   const mainLinks = [
     { name: "Dashboard", href: dashboardPath, icon: LayoutDashboard },
     { name: "Company", href: `${dashboardPath}/company`, icon: Building2 },

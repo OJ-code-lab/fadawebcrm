@@ -2,7 +2,7 @@
 import GetStartedModal from "@/components/ui/getStartedModal";
 import { TriangleAlert } from "lucide-react";
 
-function DashboardErrorMessage() {
+function ContinueBusinessReg() {
   return (
     <div className="bg-red-100/50 py-6 px-8 flex flex-col justify-between items-center gap-6  lg:gap-11.5 rounded-[16px] lg:flex-row ">
       <span className=" text-red-700 h-8 w-8 p-2">
@@ -26,4 +26,4 @@ function DashboardErrorMessage() {
   );
 }
 
-export default DashboardErrorMessage;
+export default ContinueBusinessReg;

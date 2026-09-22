@@ -1,11 +1,13 @@
-import Link from "next/link";
+import LoginForm from "@/components/auth/LoginForm";
+// import Link from "next/link";
 
 const page = () => {
   return (
-    <div className="flex max-w-5xl gap-5 *:text-wizard-green">
-      <Link href="/auth">auth</Link>
-      <Link href="/nigeria">nigeria</Link>
-      <Link href="/usa">usa</Link>
+    <div className=" max-w-8xl mx-auto my-4 grid grid-cols-1 place-items-center w-full">
+      {/* <Link href="/auth">auth</Link>
+      <Link href="/nigeria-dashboard">nigeria</Link>
+      <Link href="/usa">usa</Link> */}
+      <LoginForm />
     </div>
   );
 };

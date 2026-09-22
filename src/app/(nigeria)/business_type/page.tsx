@@ -3,10 +3,19 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import React from "react";
 
-function BusinessTypePage() {
+interface BusinessTypePageProps {
+  searchParams: Promise<{ countryId?: string }>;
+}
+
+async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
+  const { countryId } = await searchParams;
+  const nigeriaHref = countryId
+    ? `/nigeria?countryId=${encodeURIComponent(countryId)}`
+    : "/nigeria";
+
   return (
     <div className=" grid place-items-center h-screen">
-      <Card className=" border w-full max-w-2xl mx-4 px-6 py-8.5 bg-transparent  text-center sm:mx-6">
+      <Card className=" border border-gray-200/60 w-full max-w-2xl mx-4 px-6 py-8.5 bg-transparent  text-center sm:mx-6">
         <h4 className="font-medium text-4xl text-black">
           Where do you want to register your business
         </h4>
@@ -55,7 +64,7 @@ function BusinessTypePage() {
         </div> */}
 
         <div className="flex flex-col space-y-4 mt-6">
-          <Link href={"/nigeria"}>
+          <Link href={nigeriaHref}>
             <Button className="w-full bg-gray-200 text-black text-base font-normal rounded-4xl p-6 hover:bg-blue-900 hover:text-white  transition ">
               New business
             </Button>

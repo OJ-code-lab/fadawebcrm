@@ -8,6 +8,7 @@ import PasswordBotton from "../ui/passwordBotton";
 import { useState } from "react";
 import { Field } from "../ui/field";
 import { useRouter } from "next/navigation";
+import GoogleButton from "./GoogleButton";
 // import { Label } from "../ui/label";
 
 function LoginForm() {
@@ -51,14 +52,7 @@ function LoginForm() {
         }
         return;
       }
-
-      // console.log(data);
-
-      // console.log("Login successful:", data);
-
-      // const accessToken = data.data.access_token;
-      // const tokenType = data.data.token_type;
-      const user = data.data.user;
+      const user = data.data.login.user;
 
       if (!user.email_verified) {
         router.push(
@@ -67,12 +61,6 @@ function LoginForm() {
         return;
       }
       router.push("/nigeria-dashboard");
-
-      // console.log("Access token:", accessToken);
-      // console.log("Token type:", tokenType);
-      // console.log("User:", user);/
-
-      // We'll handle authentication/token here next.
     } catch (error) {
       console.error("Login error:", error);
       setGeneralError("Something went wrong. Please try again.");
@@ -81,7 +69,7 @@ function LoginForm() {
     }
   };
   return (
-    <div className="  max-w-7xl mx-auto my-4 grid grid-cols-1 place-items-center lg:grid-cols-2 gap-8 w-full">
+    <div className="  max-w-350 mx-auto my-4 grid grid-cols-1 place-items-center lg:grid-cols-2 gap-16 w-full">
       <div className="w-full relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center  h-screen rounded-4xl p-10 overflow-hidden">
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
         <div className="relative z-10 flex flex-col top-80">
@@ -97,17 +85,16 @@ function LoginForm() {
         </div>
       </div>
 
-      <div className=" h-screen w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0">
-        <h2 className="font-medium text-3xl lg:text-4xl text-black mb-2">
+      <div className=" h-screen w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
+        <h2 className="font-medium text-3xl lg:text-4xl text-black">
           Your business starts here.
         </h2>
-        <p className="bg-gray-200 p-3 text-center w-full rounded-4xl ">
-          sign up with Google
-        </p>
+
+        <GoogleButton label="Sign in with Google" />
         <p className=" font-medium text-base text-center ">Or</p>
         <div className="w-full">
           <form className="w-full" onSubmit={handleSubmit}>
-            <div className="w-full flex flex-col gap-2.5">
+            <div className="w-full flex flex-col gap-2.5 space-y-3">
               <Field>
                 <Input
                   id="email"

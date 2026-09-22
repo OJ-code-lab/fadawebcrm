@@ -1,9 +1,9 @@
-import DashboardErrorMessage from "@/components/ui/dashboardErrorMessage";
+import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
 
 function companyPage() {
   return (
     <div>
-      <DashboardErrorMessage />
+      <ContinueBusinessReg />
     </div>
   );
 }

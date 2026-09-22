@@ -7,19 +7,16 @@ export async function POST(req: Request) {
   const accessToken = cookieStore.get("access_token")?.value;
 
   try {
-    const { business_id, plan_id, payment_gateway_id } = await req.json();
+    const { gateway_id, order_id } = await req.json();
 
-    const { response, data } = await apiFetch(
-      `/business/${business_id}/plans/${plan_id}/order/nigeria`,
-      {
-        method: "POST",
-        headers: {
-          "X-API-KEY": process.env.API_KEY || "",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ payment_gateway_id }),
+    const { response, data } = await apiFetch(`/pay`, {
+      method: "POST",
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+      body: JSON.stringify({ gateway_id, order_id }),
+    });
 
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status });

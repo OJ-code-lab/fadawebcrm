@@ -22,18 +22,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    // const { response, data } = await apiFetch(
-    //   `/business/${businessId}/plans/${planId}`,
-    //   {
-    //     method: "GET",
-    //     headers: {
-    //       "X-API-KEY": process.env.API_KEY || "",
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   },
-    // );
     const { response, data } = await apiFetch(
-      `/business/01a0a4ee-d51d-7102-ad51-72de5268dea4/plans/01a0967d-de6b-70c7-971b-bd3580ccaad9`,
+      `/business/${businessId}/plans/${planId}`,
       {
         method: "GET",
         headers: {
@@ -42,6 +32,16 @@ export async function GET(req: Request) {
         },
       },
     );
+    // const { response, data } = await apiFetch(
+    //   `/business/01a0a4ee-d51d-7102-ad51-72de5268dea4/plans/01a0967d-de6b-70c7-971b-bd3580ccaad9`,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       "X-API-KEY": process.env.API_KEY || "",
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   },
+    // );
 
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status });

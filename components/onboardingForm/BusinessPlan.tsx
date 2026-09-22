@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "../ui/card";
-import { ArrowLeftFromLine, ArrowRightFromLine, Loader2 } from "lucide-react";
+import {
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
+  Lightbulb,
+  Loader2,
+} from "lucide-react";
 
+// types for selecting business plain (GET)
 export type BusinessPlanItem = {
   id: string;
   name: string;
@@ -20,16 +25,7 @@ type BusinessPlanService = {
   title: string;
 };
 
-type Business = {
-  id: string;
-  name: string;
-
-  entity_type: string;
-  state: string;
-  citizenship: string;
-  state_fee: string;
-};
-
+// types to display business summary (GET)
 type BusinessSummary = {
   id: string;
   name: string;
@@ -37,16 +33,36 @@ type BusinessSummary = {
   business: Business;
 };
 
+type Business = {
+  id: string;
+  name: string;
+  entity_type: string;
+  state: string;
+  citizenship: string;
+  state_fee: string;
+};
+
+// types for payment gatway (GET)
 export type PaymentGateway = {
   id: string;
   name: string;
 };
 
+// types for props
 type BusinessPlanProps = {
   businessPlanType?: BusinessPlanItem[];
   paymentGatewayMethod?: PaymentGateway[];
+  businessId?: string;
 };
 
+// type for postig order details to database
+type OrderResult = {
+  id: string;
+  total: string;
+  formattedTotal: string;
+};
+
+// progress bar for wizard form state
 function StepProgressBar({
   currentStep,
   totalSteps,
@@ -55,7 +71,7 @@ function StepProgressBar({
   totalSteps: number;
 }) {
   return (
-    <div className="mb-6 flex w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
+    <div className="mb-6 flex max-w-6xl mx-auto w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
       {Array.from({ length: totalSteps }).map((_, index) => {
         const stepNumber = index + 1;
         const isCurrent = stepNumber === currentStep;
@@ -81,11 +97,8 @@ function StepProgressBar({
 export default function BusinessPlan({
   businessPlanType = [],
   paymentGatewayMethod = [],
+  businessId,
 }: BusinessPlanProps) {
-  // const router = useRouter();
-  const params = useParams();
-  const businessId = params?.id as string; // Read from dynamic URL path
-
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedGateway, setSelectedGateway] = useState<string>("");
@@ -93,6 +106,8 @@ export default function BusinessPlan({
   const [summaryData, setSummaryData] = useState<BusinessSummary | null>(null);
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [order, setOrder] = useState<OrderResult | null>(null);
+  // const [confirmingOrder, setConfirmingOrder] = useState(false);
 
   // Validate step progress conditions
   const isStepValid = (step: number): boolean => {
@@ -108,24 +123,24 @@ export default function BusinessPlan({
     }
   };
 
-  // Dynamically fetch Order/Business summary when moving to Step 2
-
   const fetchSummary = async (planId: string, businessId: string) => {
     setLoadingSummary(true);
     try {
       const response = await fetch(
         `/api/orderSummary?businessId=${businessId}&planId=${planId}`,
       );
-
       if (response.ok) {
         const data = await response.json();
         console.log("Order summary: ", data?.data ?? data);
         setSummaryData(data?.data ?? data);
       } else {
         console.error("Failed fetching summary:", await response.text());
+        return false;
       }
+      return true;
     } catch (err) {
       console.error("Failed fetching summary:", err);
+      return false;
     } finally {
       setLoadingSummary(false);
     }
@@ -133,8 +148,13 @@ export default function BusinessPlan({
 
   const handleNext = async () => {
     if (currentStep === 1 && selectedPlan) {
-      await fetchSummary(selectedPlan, businessId);
-      setCurrentStep(2);
+      if (!businessId) {
+        console.error("Cannot fetch order summary without a business ID.");
+        return;
+      }
+
+      const summaryFetched = await fetchSummary(selectedPlan, businessId);
+      if (summaryFetched) setCurrentStep(2);
     } else if (currentStep === 2 && termsAgreed) {
       setCurrentStep(3);
     }
@@ -152,7 +172,9 @@ export default function BusinessPlan({
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/confirm-order", {
+      // submiting order and type of payment gateway post
+
+      const confirmRes = await fetch("/api/confirm-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -161,10 +183,44 @@ export default function BusinessPlan({
           payment_gateway_id: selectedGateway,
         }),
       });
+      const confirmData = await confirmRes.json();
+      if (!confirmRes.ok) {
+        console.error("Failed to confirm order:", confirmData);
+        return;
+      }
+      const orderData = confirmData?.data?.order;
 
-      const data = await response.json();
-      if (response.ok && data.checkout_url) {
-        window.location.href = data.checkout_url; // Navigate to payment engine
+      if (!orderData?.id) {
+        console.error("Order response is missing a valid ID:", confirmData);
+        return;
+      }
+      // setOrderId(newOrderId);
+      const confirmedOrder: OrderResult = {
+        id: confirmData?.data?.order?.id,
+        total: confirmData?.data?.order?.total,
+        formattedTotal: confirmData?.data?.order?.formatted_total,
+      };
+      setOrder(confirmedOrder);
+
+      // initiate payment
+      const payRes = await fetch("/api/order-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          gateway_id: selectedGateway,
+          order_id: confirmedOrder.id,
+        }),
+      });
+
+      const payData = await payRes.json();
+      const paymentUrl =
+        payData?.data?.payment_url ??
+        payData?.payment_url ??
+        payData?.checkout_url;
+      if (payRes.ok && paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        console.error("Payment initiation failed:", payData);
       }
     } catch (error) {
       console.error("Checkout initialization failed:", error);
@@ -174,13 +230,13 @@ export default function BusinessPlan({
   };
 
   return (
-    <div className="grid place-items-center pt-8 max-w-6xl mx-auto px-4">
+    <div className="grid place-items-center pt-8  px-4">
       <StepProgressBar currentStep={currentStep} totalSteps={3} />
 
       <form onSubmit={handleSubmitPayment} className="w-full space-y-6">
         {/* STEP 1: SELECT SUBSCRIPTION PLAN */}
         {currentStep === 1 && (
-          <div>
+          <div className="max-w-6xl mx-auto">
             <div className="my-4 text-center">
               <h3 className="font-bold text-3xl">
                 Choose your subscription plan
@@ -189,7 +245,7 @@ export default function BusinessPlan({
                 Select the plan that works best for your business.
               </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
               {businessPlanType.map((plan) => {
                 const isSelected = selectedPlan === plan.id;
                 const isGrowthPlan = plan.name.toLowerCase() === "growth";
@@ -224,7 +280,7 @@ export default function BusinessPlan({
                           : " border-gray-200 text-black hover:bg-gray-200"
                       }`}
                     >
-                      {isSelected ? "Selected" : "Select Plan"}
+                      {isSelected ? "Selected" : plan.name}
                     </Button>
                     <div>
                       <ul className="space-y-4 text-sm">
@@ -235,7 +291,7 @@ export default function BusinessPlan({
                           <h3>
                             <span>✓</span> {""}LLC filed in 1–2 business days
                           </h3>
-                          <p className={`pl-4 leading-8 text-light-black`}>
+                          <p className={`pl-4 text-light-black`}>
                             Articles of organization + operating agreement
                             included
                           </p>
@@ -244,7 +300,7 @@ export default function BusinessPlan({
                           <h3>
                             <span>✓</span> {""}LLC filed in 1–2 business days
                           </h3>
-                          <p className={`pl-4 leading-8 text-light-black`}>
+                          <p className={`pl-4 text-light-black`}>
                             Articles of organization + operating agreement
                             included
                           </p>
@@ -253,7 +309,7 @@ export default function BusinessPlan({
                           <h3>
                             <span>✓</span> {""}LLC filed in 1–2 business days
                           </h3>
-                          <p className={`pl-4 leading-8 text-light-black`}>
+                          <p className={`pl-4 text-light-black`}>
                             Articles of organization + operating agreement
                             included
                           </p>
@@ -262,7 +318,7 @@ export default function BusinessPlan({
                           <h3>
                             <span>✓</span> {""}LLC filed in 1–2 business days
                           </h3>
-                          <p className={`pl-4 leading-8 text-light-black`}>
+                          <p className={`pl-4 text-light-black`}>
                             Articles of organization + operating agreement
                             included
                           </p>
@@ -289,9 +345,9 @@ export default function BusinessPlan({
             ) : (
               summaryData && (
                 <div className=" p-6 space-y-4">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     {/* box1 */}
-                    <div className="bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
+                    <div className="flex-1  bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
                       <h2 className="font-bold text-2xl mb-5 capitalize">
                         Company
                       </h2>
@@ -313,51 +369,78 @@ export default function BusinessPlan({
                       </div>
                     </div>
                     {/* box2 */}
-                    <div className="bg-gray-200/40  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
-                      <h2 className="font-bold text-2xl mb-5 capitalize">
-                        Subscription
-                      </h2>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>Business Name:</span>
-                        <span>{summaryData.business?.name}</span>
-                      </div>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>Entity Type:</span>
-                        <span>{summaryData.business?.entity_type}</span>
-                      </div>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>State:</span>
-                        <span>{summaryData.business?.state}</span>
-                      </div>
-                      <div className="flex justify-between gap-16 pb-2">
+                    <div className="flex-1 space-y-6 ">
+                      <div className=" bg-gray-200/40  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
+                        <h2 className="font-bold text-2xl mb-5 capitalize">
+                          Subscription
+                        </h2>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>Package Plan</span>
+                          <span>{summaryData.name}</span>
+                        </div>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>Price</span>
+                          <span>{summaryData.business?.entity_type}</span>
+                        </div>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>Billing</span>
+                          <span>{summaryData.business?.state}</span>
+                        </div>
+                        {/* <div className="flex justify-between gap-16 pb-2">
                         <span>Package Total:</span>
-                        {/* <span className="font-bold">{summaryData.formatted}</span> */}
+                        <span className="font-bold">{summaryData.formatted}</span>
+                      </div> */}
+                      </div>
+                      <div className=" hidden pt-4 lg:flex items-center gap-2 ">
+                        <input
+                          type="checkbox"
+                          id="terms"
+                          checked={termsAgreed}
+                          onChange={(e) => setTermsAgreed(e.target.checked)}
+                          className="h-4 w-4"
+                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-sm cursor-pointer"
+                        >
+                          I agree to the Terms and Conditions and confirm
+                          details above are accurate.
+                        </label>
                       </div>
                     </div>
                     {/* box3 */}
-                    <div className="bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
-                      <h2 className="font-bold text-2xl mb-5 capitalize">
-                        your plan
-                      </h2>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>Business Name:</span>
-                        <span>{summaryData.business?.name}</span>
+                    <div className="flex-1 space-y-6">
+                      <div className="bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
+                        <h2 className="font-bold text-2xl mb-5 capitalize">
+                          your plan
+                        </h2>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>Tax and Compliance</span>
+                          <span>{summaryData.business?.name}</span>
+                        </div>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>State Fee</span>
+                          <span>{summaryData.business?.state_fee}</span>
+                        </div>
+                        <div className="flex justify-between gap-16 pb-2">
+                          <span>Discount (20%)</span>
+                          <span>{summaryData.business?.state}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>Entity Type:</span>
-                        <span>{summaryData.business?.entity_type}</span>
-                      </div>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>State:</span>
-                        <span>{summaryData.business?.state}</span>
-                      </div>
-                      <div className="flex justify-between gap-16 pb-2">
-                        <span>Package Total:</span>
-                        {/* <span className="font-bold">{summaryData.formatted}</span> */}
+                      <div className="bg-gray-200/40  p-8 rounded-[32px] font-normal text-base leading-7 text-black ">
+                        <span>
+                          <Lightbulb className="text-blue-500 mb-6" />
+                        </span>
+                        <p>
+                          {
+                            "After confirming, we'll gather additional details about your company, such as company members, registered address, ownership breakdown, and more."
+                          }
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <div className="pt-4 flex items-center gap-2">
+
+                  <div className="pt-4 flex items-center gap-2 lg:hidden">
                     <input
                       type="checkbox"
                       id="terms"
@@ -365,7 +448,10 @@ export default function BusinessPlan({
                       onChange={(e) => setTermsAgreed(e.target.checked)}
                       className="h-4 w-4"
                     />
-                    <label htmlFor="terms" className="text-sm cursor-pointer">
+                    <label
+                      htmlFor="terms"
+                      className="text-sm cursor-pointer mt-2"
+                    >
                       I agree to the Terms and Conditions and confirm details
                       above are accurate.
                     </label>
@@ -386,9 +472,9 @@ export default function BusinessPlan({
               {paymentGatewayMethod.map((gateway) => (
                 <label
                   key={gateway.id}
-                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-blue-card ${
                     selectedGateway === gateway.id
-                      ? "border-green-600 bg-green-50/20"
+                      ? " bg-blue-card text-white border-blue-card"
                       : "border-gray-200"
                   }`}
                 >
@@ -399,6 +485,7 @@ export default function BusinessPlan({
                     value={gateway.id}
                     checked={selectedGateway === gateway.id}
                     onChange={(e) => setSelectedGateway(e.target.value)}
+                    className="sr-only"
                   />
                 </label>
               ))}
@@ -407,7 +494,7 @@ export default function BusinessPlan({
         )}
 
         {/* CONTROLS */}
-        <div className="flex justify-between pt-6">
+        <div className="flex justify-between pt-6 mb-6 max-w-6xl mx-auto">
           <Button
             type="button"
             variant="outline"
@@ -423,7 +510,8 @@ export default function BusinessPlan({
               onClick={handleNext}
               disabled={!isStepValid(currentStep)}
             >
-              Next <ArrowRightFromLine className="ml-2 h-4 w-4" />
+              Next
+              <ArrowRightFromLine className="ml-2 h-4 w-4" />
             </Button>
           ) : (
             <Button

@@ -64,7 +64,6 @@ async function onboardingFormPage({ searchParams }: PageProps) {
   } catch (error) {
     console.error("Entity types fetch failed:", error);
 
-    // Fixed: Removed the stray "[" bracket on line 39
     return (
       <div className="grid place-items-center h-screen">
         <OnBoardingForm

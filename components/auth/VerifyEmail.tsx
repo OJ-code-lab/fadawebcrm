@@ -30,7 +30,7 @@ function VerifyEmail() {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   const [otpForm, setOtpForm] = useState<verifyOTP>({
     email,

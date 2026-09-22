@@ -5,12 +5,14 @@ import BusinessPlan, {
 import { apiFetch } from "@/lib/api";
 import { cookies } from "next/headers";
 
-type PageProps = {
-  params: Promise<{ id: string }>;
+type BusinessPlanPageProps = {
+  searchParams: Promise<{ businessId?: string }>;
 };
 
-export default async function BusinessPlanPage({ params }: PageProps) {
-  const { id: businessId } = await params;
+export default async function BusinessPlanPage({
+  searchParams,
+}: BusinessPlanPageProps) {
+  const { businessId } = await searchParams;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
 
@@ -30,16 +32,15 @@ export default async function BusinessPlanPage({ params }: PageProps) {
     //     },
     //   },
     // );
-    const { response: planRes, data: planData } = await apiFetch(
-      `/business/01a0a4ee-d51d-7102-ad51-72de5268dea4/plans`,
-      {
-        method: "GET",
-        headers: {
-          "X-API-KEY": process.env.API_KEY || "",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
+    const { response: planRes, data: planData } = businessId
+      ? await apiFetch(`/business/${businessId}/plans`, {
+          method: "GET",
+          headers: {
+            "X-API-KEY": process.env.API_KEY || "",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+      : { response: new Response(null, { status: 400 }), data: null };
 
     console.log("Business Plans:", planData);
 
@@ -75,6 +76,7 @@ export default async function BusinessPlanPage({ params }: PageProps) {
     <BusinessPlan
       businessPlanType={businessPlans}
       paymentGatewayMethod={paymentGateways}
+      businessId={businessId}
     />
   );
 }

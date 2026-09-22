@@ -21,7 +21,7 @@ export default function CompanyTabs({
     <>
       <nav className="mb-6 flex gap-6 pb-2 mt-8">
         <Link
-          href="/nigeria/nigeria-dashboard/company?tab=information"
+          href="/nigeria-dashboard/company?tab=information"
           className={`pb-1 ${activeTab === "information" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
           <div className="flex gap-2 items-center">
@@ -33,7 +33,7 @@ export default function CompanyTabs({
           </div>
         </Link>
         <Link
-          href="/nigeria/nigeria-dashboard/company?tab=mydocument"
+          href="/nigeria-dashboard/company?tab=mydocument"
           className={`pb-1 ${activeTab === "mydocument" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
         >
           <div className="flex gap-2 items-center">

@@ -2,12 +2,13 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+// import { Label } from "../ui/label";
 import PasswordBotton from "../ui/passwordBotton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 // import { apiFetch } from "@/lib/api";
 import { Field } from "../ui/field";
+import GoogleButton from "./GoogleButton";
 
 interface RegisterData {
   first_name: string;
@@ -68,7 +69,7 @@ function RegistrationForm() {
 
       const data = await response.json();
 
-      console.timeEnd("registration");
+      // console.timeEnd("registration");
 
       if (!response.ok || !data.status) {
         setErrors(data.errors ?? {});
@@ -85,11 +86,8 @@ function RegistrationForm() {
     }
   }
 
-  const handleGoogleAuth = () => {
-    window.location.href = "/api/auth/google";
-  };
   return (
-    <div className=" max-w-7xl mx-auto my-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className=" max-w-350 mx-auto my-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
       <div className="relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center h-screen rounded-4xl p-10 overflow-hidden">
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
         <div className="relative z-10 flex flex-col top-80">
@@ -108,13 +106,8 @@ function RegistrationForm() {
       <div className="bg-transparent h-screen grid place-items-center p-4 ">
         <h2 className="font-medium text-base lg:text-3xl text-black">
           Your business starts here.{" "}
-          <Button type="button" onClick={handleGoogleAuth}>
-            Continue with Google
-          </Button>
         </h2>
-        <p className="bg-gray-200 p-2.5 text-center mt-3 w-full rounded-4xl">
-          sign up with Google
-        </p>
+        <GoogleButton label="Sign up with Google" />
         <p className=" font-medium text-base text-center mt-3">Or</p>
         <div className="w-full">
           <form onSubmit={handleSubmit}>
@@ -203,7 +196,7 @@ function RegistrationForm() {
                 At least up to 8 characters
               </p> */}
             </div>
-            <div className="flex items-center gap-4 my-2.5">
+            {/* <div className="flex items-center gap-4 my-2.5">
               <Field>
                 <input
                   name="terms_conditions"
@@ -220,7 +213,7 @@ function RegistrationForm() {
                   </Link>{" "}
                 </Label>
               </Field>
-            </div>
+            </div> */}
             <div className="w-full my-5">
               <Button
                 className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card"

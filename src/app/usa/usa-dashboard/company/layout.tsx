@@ -1,6 +1,6 @@
-import DashboardErrorMessage from "@/components/ui/dashboardErrorMessage";
 import CompanyTabs from "./companyTabs";
 import { Suspense } from "react";
+import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
 
 interface CompanyLayoutProps {
   information: React.ReactNode;
@@ -13,7 +13,7 @@ export default function CompanyLayout({
 }: CompanyLayoutProps) {
   return (
     <div className=" lg:p-6 ">
-      <DashboardErrorMessage />
+      <ContinueBusinessReg />
 
       <Suspense fallback={<main>{information}</main>}>
         <CompanyTabs information={information} mydocument={mydocument} />

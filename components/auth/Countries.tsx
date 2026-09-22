@@ -9,21 +9,6 @@ type Country = {
   id: string;
   country: string;
   code: string;
-  // base_price: {
-  //   amount: string;
-  //   currency: string;
-  //   symbol: string;
-  //   formatted: string;
-  // };
-  // price: {
-  //   amount: number;
-  //   currency: string;
-  //   symbol: string;
-  //   formatted: string;
-  //   exchange_rate: number;
-  // };
-  // order_price: number;
-  // order_currency: string;
 };
 
 function Countries() {
@@ -39,8 +24,7 @@ function Countries() {
           throw new Error("could not fetch resource");
         }
         const info = await response.json();
-        console.log(info);
-        // console.log("Country API Info error:", info);
+
         setCountries(info.data);
       } catch (e) {
         console.log("countries error: ", e);
@@ -56,7 +40,7 @@ function Countries() {
     if (!country) return;
 
     if (country.code === "NGN") {
-      router.push(`/nigeria?countryId=${country.id}`);
+      router.push(`/business_type?countryId=${country.id}`);
     }
 
     if (country.code === "US") {
@@ -80,7 +64,9 @@ function Countries() {
               <label
                 htmlFor={country.id}
                 className={`flex items-center gap-3 w-full p-4 rounded-3xl cursor-pointer transition-all border-2 ${
-                  selectedCountry === country.id ? "bg-green-500" : ""
+                  selectedCountry === country.id
+                    ? "bg-blue-card text-white"
+                    : ""
                 }`}
               >
                 <input
@@ -96,7 +82,13 @@ function Countries() {
                 <span>
                   <Flag />
                 </span>
-                <span className="text-black">{country.country}</span>
+                <span
+                  className={`text-black ${
+                    selectedCountry === country.id ? "text-white" : ""
+                  }`}
+                >
+                  {country.country}
+                </span>
               </label>
             </div>
           ))}
@@ -110,31 +102,9 @@ function Countries() {
             Next{" "}
             <span>
               <ArrowRightFromLine />
-              {/* <ArrowRightFromLine /> */}
             </span>
           </Button>
         </div>
-
-        {/* <div className="space-y-4">
-          <label
-            htmlFor="c1"
-            className="flex items-center gap-3 w-full p-4 rounded-3xl cursor-pointer transition-all border-2 bg-green-500"
-          >
-            <input id="c1" name="count" type="radio" className=" "></input>
-            <span>
-              <Flag />
-            </span>
-          </label>
-          <label
-            htmlFor="c2"
-            className="flex items-center gap-3 w-full p-4 rounded-3xl cursor-pointer transition-all border-2"
-          >
-            <input id="c2" name="count" type="radio" className=""></input>
-            <span>
-              <Flag />
-            </span>
-          </label>
-        </div> */}
       </Card>
     </div>
   );

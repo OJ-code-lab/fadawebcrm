@@ -29,6 +29,64 @@ import {
 import { Field, FieldLabel } from "./field";
 import { ArrowLeftFromLine, ArrowRightFromLine, Loader2 } from "lucide-react";
 
+// --------------------------------------------------------------------------------------------------------------
+interface InitialBusinessData {
+  name: string;
+  second_name?: string;
+  industry_id: string;
+}
+
+// PUT COMPANY REGISTRATION
+interface CompanyReg {
+  name: string;
+  second_name: string;
+  business_country_id: string;
+  industry_id: string;
+  citizenship: string;
+  addresses: {
+    address: string;
+    state: string;
+    LGA: string;
+    city: string;
+    house_number: string;
+    street_name: string;
+    postal_code: string;
+    type: string;
+  }[];
+  members: Members[];
+}
+interface Members {
+  first_name: string;
+  last_name: string;
+  other_name: string;
+  phone_number: string;
+  email: string;
+  occupation: string;
+  nationality: string;
+  gender: string;
+  date_of_birth: string;
+  is_director: boolean;
+  is_shareholder: boolean;
+  is_witness: boolean;
+  ownership_percentage: number;
+  address: {
+    address: string;
+    state: string;
+    LGA: string;
+    city: string;
+    house_number: string;
+    street_name: string;
+    postal_code: string;
+    country: string;
+  };
+  id_type: string;
+  id_number: string;
+  file_path: string;
+  signature: string;
+}
+
+// --------------------------------------------------------------------------------------------------------------
+
 const items = [
   { label: "Select a fruit", value: null },
   { label: "Apple", value: "apple" },
@@ -331,6 +389,18 @@ export function GetStartedModal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // try{
+    //   const response = await fetch("/api/companyReg",{
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Type": "applicaton/json",
+    //     },
+    //     body: JSON.stringify({
+
+    //     })
+    //   })
+    // }
     if (isStepValid(currentStep, formData)) {
       setIsSubmitting(true);
       console.log("Form Submitted Successfully:", formData);

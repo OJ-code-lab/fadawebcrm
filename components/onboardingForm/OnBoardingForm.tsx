@@ -154,15 +154,6 @@ function OnBoardingForm({
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // useEffect(() => {
-  //   if (countryId) {
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       business_country_id: countryId,
-  //     }));
-  //   }
-  // }, [countryId]);
-
   const updateField = (key: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -179,17 +170,6 @@ function OnBoardingForm({
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (isStepValid(currentStep, formData)) {
-  //     setIsSubmitting(true);
-  //     console.log("Form Submitted Successfully:", formData);
-  //     //   setIsOpen(false);
-  //     setCurrentStep(1);
-  //     setFormData(initialFormData);
-  //     router.push("/");
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -205,16 +185,13 @@ function OnBoardingForm({
       business_country_id: countryId,
       company_name: formData.company_name,
       companySecondName: formData.companySecondName,
-      // state: formData.state,
+      state: formData.state,
       registration_type: formData.registration_type,
       industry_id: formData.industry_id,
     };
 
     try {
-      console.log("businessDatas being sent:", businessDatas);
-      // console.log("countryId:", countryId);
-      // console.log("entityTypes:", entityTypes);
-      console.log("current formData:", formData);
+      // console.log("current formData:", formData);
       const response = await fetch("/api/onboarding", {
         method: "POST",
         headers: {
@@ -232,7 +209,18 @@ function OnBoardingForm({
         return;
       }
 
-      router.push(`/nigeria/business_plan/${data.id}`);
+      const businessId = data?.data?.id ?? data?.data?.business?.id ?? data?.id;
+      if (typeof businessId !== "string" || !businessId) {
+        console.error(
+          "Business creation response is missing a valid ID:",
+          data,
+        );
+        return;
+      }
+
+      router.push(
+        `/nigeria/business_plan?businessId=${encodeURIComponent(businessId)}`,
+      );
     } catch (error) {
       console.error("Business creation error:", error);
     } finally {
@@ -245,11 +233,12 @@ function OnBoardingForm({
         <StepProgressBar currentStep={currentStep} totalSteps={4} />
         <form onSubmit={handleSubmit} className="min-w-0 space-y-4">
           {/* STEP 1 */}
+          {/* choose state */}
           {currentStep === 1 && (
             <Card className="w-full max-w-2xl px-4 py-8.5 bg-transparent  text-center ">
               <div className="space-y-8">
                 <h4 className="font-semibold text-2xl text-center">
-                  What state are you be operating from?
+                  What state are you operating from?
                 </h4>
 
                 <div className=" ">
@@ -290,11 +279,12 @@ function OnBoardingForm({
           )}
 
           {/* STEP 2 */}
+          {/* company name */}
           {currentStep === 2 && (
             <Card className="w-full max-w-2xl sm:max-w-lg px-4 py-8.5 bg-transparent  text-center">
               <div className="space-y-6">
                 <h4 className="font-semibold text-2xl text-center ">
-                  what do you want to name your company?
+                  What do you want to name your company?
                 </h4>
 
                 <p className="font-light text-base text-light-black">
@@ -343,11 +333,12 @@ function OnBoardingForm({
           )}
 
           {/* STEP 3 */}
+          {/* type of industary */}
           {currentStep === 3 && (
             <Card className="w-full max-w-2xl sm:max-w-lg min-w-xs  px-4 py-8.5 bg-transparent  text-center ">
               <div className="space-y-8">
                 <h4 className="font-semibold text-2xl text-center">
-                  Select registration type
+                  Select Business Entity Type
                 </h4>
 
                 <div className=" ">
@@ -388,7 +379,7 @@ function OnBoardingForm({
             <Card className="w-full max-w-2xl sm:max-w-lg min-w-xs  px-4 py-8.5 bg-transparent  text-center ">
               <div className="space-y-8">
                 <h4 className="font-semibold text-2xl text-center">
-                  Select registration type
+                  Select Line of Business
                 </h4>
 
                 <div className=" ">
@@ -402,13 +393,19 @@ function OnBoardingForm({
                         }
                       >
                         <SelectTrigger className="w-full p-6">
-                          <SelectValue placeholder="Select industry" />
+                          <SelectValue placeholder="Select industry">
+                            {industriesType.find(
+                              (industry) =>
+                                String(industry.id ?? industry.name) ===
+                                formData.industry_id,
+                            )?.name ?? "Select industry"}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
                             {industriesType.map((industry) => (
                               <SelectItem
-                                key={String(industry.id ?? industry.name)}
+                                key={String(industry.id)}
                                 value={String(industry.id ?? industry.name)}
                               >
                                 {industry.name}

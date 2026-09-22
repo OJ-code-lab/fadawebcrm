@@ -1,6 +1,9 @@
+"use client";
+import { BusinessDetailTypes } from "@/components/types/BusinessDetailTypes";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import DashboardErrorMessage from "@/components/ui/dashboardErrorMessage";
+import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
 import {
   BriefcaseBusinessIcon,
   ChevronRight,
@@ -10,18 +13,41 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { useEffect, useState } from "react";
+
 const documents = [
   { type: "Company Documents", date: "26 March, 2026" },
   { type: "Company Documents", date: "26 March, 2026" },
   { type: "Company Documents", date: "26 March, 2026" },
 ];
 
-export default function dashboard() {
+export default function Dashboard() {
+  const [businessDetails, setBusinessDetails] =
+    useState<BusinessDetailTypes | null>(null);
+
+  useEffect(() => {
+    const fecthBusinessDetails = async () => {
+      try {
+        const response = await fetch(
+          `/api/get/business/01a0c445-2e84-7335-955d-f934f85d2d23`,
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch business details");
+        }
+        const businessDetails: BusinessDetailTypes = await response.json();
+        console.log("Business Details:", businessDetails);
+        setBusinessDetails(businessDetails);
+      } catch (error) {
+        console.error("Error fetching business details:", error);
+      }
+    };
+    fecthBusinessDetails();
+  }, []);
   return (
     <div className="flex flex-col gap-12 justify-between ">
       {/* erro message */}
 
-      <DashboardErrorMessage />
+      <ContinueBusinessReg />
 
       {/* user info */}
       <div className="grid grid-cols-1 items-stretch lg:grid-cols-4 gap-8">
@@ -32,9 +58,12 @@ export default function dashboard() {
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">
-              Business name
+              Business Name
             </p>
-            <p className="font-semibold text-xl  ">Febtem Business LTD </p>
+            <p className="font-semibold text-xl  ">
+              {" "}
+              {businessDetails?.data?.name ?? "Null"}{" "}
+            </p>
           </div>
         </Card>
         <Card className="min-w-0 py-6 px-8">
@@ -44,7 +73,10 @@ export default function dashboard() {
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">Business ID</p>
-            <p className="font-semibold text-xl  ">81056473-10</p>
+            <p className="font-semibold text-xl  ">
+              {" "}
+              {businessDetails?.data?.id ?? "Null"}{" "}
+            </p>
           </div>
         </Card>
         <Card className="min-w-0 py-6 px-8">
@@ -58,11 +90,11 @@ export default function dashboard() {
             </p>
             <p className="font-semibold text-xl  ">
               {" "}
-              <span className="text-green-500 mr-1">
+              <span className="text-green-500 bg-green-500 rounded-full inline-flex items-center justify-center h-2 w-2 mr-2">
                 {" "}
-                <Dot size={5} />{" "}
-              </span>
-              Active
+                <Dot size={15} className="text-green-500 bg-green-500" />{" "}
+              </span>{" "}
+              {businessDetails?.data.status ?? "Null"}{" "}
             </p>
           </div>
         </Card>

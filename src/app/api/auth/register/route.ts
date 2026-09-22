@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { response, data } = await apiFetch("/register", {
+    const { response, data } = await apiFetch("/auth/register", {
       method: "POST",
       headers: {
         "X-API-KEY": process.env.API_KEY || "",

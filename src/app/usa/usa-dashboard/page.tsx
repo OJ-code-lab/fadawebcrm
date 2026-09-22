@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import DashboardErrorMessage from "@/components/ui/dashboardErrorMessage";
+import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
+
 import {
   BriefcaseBusinessIcon,
   ChevronRight,
@@ -21,7 +22,7 @@ export default function dashboard() {
     <div className="flex flex-col gap-12 justify-between ">
       {/* erro message */}
 
-      <DashboardErrorMessage />
+      <ContinueBusinessReg />
 
       {/* user info */}
       <div className="grid grid-cols-1 items-stretch lg:grid-cols-4 gap-8">
