@@ -1,46 +1,111 @@
-import { NextResponse } from "next/server";
-import { apiFetch } from "@/lib/api";
 import { cookies } from "next/headers";
+import { apiFetch } from "@/lib/api";
+import {
+  BusinessDetails,
+  BusinessListItem,
+  Orderlist,
+} from "@/src/types/businessTypes";
 
-export async function GET() {
+// get all registered business
+export async function getAllBusinesses(): Promise<BusinessListItem[]> {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
+  const token = cookieStore.get("access_token")?.value;
 
-  if (!accessToken) {
-    return NextResponse.json(
-      {
-        status: false,
-        message: "Authentication is required to load business details.",
-        error_code: "missing_access_token",
-        data: null,
-      },
-      { status: 401 },
-    );
-  }
+  if (!token) return [];
 
   try {
-    const { response, data } = await apiFetch(`/business`, {
-      method: "GET",
+    const { data } = await apiFetch("/business", {
       headers: {
         "X-API-KEY": process.env.API_KEY || "",
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    return NextResponse.json(data, { status: response.status });
+    // Your endpoint returns: { status: true, data: [ ...businesses ] }
+    if (data?.status && Array.isArray(data.data)) {
+      return data.data;
+    }
+    return [];
   } catch (error) {
-    console.error("business details fetch errors:", error);
-    return NextResponse.json(
-      {
-        status: false,
-        message:
-          error instanceof Error
-            ? error.message
-            : "Unable to load business details.",
-        error_code: "business_details_fetch_failed",
-        data: null,
+    console.error("Error fetching business list:", error);
+    return [];
+  }
+}
+
+// get business details by id
+export async function getBusinessDetails(
+  businessId: string,
+): Promise<BusinessDetails | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return null;
+
+  try {
+    const { data } = await apiFetch(`/business/${businessId}`, {
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${token}`,
       },
-      { status: 500 },
-    );
+    });
+    if (data?.status && data.data) {
+      return data.data;
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching business ${businessId}:`, error);
+    return null;
+  }
+}
+
+// get orderlist
+export async function getAllOrders(): Promise<Orderlist[]> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return [];
+
+  try {
+    const { data } = await apiFetch("/orders", {
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (data?.status && Array.isArray(data.data)) {
+      return data.data;
+    }
+    return [];
+  } catch (error) {
+    console.error("Error fetching business list:", error);
+    return [];
+  }
+}
+
+// get orders by ID
+export async function getOrdersById(
+  orderId: string,
+): Promise<Orderlist | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return null;
+
+  try {
+    const { data } = await apiFetch(`/business/${orderId}`, {
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (data?.status && data.data) {
+      return data.data;
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching business ${orderId}:`, error);
+    return null;
   }
 }

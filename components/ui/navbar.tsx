@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   LayoutDashboard,
@@ -14,97 +14,55 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
-// function Navbar() {
-//   const pathname = usePathname();
-//   return (
-//     <nav className="flex flex-col gap-8 bg-transparent">
-//       <div className="px-4">
-//         <Link href="/">LOGO</Link>
-//       </div>
-
-//       <div className="flex flex-col gap-12 *:text-light-black font-normal text-[16px]">
-//         <div className="flex flex-col gap-2 ">
-//           <Link
-//             href="/nigeria-dash-board"
-//             className={`border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white ${pathname === "/nigeria-dashboard" ? "bg-blue-card text-white" : ""} `}
-//           >
-//             <span></span> <span>Dashboard</span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>Company</span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>Services</span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>Tax Compliance </span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>My Order</span>
-//           </Link>
-//         </div>
-
-//         <div className="border-t flex flex-col gap-2 py-3">
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>Setting</span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] hover:bg-blue-card hover:text-white "
-//           >
-//             <span></span> <span>Refer & Earn </span>
-//           </Link>
-//           <Link
-//             href="/"
-//             className="border py-2.5 px-4 rounded-[8px] text-red-600 hover:bg-blue-card "
-//           >
-//             <span></span> <span> Logout</span>
-//           </Link>
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// }
 
 interface NavbarProps {
   className?: string;
   country: "nigeria" | "usa";
+  businessId?: string;
 }
 
-function Navbar({ className, country }: NavbarProps) {
+export default function Sidebar({ className, businessId }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
-  const dashboardPath = `/${country === "nigeria" ? "nigeria-dashboard" : "usa-dashboard"}`;
-  const mainLinks = [
-    { name: "Dashboard", href: dashboardPath, icon: LayoutDashboard },
-    { name: "Company", href: `${dashboardPath}/company`, icon: Building2 },
+
+  const isActive = (path: string) => pathname === path;
+
+  // Main top section
+  const mainNavItems = [
     {
-      name: "Services",
-      href: `${dashboardPath}/services`,
+      label: "Dashboard",
+      href: `/${businessId}/dashboard`,
+      icon: LayoutDashboard,
+    },
+    { label: "Company", href: `/${businessId}/company`, icon: Building2 },
+    {
+      label: "Services",
+      href: `/${businessId}/services`,
       icon: BriefcaseBusiness,
     },
-    { name: "Tax Compliance", href: `${dashboardPath}/tax`, icon: ReceiptText },
+    {
+      label: "Tax Compliance",
+      href: `/${businessId}/tax-compliance`,
+      icon: ReceiptText,
+    },
+    { label: "My Orders", href: `/${businessId}/my-orders`, icon: Package },
   ];
-  const bottomLinks = [
-    { name: "Settings", href: `${dashboardPath}/settings`, icon: Settings },
-    { name: "Refer & Earn", href: `${dashboardPath}/refer`, icon: Gift },
-    { name: "Logout", href: `${dashboardPath}/logout`, icon: LogOut },
+
+  //  bottom section
+  const secondaryNavItems = [
+    { label: "Settings", href: `/${businessId}/settings`, icon: Settings },
+    {
+      label: "Refer & Earn",
+      href: `/${businessId}/refer-and-earn`,
+      icon: Gift,
+    },
   ];
+
+  async function handleLogout() {
+    router.push("/");
+  }
+
   return (
     <nav
       className={cn(
@@ -112,71 +70,82 @@ function Navbar({ className, country }: NavbarProps) {
         className,
       )}
     >
-      <div className="hidden px-4 lg:block">
-        <Link href="/">LOGO</Link>
+      <div>
+        <div className="px-4 py-3 font-bold text-lg text-gray-800 tracking-wide">
+          LOGO
+        </div>
+
+        {/* Top Navigation List */}
+        <div className="mt-4 space-y-1">
+          {mainNavItems.map((item) => {
+            const active = isActive(item.href);
+            if (item.label === "My Orders") {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={openOrders}
+                  className={`flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-left font-medium transition ${
+                    isOrdersOpen
+                      ? "bg-blue-card text-white shadow-sm"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
+                >
+                  <item.icon size={18} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            }
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition ${
+                  active
+                    ? "bg-blue-card text-white shadow-sm"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+              >
+                <item.icon size={18} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-row gap-2 overflow-x-auto font-normal text-xs lg:text-base *:text-light-black lg:flex-col lg:overflow-visible">
-        <div className="flex shrink-0 flex-row gap-2 lg:flex-col">
-          {mainLinks.map((link) => (
+      {/* Bottom Navigation & Logout */}
+      <div className="space-y-1 border-t border-gray-100 pt-4">
+        {secondaryNavItems.map((item) => {
+          const active = isActive(item.href);
+          return (
             <Link
-              key={link.href}
-              href={link.href}
-              className={`whitespace-nowrap rounded-[8px] px-3 py-2.5 transition-all duration-400 ease-in-out hover:bg-blue-card hover:text-white lg:px-4 ${
-                pathname === link.href ? "bg-blue-card text-white" : ""
+              key={item.label}
+              href={item.href}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition ${
+                active
+                  ? "bg-blue-card text-white"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              <div className="flex gap-2 justify-start items-center">
-                <span>
-                  <link.icon size={20} />
-                </span>
-                <span>{link.name}</span>
-              </div>
+              <item.icon size={18} />
+              <span>{item.label}</span>
             </Link>
-          ))}
-        </div>
+          );
+        })}
 
-        <div>
-          <button
-            onClick={openOrders}
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors w-full",
-              isOrdersOpen
-                ? "bg-blue-card text-white"
-                : "text-light-black hover:text-white hover:bg-blue-card",
-            )}
-          >
-            <Package size={20} />
-            My Orders
-          </button>
-        </div>
-        {/* Bottom Links */}
-        <div className="flex shrink-0 flex-row gap-2 border-l py-0 pl-2 lg:flex-col lg:mt-12 lg:gap-2 lg:border-l-0 lg:border-t lg:py-3 lg:pl-0">
-          {bottomLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`${
-                link.name === "Refer & Earn" || link.name === "Logout"
-                  ? "hidden lg:block"
-                  : ""
-              } 
-              ${link.name === "Logout" || link.icon === LogOut ? "text-red-500" : ""} whitespace-nowrap rounded-[8px] px-3 py-2.5 transition-all duration-400 ease hover:bg-blue-card hover:text-white lg:px-4 ${
-                pathname === link.href ? "bg-blue-card text-white" : ""
-              }`}
-            >
-              <div className="flex gap-2 justify-start items-center">
-                <span>
-                  <link.icon size={20} />
-                </span>
-                <span>{link.name}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-red-500 hover:bg-red-50 transition text-left"
+        >
+          <span>
+            <LogOut size={18} />
+          </span>
+          <span>Logout</span>
+        </button>
       </div>
     </nav>
   );
 }
-
-export default Navbar;

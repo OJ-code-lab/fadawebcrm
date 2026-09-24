@@ -131,7 +131,7 @@ export default function BusinessPlan({
       );
       if (response.ok) {
         const data = await response.json();
-        console.log("Order summary: ", data?.data ?? data);
+        // console.log("Order summary: ", data?.data ?? data);
         setSummaryData(data?.data ?? data);
       } else {
         console.error("Failed fetching summary:", await response.text());

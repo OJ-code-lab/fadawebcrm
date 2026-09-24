@@ -16,6 +16,7 @@ import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
 interface NavbarProps {
   className?: string;
   country: "nigeria" | "usa";
+  businessId?: string;
 }
 function MobileNavbar({ className, country }: NavbarProps) {
   const pathname = usePathname();

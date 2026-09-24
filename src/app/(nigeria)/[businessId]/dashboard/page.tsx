@@ -1,9 +1,10 @@
-"use client";
-import { BusinessDetailTypes } from "@/components/types/BusinessDetailTypes";
+// "use client";
+// import { BusinessDetailTypes } from "@/components/types/BusinessDetailTypes";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
+import { getBusinessDetails } from "@/src/app/api/business-details/route";
 import {
   BriefcaseBusinessIcon,
   ChevronRight,
@@ -13,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 const documents = [
   { type: "Company Documents", date: "26 March, 2026" },
@@ -21,33 +22,38 @@ const documents = [
   { type: "Company Documents", date: "26 March, 2026" },
 ];
 
-export default function Dashboard() {
-  const [businessDetails, setBusinessDetails] =
-    useState<BusinessDetailTypes | null>(null);
+import { notFound } from "next/navigation";
+// import { getBusinessDetails} from '@/lib/business-api';
 
-  useEffect(() => {
-    const fecthBusinessDetails = async () => {
-      try {
-        const response = await fetch(
-          `/api/get/business/01a0c445-2e84-7335-955d-f934f85d2d23`,
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch business details");
-        }
-        const businessDetails: BusinessDetailTypes = await response.json();
-        console.log("Business Details:", businessDetails);
-        setBusinessDetails(businessDetails);
-      } catch (error) {
-        console.error("Error fetching business details:", error);
-      }
-    };
-    fecthBusinessDetails();
-  }, []);
+interface DashboardPageProps {
+  params: Promise<{ businessId: string }>;
+}
+
+export default async function DashboardPage({ params }: DashboardPageProps) {
+  const { businessId } = await params;
+
+  // Fetch business details and documents in parallel on the server
+  const [business] = await Promise.all([
+    getBusinessDetails(businessId),
+    // getBusinessDocuments(businessId),
+  ]);
+  //   const [business, documents] = await Promise.all([
+  //     getBusinessDetails(businessId),
+  //     getBusinessDocuments(businessId),
+  //   ]);
+
+  if (!business) {
+    notFound();
+  }
+
+  // Check if setup is complete (determines if warning banner shows)
+  const isSetupIncomplete =
+    business.status === "draft" || !business.entity_type;
   return (
     <div className="flex flex-col gap-12 justify-between ">
       {/* erro message */}
 
-      <ContinueBusinessReg />
+      {isSetupIncomplete && <ContinueBusinessReg />}
 
       {/* user info */}
       <div className="grid grid-cols-1 items-stretch lg:grid-cols-4 gap-8">
@@ -62,7 +68,7 @@ export default function Dashboard() {
             </p>
             <p className="font-semibold text-xl  ">
               {" "}
-              {businessDetails?.data?.name ?? "Null"}{" "}
+              {business.name ?? "Null"}{" "}
             </p>
           </div>
         </Card>
@@ -73,10 +79,7 @@ export default function Dashboard() {
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">Business ID</p>
-            <p className="font-semibold text-xl  ">
-              {" "}
-              {businessDetails?.data?.id ?? "Null"}{" "}
-            </p>
+            <p className="font-semibold text-xl  "> {business.id ?? "Null"} </p>
           </div>
         </Card>
         <Card className="min-w-0 py-6 px-8">
@@ -94,7 +97,7 @@ export default function Dashboard() {
                 {" "}
                 <Dot size={15} className="text-green-500 bg-green-500" />{" "}
               </span>{" "}
-              {businessDetails?.data.status ?? "Null"}{" "}
+              {business.status ?? "Null"}{" "}
             </p>
           </div>
         </Card>
