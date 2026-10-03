@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { NIGERIAN_STATES } from "@/src/app/(nigeria)/location";
 // import { StepProgressBar } from "./StepProgressBar";
 
 import {
@@ -37,53 +38,6 @@ interface InitialBusinessData {
 }
 
 // PUT COMPANY REGISTRATION
-interface CompanyReg {
-  name: string;
-  second_name: string;
-  business_country_id: string;
-  industry_id: string;
-  citizenship: string;
-  addresses: {
-    address: string;
-    state: string;
-    LGA: string;
-    city: string;
-    house_number: string;
-    street_name: string;
-    postal_code: string;
-    type: string;
-  }[];
-  members: Members[];
-}
-interface Members {
-  first_name: string;
-  last_name: string;
-  other_name: string;
-  phone_number: string;
-  email: string;
-  occupation: string;
-  nationality: string;
-  gender: string;
-  date_of_birth: string;
-  is_director: boolean;
-  is_shareholder: boolean;
-  is_witness: boolean;
-  ownership_percentage: number;
-  address: {
-    address: string;
-    state: string;
-    LGA: string;
-    city: string;
-    house_number: string;
-    street_name: string;
-    postal_code: string;
-    country: string;
-  };
-  id_type: string;
-  id_number: string;
-  file_path: string;
-  signature: string;
-}
 
 // --------------------------------------------------------------------------------------------------------------
 
@@ -387,20 +341,20 @@ export function GetStartedModal() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // try{
-    //   const response = await fetch("/api/companyReg",{
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Type": "applicaton/json",
-    //     },
-    //     body: JSON.stringify({
-
-    //     })
-    //   })
-    // }
+    try {
+      const response = await fetch("/api/companyReg", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "applicaton/json",
+        },
+        body: JSON.stringify({}),
+      });
+    } catch (error) {
+      console.log("error putting business update:", error);
+    }
     if (isStepValid(currentStep, formData)) {
       setIsSubmitting(true);
       console.log("Form Submitted Successfully:", formData);
@@ -497,7 +451,33 @@ export function GetStartedModal() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Fruits</SelectLabel>
+                            <SelectLabel>State</SelectLabel>
+                            {NIGERIAN_STATES.map((state) => (
+                              <SelectItem key={state.state} value={state.state}>
+                                {state.state}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FieldLabel>Fruits</FieldLabel>
+                    </Field>
+                  </div>
+                  <div className="space-y-4">
+                    <Field className="w-full">
+                      <Select
+                        items={items}
+                        onValueChange={(value) =>
+                          typeof value === "string" &&
+                          updateField("businessCategory", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Business Categories</SelectLabel>
                             {items.map((item) => (
                               <SelectItem key={item.value} value={item.value}>
                                 {item.label}
@@ -509,7 +489,7 @@ export function GetStartedModal() {
                       <FieldLabel>Fruits</FieldLabel>
                     </Field>
                   </div>
-                  <div className="space-y-4">
+                  {/* <div className="space-y-4">
                     <Input
                       id="date"
                       type="date"
@@ -518,7 +498,7 @@ export function GetStartedModal() {
                       placeholder="MM/DD/YY"
                     />
                     <Label htmlFor="date">Date</Label>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="space-y-4">
                   <Input

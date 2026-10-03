@@ -1,13 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
 function GoogleButton({ label }: { label: string }) {
-  const router = useRouter();
-
   function handleClick() {
-    router.push("/api/auth/google");
+    window.location.href = "/api/auth/google";
   }
 
   return (

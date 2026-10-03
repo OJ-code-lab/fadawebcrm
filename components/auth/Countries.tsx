@@ -39,7 +39,11 @@ function Countries() {
 
     if (!country) return;
 
-    if (country.code === "NGN") {
+    //  if (country.code === "NGN") {
+    //   router.push(`/business_type?countryId=${country.id}`);
+    // }
+
+    if (["NG", "NGN"].includes(country.code)) {
       router.push(`/business_type?countryId=${country.id}`);
     }
 

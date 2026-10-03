@@ -39,7 +39,7 @@ export default function BusinessDropdown({
   async function handleSelectBusiness(businessId: string) {
     setIsOpen(false);
     await setLastActiveBusiness(businessId);
-    router.push(`/${businessId}/dashboard`);
+    router.push("/dashboard");
     router.refresh();
   }
 
@@ -49,7 +49,9 @@ export default function BusinessDropdown({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 bg-white rounded-full px-4 py-2 text-sm font-medium text-gray-700  hover:bg-gray-50 transition"
       >
-        <span className="font-bold text-base">{currentBusiness?.name ?? "Business"}</span>
+        <span className="font-bold text-base">
+          {currentBusiness?.name ?? "Business"}
+        </span>
         <ChevronDown
           size={22}
           className={`rounded-full border-2 border-gray-200 text-green-600 transition-transform ${isOpen ? "rotate-180" : ""}`}

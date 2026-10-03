@@ -1,7 +1,11 @@
 import { Card, CardHeader } from "@/components/ui/card";
+import { getActiveBusinessId } from "@/lib/business";
+import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
 import { Copy } from "lucide-react";
 
-export default function InformationPage() {
+export default async function InformationPage() {
+  const businessId = await getActiveBusinessId();
+  const business = await getBusinessDetails(businessId);
   return (
     <div className="grid gris-col-1 lg:grid-cols-2 gap-6 ">
       <Card className="p-8">
@@ -11,9 +15,9 @@ export default function InformationPage() {
 
         <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
           <div className="flex justify-between">
-            <span> State</span>
+            <span> Business Name</span>
             <div className="flex gap-2 items-center">
-              Null{" "}
+              {business?.name ?? "—"}
               <span>
                 {" "}
                 <Copy size={15} />{" "}
@@ -23,7 +27,7 @@ export default function InformationPage() {
           <div className="flex justify-between">
             <span> Entity</span>
             <div className="flex gap-2 items-center">
-              Null{" "}
+              {business?.entity_type ?? "—"}
               <span>
                 {" "}
                 <Copy size={15} />{" "}
@@ -31,9 +35,9 @@ export default function InformationPage() {
             </div>
           </div>
           <div className="flex justify-between">
-            <span> LGA</span>
+            <span> Industry</span>
             <div className="flex gap-2 items-center">
-              Null{" "}
+              {business?.industry ?? "—"}
               <span>
                 {" "}
                 <Copy size={15} />{" "}
@@ -41,9 +45,9 @@ export default function InformationPage() {
             </div>
           </div>
           <div className="flex justify-between">
-            <span> City</span>
+            <span> Country</span>
             <div className="flex gap-2 items-center">
-              Null{" "}
+              {business?.business_country ?? "—"}
               <span>
                 {" "}
                 <Copy size={15} />{" "}
@@ -51,9 +55,9 @@ export default function InformationPage() {
             </div>
           </div>
           <div className="flex justify-between">
-            <span> House Number</span>
+            <span> State</span>
             <div className="flex gap-2 items-center">
-              Null{" "}
+              {business?.state ?? "—"}
               <span>
                 {" "}
                 <Copy size={15} />{" "}

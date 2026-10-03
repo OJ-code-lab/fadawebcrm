@@ -20,14 +20,16 @@ export async function apiFetch(endpoint: string, options?: RequestInit) {
   if (!API_URL) {
     throw new Error("BASE_API_URL is not configured.");
   }
-
+  // ilk;j;ufy
   try {
+    const headers = new Headers(options?.headers);
+    if (!(options?.body instanceof FormData) && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
+
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
+      headers,
     });
 
     const data = await parseResponseData(response);
@@ -37,7 +39,8 @@ export async function apiFetch(endpoint: string, options?: RequestInit) {
       data,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown fetch error.";
+    const message =
+      error instanceof Error ? error.message : "Unknown fetch error.";
     throw new Error(message);
   }
 }

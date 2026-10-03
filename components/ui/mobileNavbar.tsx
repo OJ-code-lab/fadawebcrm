@@ -16,10 +16,9 @@ import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
 interface NavbarProps {
   className?: string;
   country: "nigeria" | "usa";
-  businessId?: string;
 }
 
-function MobileNavbar({ className, businessId }: NavbarProps) {
+function MobileNavbar({ className }: NavbarProps) {
   const pathname = usePathname();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
   const isActive = (path: string) => pathname === path;
@@ -28,17 +27,17 @@ function MobileNavbar({ className, businessId }: NavbarProps) {
   const mainNavItems = [
     {
       label: "Dashboard",
-      href: `/${businessId}/dashboard`,
+      href: "/dashboard",
       icon: LayoutDashboard,
     },
-    { label: "Company", href: `/${businessId}/company`, icon: Building2 },
+    { label: "Company", href: "/dashboard/company", icon: Building2 },
     {
       label: "Services",
-      href: `/${businessId}/services`,
+      href: "/dashboard/services",
       icon: BriefcaseBusiness,
     },
-    { label: "My Orders", href: `/${businessId}/my-orders`, icon: Package },
-    { label: "Settings", href: `/${businessId}/settings`, icon: Settings },
+    { label: "My Orders", href: "/dashboard/my-orders", icon: Package },
+    { label: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (

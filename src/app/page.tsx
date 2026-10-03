@@ -3,7 +3,7 @@ import LoginForm from "@/components/auth/LoginForm";
 
 const page = () => {
   return (
-    <div className=" max-w-8xl mx-auto my-4 grid grid-cols-1 place-items-center w-full">
+    <div className=" max-w-7xl mx-auto my-4 grid grid-cols-1 place-items-center w-full">
       {/* <Link href="/auth">auth</Link>
       <Link href="/nigeria-dashboard">nigeria</Link>
       <Link href="/usa">usa</Link> */}

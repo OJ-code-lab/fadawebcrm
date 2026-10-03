@@ -24,7 +24,6 @@ export async function POST(
       { status: 401 },
     );
   }
-
   try {
     const body = await request.json();
     const endpoint = `/${path.join("/")}`;

@@ -19,10 +19,9 @@ import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
 interface NavbarProps {
   className?: string;
   country: "nigeria" | "usa";
-  businessId?: string;
 }
 
-export default function Sidebar({ className, businessId }: NavbarProps) {
+export default function Sidebar({ className }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { isOrdersOpen, openOrders } = useOrdersDrawer();
@@ -33,30 +32,30 @@ export default function Sidebar({ className, businessId }: NavbarProps) {
   const mainNavItems = [
     {
       label: "Dashboard",
-      href: `/${businessId}/dashboard`,
+      href: "/dashboard",
       icon: LayoutDashboard,
     },
-    { label: "Company", href: `/${businessId}/company`, icon: Building2 },
+    { label: "Company", href: "/dashboard/company", icon: Building2 },
     {
       label: "Services",
-      href: `/${businessId}/services`,
+      href: "/dashboard/services",
       icon: BriefcaseBusiness,
     },
     {
       label: "Tax Compliance",
-      href: `/${businessId}/tax-compliance`,
+      href: "/dashboard/tax-compliance",
       icon: ReceiptText,
       isLocked: true,
     },
-    { label: "My Orders", href: `/${businessId}/my-orders`, icon: Package },
+    { label: "My Orders", href: "/dashboard/my-orders", icon: Package },
   ];
 
   //  bottom section
   const secondaryNavItems = [
-    { label: "Settings", href: `/${businessId}/settings`, icon: Settings },
+    { label: "Settings", href: "/dashboard/settings", icon: Settings },
     {
       label: "Refer & Earn",
-      href: `/${businessId}/refer-and-earn`,
+      href: "/dashboard/refer-and-earn",
       icon: Gift,
       isLocked: true,
     },
