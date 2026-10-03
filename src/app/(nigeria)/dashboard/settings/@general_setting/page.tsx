@@ -13,7 +13,11 @@ async function generalSettingsPage() {
 
   // Fetch initial profile data on the server
   const { data } = await apiFetch("/auth/profile", {
-    headers: { Authorization: `Bearer ${accessToken}` },
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-API-KEY": process.env.API_KEY || "",
+    },
   });
   const initialProfile = {
     firstName: data.user?.first_name || "",

@@ -8,11 +8,9 @@ export async function POST(request: NextRequest) {
 
     const { response, data } = await apiFetch("/auth/login", {
       method: "POST",
-
       headers: {
         "X-API-KEY": process.env.API_KEY || "",
       },
-
       body: JSON.stringify(body),
     });
 

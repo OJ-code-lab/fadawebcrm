@@ -65,21 +65,35 @@ export interface UpdateProfilePayload {
 export async function updateUserProfile(profile: UpdateProfilePayload) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-
+  const profileUpdate = {
+    first_name: profile.firstName,
+    last_name: profile.lastName,
+    email: profile.email,
+  };
   try {
     const { response, data } = await apiFetch("/auth/profile", {
       method: "PUT",
       headers: {
+        "X-API-KEY": process.env.API_KEY || "",
         Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(profile),
+      body: JSON.stringify({
+        profileUpdate,
+      }),
     });
 
-    if (!response.ok) {
+    if (
+      !response.ok ||
+      data?.error ||
+      data?.status === false ||
+      data?.success === false
+    ) {
       return {
         success: false,
-        error: data?.message || "Failed to update profile",
+        error:
+          data?.message ||
+          (typeof data?.error === "string" ? data.error : undefined) ||
+          "Failed to update profile",
       };
     }
 
@@ -89,6 +103,64 @@ export async function updateUserProfile(profile: UpdateProfilePayload) {
     return {
       success: false,
       error: "An unexpected error occurred while updating profile.",
+    };
+  }
+}
+
+export interface ChangePasswordPayload {
+  currentPassword?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+export async function changeUserPassword(password: ChangePasswordPayload) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  const changePassword = {
+    current_password: password.currentPassword,
+    password: password.password,
+    password_confirmation: password.confirmPassword,
+  };
+  try {
+    const { response, data } = await apiFetch("/auth/change-password", {
+      method: "POST",
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(changePassword),
+    });
+
+    if (
+      !response.ok ||
+      data?.error ||
+      data?.status === false ||
+      data?.success === false
+    ) {
+      const backendError =
+        data?.errors ||
+        (typeof data?.error === "string" ? data.error : null) ||
+        data?.errors?.[0]?.msg || // Common format for express-validator/zod backend responses
+        data?.message;
+
+      return {
+        success: false,
+        error: backendError,
+        // error:
+        //   data?.message ||
+        //   (typeof data?.error === "string" ? data.error : undefined) ||
+        //   "Failed to update password.",
+      };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Change password error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred while changing your password.",
     };
   }
 }

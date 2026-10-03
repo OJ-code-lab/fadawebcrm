@@ -1,9 +1,26 @@
 import { Card, CardHeader } from "@/components/ui/card";
+import UserProfile from "@/components/ui/UserProfile";
+import { apiFetch } from "@/lib/api";
 import { UsersRound } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
 // import { Link } from "lucide-react";
 
-function generalSettingsPage() {
+async function generalSettingsPage() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+  const { response, data } = await apiFetch("/auth/profile", {
+    cache: "no-store",
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+  });
+  const user = response.ok && data?.user ? data.user : null;
+  const initialProfile = {
+    firstName: user?.first_name || "",
+    lastName: user?.last_name || "",
+    email: user?.email || "",
+    phoneNumber: user?.phone_number || "",
+  };
+
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
       <div className=" lg:flex-3/5">
@@ -18,58 +35,12 @@ function generalSettingsPage() {
           </div>
           <hr className="border-gray-200 my-4" />
 
-          <div className=" space-y-4">
-            <div className="flex justify-between items-center">
-              <h5 className="font-bold text-xl text-gray-600">
-                Profile details
-              </h5>
-              <Link href="/" className="text-blue-600 text-base font-medium">
-                Edit
-              </Link>
-            </div>
-            <div>
-              <form action="" className="space-y-4">
-                <div className="flex gap-4">
-                  <div>
-                    <label
-                      htmlFor=""
-                      className="font-medium text-base text-gray-600 capitalize "
-                    >
-                      First name
-                    </label>
-                    <input type="text" placeholder="Keliven" />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor=""
-                      className="font-medium text-base text-gray-600 capitalize "
-                    >
-                      Last name
-                    </label>
-                    <input type="text" placeholder="Tech" />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor=""
-                    className="font-medium text-base text-gray-600 capitalize "
-                  >
-                    Email Address
-                  </label>
-                  <input type="email" placeholder="example@example.com" />
-                </div>
-                <div>
-                  <label
-                    htmlFor=""
-                    className="font-medium text-base text-gray-600 capitalize "
-                  >
-                    Date of birth
-                  </label>
-                  <input type="date" placeholder="12/27/1998" />
-                </div>
-              </form>
-            </div>
-          </div>
+          {!response.ok && (
+            <p role="alert" className="text-sm text-red-600">
+              {data?.message || "Unable to load your profile. Please try again."}
+            </p>
+          )}
+          <UserProfile initialData={initialProfile} />
         </Card>
       </div>
 

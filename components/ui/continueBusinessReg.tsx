@@ -64,7 +64,6 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
       <p className="text-sm lg:text-lg font-normal lg:text-start">
         Please provide your company details to access our services seamlessly,
         whether forming a new company or adding existing information.{" "}
-        <span>{business?.name ?? ""}</span>
       </p>
 
       <div>

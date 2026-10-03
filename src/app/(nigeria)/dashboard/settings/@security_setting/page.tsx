@@ -1,12 +1,9 @@
-"use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Eye, EyeOff, UsersRound } from "lucide-react";
+import ChangePassword from "@/components/ui/ChangePassword";
+import { UsersRound } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-export default function SecuritySettingsPage() {
-  const [showPassword, setShowPassword] = useState(false);
+export default async function SecuritySettingsPage() {
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
       <div className="lg:flex-3/5">
@@ -20,61 +17,7 @@ export default function SecuritySettingsPage() {
             </p>
           </div>
           <hr className="border-gray-200 my-4" />
-          <div>
-            <form action="" className="space-y-4">
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Current Password"
-                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none "
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 inset-y-0 flex items-center text-[#9CA3AF]"
-                >
-                  {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-                </button>
-              </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="New Password"
-                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 inset-y-0 flex items-center text-[#9CA3AF]"
-                >
-                  {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-                </button>
-              </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter Confirm Password"
-                  className="mt-0 bg-gray-100 focus:outline-none focus:border-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 inset-y-0 flex items-center text-[#9CA3AF]"
-                >
-                  {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-                </button>
-              </div>
-
-              <p className="font-medium text-sm text-light-black">
-                At least up to 8 characters
-              </p>
-
-              <Button className="bg-blue-card text-white font-medium text-sm w-full py-5 rounded-3xl hover:bg-blue-800 ">
-                {" "}
-                Update Password{" "}
-              </Button>
-            </form>
-          </div>
+          <ChangePassword />
         </Card>
       </div>
       <div className=" lg:flex-2/5">

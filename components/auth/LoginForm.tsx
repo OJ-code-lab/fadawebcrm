@@ -56,7 +56,6 @@ function LoginForm() {
 
         body: JSON.stringify({
           email,
-
           password,
         }),
       });
@@ -69,10 +68,8 @@ function LoginForm() {
         } else {
           setGeneralError(data.message || "Login failed.");
         }
-
         return;
       }
-
       const user = data.data.login.user;
 
       if (!user.email_verified) {

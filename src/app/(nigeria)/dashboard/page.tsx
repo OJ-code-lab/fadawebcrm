@@ -48,7 +48,7 @@ export async function DashboardPageContent({
 
   // Check if setup is complete (determines if warning banner shows)
   const isSetupIncomplete =
-    business.status === "draft" || !business.entity_type;
+    business.members.length === 0 || !business.entity_type;
   return (
     <div className="flex flex-col gap-12 justify-between ">
       {/* erro message */}

@@ -45,18 +45,35 @@ export async function GET() {
       throw new Error("GOOGLE_URL environment variable is not defined.");
     }
 
-    // Direct native fetch to GOOGLE_URL endpoint
-    const res = await fetch(`${googleBaseUrl.replace(/\/$/, "")}/auth/google`, {
+    const authUrl = new URL(`${googleBaseUrl.replace(/\/$/, "")}/auth/google`);
+    const res = await fetch(authUrl, {
       method: "GET",
       headers: {
         "X-API-KEY": process.env.API_KEY || "",
       },
       cache: "no-store",
+      redirect: "manual",
     });
+
+    const location = res.headers.get("location");
+    if (location) {
+      return NextResponse.redirect(new URL(location, authUrl));
+    }
 
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Google Auth Request Failed:", res.status, errorText);
+      return NextResponse.redirect(
+        new URL(
+          "/auth/sign-in?error=google_failed",
+          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+        ),
+      );
+    }
+
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      console.error("Google Auth Request returned no redirect or JSON response:", contentType);
       return NextResponse.redirect(
         new URL(
           "/auth/sign-in?error=google_failed",

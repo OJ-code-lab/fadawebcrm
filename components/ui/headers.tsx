@@ -1,26 +1,7 @@
-// import AddBusiness from "./AddBusiness";
-
-// function Headers() {
-//   return (
-//     <div className="flex justify-between gap-4">
-//       <div className="font-bold text-2xl">
-//         Hello <span>UserName</span>
-//       </div>
-//       <div className="flex gap-2 font-semibold text-base">
-//         <AddBusiness />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Headers;
-
-// components/Header.tsx
-// import BusinessDropdown from '@/components/BusinessDropdown';
-// import { BusinessListItem, BusinessDetails } from '@/lib/business-api';
-// import { BusinessListItem, BusinessDetails } from '@/src/app/api/business-details/route';
 import { BusinessDetails, BusinessListItem } from "@/src/types/businessTypes";
 import BusinessDropdown from "./BusinessDropdown";
+import { cookies } from "next/headers";
+import { apiFetch } from "@/lib/api";
 
 interface HeaderProps {
   userName?: string;
@@ -28,14 +9,22 @@ interface HeaderProps {
   businesses?: BusinessListItem[];
 }
 
-export default function Headers({
-  userName = "User",
+export default async function Headers({
   currentBusiness,
   businesses = [],
 }: HeaderProps) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  const { data } = await apiFetch("/auth/profile", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-API-KEY": process.env.API_KEY || "",
+    },
+  });
   return (
-    <header className="flex justify-between items-center p-6 bg-white">
-      <h1 className="text-2xl font-bold ">Hello {userName}</h1>
+    <header className="flex justify-between items-center p-4 bg-white">
+      <h1 className="text-2xl font-bold ">Hello {data.user?.first_name}</h1>
 
       {/* Passing props down to the child dropdown */}
       <BusinessDropdown
