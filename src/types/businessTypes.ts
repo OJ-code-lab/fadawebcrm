@@ -75,3 +75,31 @@ export interface Orderlist {
   orderable: string;
   created_at: string;
 }
+
+// services type
+export interface ServicesOffer {
+  name: string;
+  id: string;
+  image: string;
+  description: string;
+  requirement: string;
+  price: {
+    base: string;
+    converted: string;
+    formatted: string;
+    symbol: string;
+  };
+}
+export interface ServiceDetails {
+  title: string;
+  id: string;
+  image: string;
+  description: string;
+  requirement: string;
+  price: {
+    base: string;
+    converted: string;
+    formatted: string;
+    symbol: string;
+  };
+}

@@ -145,7 +145,6 @@ export default function BusinessPlan({
       setLoadingSummary(false);
     }
   };
-
   const handleNext = async () => {
     if (currentStep === 1 && selectedPlan) {
       if (!businessId) {

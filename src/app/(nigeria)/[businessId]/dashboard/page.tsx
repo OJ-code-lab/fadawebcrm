@@ -4,7 +4,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
-import { getBusinessDetails } from "@/src/app/api/business-details/route";
+import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
+// import { getBusinessDetails } from "@/src/app/api/business-details/route";
 import {
   BriefcaseBusinessIcon,
   ChevronRight,

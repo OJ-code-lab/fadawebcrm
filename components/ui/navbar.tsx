@@ -11,6 +11,7 @@ import {
   Gift,
   LogOut,
   Package,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
@@ -45,6 +46,7 @@ export default function Sidebar({ className, businessId }: NavbarProps) {
       label: "Tax Compliance",
       href: `/${businessId}/tax-compliance`,
       icon: ReceiptText,
+      isLocked: true,
     },
     { label: "My Orders", href: `/${businessId}/my-orders`, icon: Package },
   ];
@@ -56,6 +58,7 @@ export default function Sidebar({ className, businessId }: NavbarProps) {
       label: "Refer & Earn",
       href: `/${businessId}/refer-and-earn`,
       icon: Gift,
+      isLocked: true,
     },
   ];
 
@@ -100,15 +103,20 @@ export default function Sidebar({ className, businessId }: NavbarProps) {
             return (
               <Link
                 key={item.label}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition ${
+                href={item.isLocked ? "#" : item.href}
+                tabIndex={item.isLocked ? -1 : undefined}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition",
                   active
                     ? "bg-blue-card text-white shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                  item.isLocked &&
+                    "pointer-events-none cursor-not-allowed opacity-50 hover:bg-transparent",
+                )}
               >
                 <item.icon size={18} />
                 <span>{item.label}</span>
+                {item.isLocked && <Lock size={14} className="text-gray-400" />}
               </Link>
             );
           })}
@@ -122,15 +130,20 @@ export default function Sidebar({ className, businessId }: NavbarProps) {
           return (
             <Link
               key={item.label}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition ${
+              href={item.isLocked ? "#" : item.href}
+              tabIndex={item.isLocked ? -1 : undefined}
+              className={cn(
+                "flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition",
                 active
-                  ? "bg-blue-card text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
+                  ? "bg-blue-card text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                item.isLocked &&
+                  "pointer-events-none cursor-not-allowed opacity-50 hover:bg-transparent",
+              )}
             >
               <item.icon size={18} />
               <span>{item.label}</span>
+              {item.isLocked && <Lock size={14} className="text-gray-400" />}
             </Link>
           );
         })}

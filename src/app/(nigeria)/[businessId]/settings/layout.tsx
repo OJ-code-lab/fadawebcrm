@@ -1,36 +1,58 @@
-// import DashboardErrorMessage from "@/components/ui/dashboardErrorMessage";
 "use client";
-// import { BookAlert, SquareText } from "lucide-react";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 
-interface CompanyLayoutProps {
+interface SettingsLayoutProps {
   general_setting: React.ReactNode;
   security_setting: React.ReactNode;
+  params: Promise<{ businessId?: string }>;
 }
 
 function SettingsContent({
   general_setting,
   security_setting,
-}: CompanyLayoutProps) {
+  params,
+}: SettingsLayoutProps) {
+  // Use React's `use()` hook to unwrap promises in Client Components
+  const resolvedParams = use(params);
+  const businessId = resolvedParams?.businessId;
+
   const searchParams = useSearchParams();
   const activeTab =
     searchParams.get("tab") === "security_setting"
       ? "security_setting"
       : "general_setting";
+
   return (
-    <div className=" lg:p-6 ">
+    <div className="lg:p-6">
       <nav className="mb-6 flex gap-6 pb-2 mt-8">
         <Link
-          href="/nigeria/nigeria-dashboard/settings?tab=general_setting"
-          className={`pb-1 ${activeTab === "general_setting" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
+          href={
+            businessId
+              ? `/${businessId}/settings?tab=general_setting`
+              : "/settings?tab=general_setting"
+          }
+          className={`pb-1 ${
+            activeTab === "general_setting"
+              ? "border-b-2 border-blue-600 font-semibold"
+              : "text-gray-500"
+          }`}
         >
           General
         </Link>
         <Link
-          href="/nigeria/nigeria-dashboard/settings?tab=security_setting"
-          className={`pb-1 ${activeTab === "security_setting" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
+          href={
+            businessId
+              ? `/${businessId}/settings?tab=security_setting`
+              : "/settings?tab=security_setting"
+          }
+          className={`pb-1 ${
+            activeTab === "security_setting"
+              ? "border-b-2 border-blue-600 font-semibold"
+              : "text-gray-500"
+          }`}
         >
           Security
         </Link>
@@ -43,7 +65,7 @@ function SettingsContent({
   );
 }
 
-export default function SettingsLayout(props: CompanyLayoutProps) {
+export default function SettingsLayout(props: SettingsLayoutProps) {
   return (
     <Suspense fallback={<main>{props.general_setting}</main>}>
       <SettingsContent {...props} />

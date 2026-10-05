@@ -1,8 +1,9 @@
 // app/dashboard/page.tsx
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAllBusinesses } from "../../business-details/businessDetails";
 // import { getAllBusinesses } from '@/lib/business-api';
-import { getAllBusinesses } from "@/src/app/api/business-details/route";
+// import { getAllBusinesses } from "@/src/app/api/business-details/route";
 
 export default async function DashboardRedirectPage() {
   const cookieStore = await cookies();

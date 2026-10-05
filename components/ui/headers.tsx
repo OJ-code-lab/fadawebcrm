@@ -23,15 +23,15 @@ import { BusinessDetails, BusinessListItem } from "@/src/types/businessTypes";
 import BusinessDropdown from "./BusinessDropdown";
 
 interface HeaderProps {
-  userName: string;
-  currentBusiness: BusinessDetails;
-  businesses: BusinessListItem[];
+  userName?: string;
+  currentBusiness?: BusinessDetails;
+  businesses?: BusinessListItem[];
 }
 
 export default function Headers({
-  userName,
+  userName = "User",
   currentBusiness,
-  businesses,
+  businesses = [],
 }: HeaderProps) {
   return (
     <header className="flex justify-between items-center p-6 bg-white">

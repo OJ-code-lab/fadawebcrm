@@ -4,12 +4,11 @@ import { apiFetch } from "@/lib/api";
 
 import { cookies } from "next/headers";
 
-export async function GET(
+export async function POST(
   request: Request,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-
   const cookieStore = await cookies();
 
   const accessToken = cookieStore.get("access_token")?.value;
@@ -18,7 +17,7 @@ export async function GET(
     return NextResponse.json(
       {
         status: false,
-        message: "Authentication is required to load business details.",
+        message: "Authentication is required.",
         error_code: "missing_access_token",
         data: null,
       },
@@ -27,28 +26,28 @@ export async function GET(
   }
 
   try {
+    const body = await request.json();
     const endpoint = `/${path.join("/")}`;
-    console.log("Forwarding to backend:", endpoint);
+
     const { response, data } = await apiFetch(endpoint, {
-      method: "GET",
+      method: "POST",
       headers: {
         "X-API-KEY": process.env.API_KEY || "",
         Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     });
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error("GET request error:", error);
-
+    console.error("POST request error:", error);
     return NextResponse.json(
       {
         status: false,
         message:
-          error instanceof Error
-            ? error.message
-            : "Unable to complete GET request.",
-        error_code: "get_request_failed",
+          error instanceof Error ? error.message : "POST request failed.",
+        error_code: "post_request_failed",
         data: null,
       },
       { status: 500 },

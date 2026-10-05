@@ -16,9 +16,9 @@ import { Orderlist } from "@/src/types/businessTypes";
 // const documents = [];
 
 interface MyOrderProps {
-  orders: Orderlist[];
+  orders?: Orderlist[];
 }
-function MyOrder({ orders }: MyOrderProps) {
+function MyOrder({ orders = [] }: MyOrderProps) {
   const { isOrdersOpen, setIsOrdersOpen } = useOrdersDrawer();
 
   return (

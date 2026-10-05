@@ -6,7 +6,9 @@ import { OrdersDrawerProvider } from "../../@context/my_order_context";
 
 export default function DashboardLayout({
   children,
-}: LayoutProps<"/usa/usa-dashboard">) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <OrdersDrawerProvider>
       <div className="min-h-screen w-full max-w-8xl mx-auto lg:px-16 lg:py-6 flex flex-col justify-center">
@@ -18,13 +20,13 @@ export default function DashboardLayout({
           </aside>
           <header className="order-1 lg:mt-6 rounded-[12px] border border-primary bg-primary p-6 lg:order-0">
             {" "}
-            <Headers />{" "}
+            <Headers userName="User" businesses={[]} />{" "}
           </header>
           <main className="order-2 rounded-[12px] bg-primary mx-4 lg:mx-0 p-6  lg:px-8 lg:py-6 pb-24 mt-8 lg:mt-0 lg:order-0 lg:pb-6">
             {children}
           </main>
         </div>
-        <MyOrder />
+        <MyOrder orders={[]} />
       </div>
     </OrdersDrawerProvider>
   );

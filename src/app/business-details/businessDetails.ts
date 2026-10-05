@@ -1,9 +1,11 @@
+// "use server";
 import { cookies } from "next/headers";
 import { apiFetch } from "@/lib/api";
 import {
   BusinessDetails,
   BusinessListItem,
   Orderlist,
+  // ServicesOffer,
 } from "@/src/types/businessTypes";
 
 // get all registered business
@@ -109,3 +111,5 @@ export async function getOrdersById(
     return null;
   }
 }
+
+// get serviceses offered

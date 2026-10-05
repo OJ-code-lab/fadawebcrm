@@ -11,13 +11,13 @@ import { ChevronDown } from "lucide-react";
 // import { BusinessListItem, BusinessDetails } from "@/src/app/api/business-details/route";
 
 interface BusinessDropdownProps {
-  currentBusiness: BusinessDetails;
-  businesses: BusinessListItem[];
+  currentBusiness?: BusinessDetails;
+  businesses?: BusinessListItem[];
 }
 
 export default function BusinessDropdown({
   currentBusiness,
-  businesses,
+  businesses = [],
 }: BusinessDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function BusinessDropdown({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 bg-white rounded-full px-4 py-2 text-sm font-medium text-gray-700  hover:bg-gray-50 transition"
       >
-        <span className="font-bold text-base">{currentBusiness.name}</span>
+        <span className="font-bold text-base">{currentBusiness?.name ?? "Business"}</span>
         <ChevronDown
           size={22}
           className={`rounded-full border-2 border-gray-200 text-green-600 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -60,7 +60,7 @@ export default function BusinessDropdown({
         <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden py-1">
           <div className="max-h-60 overflow-y-auto divide-y divide-gray-100">
             {businesses.map((biz) => {
-              const isSelected = biz.id === currentBusiness.id;
+              const isSelected = biz.id === currentBusiness?.id;
               return (
                 <button
                   key={biz.id}
