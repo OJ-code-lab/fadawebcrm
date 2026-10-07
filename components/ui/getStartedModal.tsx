@@ -31,11 +31,11 @@ import { Field, FieldLabel } from "./field";
 import { ArrowLeftFromLine, ArrowRightFromLine, Loader2 } from "lucide-react";
 
 // --------------------------------------------------------------------------------------------------------------
-interface InitialBusinessData {
-  name: string;
-  second_name?: string;
-  industry_id: string;
-}
+// interface InitialBusinessData {
+//   name: string;
+//   second_name?: string;
+//   industry_id: string;
+// }
 
 // PUT COMPANY REGISTRATION
 
@@ -1322,22 +1322,5 @@ export function GetStartedModal() {
     </>
   );
 }
-
-// function GetStartedModal({ children }: { children: ReactElement }) {
-//   return (
-//     <Dialog>
-//       <DialogTrigger render={children} />
-//       <DialogContent className="sm:max-w-2xl lg:max-w-3xl px-8 py-6 lg:px-16 lg:py-8">
-//         <DialogHeader>
-//           <DialogTitle>Get started</DialogTitle>
-//           <DialogDescription>
-//             Provide your company details to access our services.
-//           </DialogDescription>
-//         </DialogHeader>
-//         <GetStartedForm />
-//       </DialogContent>
-//     </Dialog>
-//  );
-// }
 
 export default GetStartedModal;

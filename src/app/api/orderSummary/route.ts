@@ -32,6 +32,7 @@ export async function GET(req: Request) {
         },
       },
     );
+
     // const { response, data } = await apiFetch(
     //   `/business/01a0a4ee-d51d-7102-ad51-72de5268dea4/plans/01a0967d-de6b-70c7-971b-bd3580ccaad9`,
     //   {

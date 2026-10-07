@@ -24,24 +24,6 @@ import { Card } from "../ui/card";
 import { NIGERIAN_STATES } from "@/src/app/(nigeria)/location";
 
 // ----------------------------------------------------------
-// const response = await fetch("/api/business/createNg", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify(FormData),
-// });
-
-// const data = await response.json();
-// console.log("onboarding data: ", data);
-
-// const ID_Type = [
-//   { label: "ID Type", value: null },
-//   { label: "National ID (NIN)", value: "NIN" },
-//   { label: "International Passport", value: "international passsport" },
-//   { label: "Driver's Licence", value: "driver's licence" },
-//   { label: "Voter's Card (PVC)", value: "PVC" },
-// ];
 // ------------------------------------
 type EntityType = {
   price: string;
@@ -202,7 +184,7 @@ function OnBoardingForm({
 
       const data = await response.json();
 
-      console.log("onboarding data:", data);
+      // console.log("onboarding data:", data);
 
       if (!response.ok) {
         console.error("Business creation failed:", data);
@@ -393,13 +375,14 @@ function OnBoardingForm({
                         }
                       >
                         <SelectTrigger className="w-full p-6">
-                          <SelectValue placeholder="Select industry">
+                          {/* <SelectValue placeholder="Select industry">
                             {industriesType.find(
                               (industry) =>
                                 String(industry.id ?? industry.name) ===
                                 formData.industry_id,
                             )?.name ?? "Select industry"}
-                          </SelectValue>
+                          </SelectValue> */}
+                          <SelectValue placeholder="Select industry" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>

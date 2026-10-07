@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
 // import { BusinessDetails } from "@/src/types/businessTypes";
 import GetStartedModal, { BusinessDetailsInitial } from "./CompleteReg";
+import GetStartedUSModal from "./getStartedUSModal";
 
 interface ContinueBusinessRegProps {
   businessId?: string;
@@ -24,19 +25,28 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
     apiFetch("/country", { headers: lookupHeaders }).catch(() => null),
     apiFetch("/industries", { headers: lookupHeaders }).catch(() => null),
   ]);
-  const countries: { id: string; code: string }[] = Array.isArray(
-    countryResult?.data?.data,
-  )
-    ? countryResult.data.data
-    : [];
+  const countries: { id: string; code: string; country?: string }[] =
+    Array.isArray(countryResult?.data?.data) ? countryResult.data.data : [];
   const industries: { id?: string; name: string }[] = Array.isArray(
     industryResult?.data?.data,
   )
     ? industryResult.data.data
     : [];
-  const businessCountryId =
-    //  countries.find((country) => country.code === "NGN")?.id ?? "";
-    countries.find((country) => ["NG", "NGN"].includes(country.code))?.id ?? "";
+  // The API may return the business country as a code or a country name.
+  const businessCountryValue = business?.business_country?.trim().toLowerCase();
+  const countryId = countries.find((country) => {
+    const code = country.code.trim().toLowerCase();
+    const name = country.country?.trim().toLowerCase();
+    return (
+      code === businessCountryValue ||
+      name === businessCountryValue ||
+      (businessCountryValue === "nigeria" && ["ng", "ngn"].includes(code)) ||
+      (["united states", "united states of america", "usa"].includes(
+        businessCountryValue ?? "",
+      ) &&
+        code === "us")
+    );
+  });
   const industryName = business?.industry ?? "";
   const industryId =
     industries.find(
@@ -51,24 +61,36 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
     entityType: business?.entity_type ?? "",
     industryName,
     industryId,
-    businessCountryId,
+    businessCountryId: countryId?.id ?? "",
     citizenship: business?.citizenship ?? "NG",
   };
 
   return (
     <div className="bg-red-100/50 py-6 px-8 flex flex-col justify-between items-center gap-6 lg:gap-11.5 rounded-[16px] lg:flex-row">
-      <span className="text-red-700 h-8 w-8 p-2">
-        <TriangleAlert size={28} />
-      </span>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <span className="text-red-700 h-8 w-8 p-2">
+          <TriangleAlert size={28} />
+        </span>
 
-      <p className="text-sm lg:text-lg font-normal lg:text-start">
-        Please provide your company details to access our services seamlessly,
-        whether forming a new company or adding existing information.{" "}
-      </p>
-
-      <div>
-        <GetStartedModal businessId={businessId} initial={initial} />
+        <div>
+          <p className="text-sm border lg:text-lg font-normal lg:text-start">
+            Please provide your company details to access our services
+            seamlessly, whether forming a new company or adding existing
+            information.{" "}
+          </p>
+        </div>
       </div>
+
+      {countryId && ["NG", "NGN"].includes(countryId.code) && (
+        <div>
+          <GetStartedModal businessId={businessId} initial={initial} />
+        </div>
+      )}
+      {countryId?.code === "US" && (
+        <div>
+          <GetStartedUSModal businessId={businessId} initial={initial} />
+        </div>
+      )}
     </div>
   );
 }

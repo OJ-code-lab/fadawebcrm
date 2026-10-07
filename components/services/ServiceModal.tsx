@@ -11,8 +11,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { ServiceDetails } from "@/src/types/businessTypes";
+import { createServiceOrder } from "@/src/actions/complete-companyReg";
 
 type ModalStep = "idle" | "details" | "checkout" | "payment" | "success";
+
+interface Gateway {
+  id: string;
+  name: string;
+}
+
+interface OrderDetails {
+  id: string;
+  name: string;
+  total: string;
+  formatted_total: string;
+  currency: string;
+}
 
 interface ServiceModalProps {
   serviceId: string;
@@ -27,8 +41,17 @@ export default function ServiceModal({
     null,
   );
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [payLoading, setPayLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>("details");
+
+  // Order & Gateway response storage
+  const [confirmedOrder, setConfirmedOrder] = useState<OrderDetails | null>(
+    null,
+  );
+  const [gateways, setGateways] = useState<Gateway[]>([]);
+  const [selectedGateway, setSelectedGateway] = useState<string>("");
 
   useEffect(() => {
     async function getServicesById(id: string) {
@@ -54,19 +77,76 @@ export default function ServiceModal({
 
     if (serviceId) {
       getServicesById(serviceId);
-      //   setCurrentStep("details");
     }
   }, [serviceId]);
 
   const closeAll = () => {
     setCurrentStep("idle");
     setServiceDetails(null);
+    setConfirmedOrder(null);
+    setGateways([]);
+    setSelectedGateway("");
     onClose();
   };
 
-  const handlePayForServices = () => {
-    // Implement checkout / payment endpoint logic here
-    setCurrentStep("payment");
+  // 1. Create order on Checkout click
+  const handleCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+
+      // Call the Server Action directly like a standard JS function
+      const res = await createServiceOrder(serviceId);
+
+      if (res?.status && res?.data) {
+        setConfirmedOrder(res.data.order);
+        setGateways(res.data.gateway || []);
+
+        if (res.data.gateway?.length > 0) {
+          setSelectedGateway(res.data.gateway[0].id); // Pre-select first gateway
+        }
+
+        setCurrentStep("payment");
+      } else {
+        console.error("Failed to create order:", res?.error);
+      }
+    } catch (error) {
+      console.error("Error calling createOrderAction:", error);
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
+  // 2. Submit payment on Pay Now click
+  const handlePayment = async () => {
+    if (!selectedGateway || !confirmedOrder) return;
+
+    try {
+      setPayLoading(true);
+      const payRes = await fetch("/api/order-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          gateway_id: selectedGateway,
+          order_id: confirmedOrder.id,
+        }),
+      });
+
+      const payData = await payRes.json();
+      const paymentUrl =
+        payData?.data?.payment_url ??
+        payData?.payment_url ??
+        payData?.checkout_url;
+
+      if (payRes.ok && paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        console.error("Payment initiation failed:", payData);
+      }
+    } catch (error) {
+      console.error("Payment initialization failed:", error);
+    } finally {
+      setPayLoading(false);
+    }
   };
 
   return (
@@ -193,10 +273,11 @@ export default function ServiceModal({
 
           <DialogFooter className="mt-6 flex flex-col gap-4 sm:flex-col sm:justify-start">
             <Button
-              onClick={handlePayForServices}
+              onClick={handleCheckout}
+              disabled={checkoutLoading}
               className="bg-blue-card rounded-3xl text-sm text-white hover:bg-blue-900 w-full"
             >
-              Check out
+              {checkoutLoading ? "Processing..." : "Check out"}
             </Button>
             <Button
               onClick={() => setCurrentStep("details")}
@@ -217,20 +298,46 @@ export default function ServiceModal({
       >
         <DialogContent className="sm:max-w-3xl px-8 py-6 lg:px-16 lg:py-8">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Payment</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">
+              Payment Method
+            </DialogTitle>
             <DialogDescription render={<div />}>
-              <div className="text-sm text-light-black">
-                <p>Payment Method</p>
+              <div className="text-sm text-light-black space-y-4 pt-4">
+                {gateways.length > 0 ? (
+                  gateways.map((gw) => (
+                    <label
+                      key={gw.id}
+                      className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-accent"
+                    >
+                      <input
+                        type="radio"
+                        name="payment_gateway"
+                        value={gw.id}
+                        checked={selectedGateway === gw.id}
+                        onChange={(e) => setSelectedGateway(e.target.value)}
+                        className="w-4 h-4 text-blue-600"
+                      />
+                      <span className="capitalize font-medium text-black">
+                        {gw.name}
+                      </span>
+                    </label>
+                  ))
+                ) : (
+                  <p className="text-gray-500">
+                    No payment gateways available.
+                  </p>
+                )}
               </div>
             </DialogDescription>
           </DialogHeader>
 
           <DialogFooter className="mt-6 flex gap-2">
             <Button
-              onClick={() => setCurrentStep("success")}
+              onClick={handlePayment}
+              disabled={payLoading || !selectedGateway}
               className="bg-blue-card rounded-3xl text-sm text-white hover:bg-blue-900"
             >
-              Pay Now
+              {payLoading ? "Redirecting..." : "Pay Now"}
             </Button>
             <Button
               onClick={() => setCurrentStep("checkout")}

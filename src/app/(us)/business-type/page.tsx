@@ -9,10 +9,9 @@ interface BusinessTypePageProps {
 
 async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
   const { countryId } = await searchParams;
-
-  const nigeriaHref = countryId
-    ? `/nigeria?countryId=${encodeURIComponent(countryId)}`
-    : "/nigeria";
+  const us = countryId
+    ? `/register-business?${encodeURIComponent(countryId)}`
+    : "/register-business";
 
   return (
     <div className=" grid place-items-center h-screen">
@@ -26,7 +25,7 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
         </p>
 
         <div className="flex flex-col space-y-4 mt-6">
-          <Link href={nigeriaHref}>
+          <Link href={us}>
             <Button className="w-full bg-gray-200 text-black text-base font-normal rounded-4xl p-6 hover:bg-blue-900 hover:text-white  transition ">
               New business
             </Button>

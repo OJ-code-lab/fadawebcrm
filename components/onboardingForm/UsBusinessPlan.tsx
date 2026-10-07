@@ -173,8 +173,7 @@ export default function BusinessPlan({
     setIsSubmitting(true);
     try {
       // submiting order and type of payment gateway post
-
-      const confirmRes = await fetch("/api/confirm-order", {
+      const confirmRes = await fetch("/api/confirm_order_us", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

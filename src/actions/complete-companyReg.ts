@@ -2,6 +2,7 @@
 
 import { apiFetch } from "@/lib/api";
 import { cookies } from "next/headers";
+// import { NextResponse } from "next/server";
 // import type { CompanyReg } from "@/components/ui/CompleteReg";
 
 export async function completeCompanyReg(
@@ -161,6 +162,92 @@ export async function changeUserPassword(password: ChangePasswordPayload) {
     return {
       success: false,
       error: "An unexpected error occurred while changing your password.",
+    };
+  }
+}
+
+export async function createServiceOrder(serviceId: string) {
+  try {
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get("access_token")?.value;
+
+    if (!token) {
+      return { status: false, error: "Unauthorized" };
+    }
+
+    const { response, data } = await apiFetch("/orders/createServe", {
+      method: "POST",
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        service_id: serviceId,
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        status: false,
+        error: data?.message || "Failed to create order",
+      };
+    }
+
+    return data; // Returns { status: true, message: "Order created", data: { order, gateway } }
+  } catch (error) {
+    console.error("Error creating order in Server Action:", error);
+    return { status: false, error: "Internal server error" };
+  }
+}
+
+export async function completeUsCompanyReg(
+  businessId: string,
+  payload: FormData,
+) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  try {
+    const { response, data } = await apiFetch(
+      `/business/${businessId}/editUs`,
+      {
+        method: "PUT",
+        headers: {
+          "X-API-KEY": process.env.API_KEY || "",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: payload,
+      },
+    );
+
+    if (!response.ok) {
+      console.error(
+        JSON.stringify(
+          {
+            error: `Business registration failed (${response.status})`,
+            status: response.status,
+            statusText: response.statusText,
+            body: data,
+          },
+          null,
+          2,
+        ),
+      );
+
+      return {
+        success: false as const,
+        error:
+          data?.message || "Failed to update business registration details",
+        status: response.status,
+        body: data,
+      };
+    }
+    return { success: true as const, data };
+  } catch (error) {
+    console.error("Business update error:", error);
+    return {
+      success: false as const,
+      error: "An unexpected error occurred while updating details.",
     };
   }
 }

@@ -8,8 +8,11 @@ export async function POST(req: Request) {
 
   try {
     const { business_id, plan_id, payment_gateway_id } = await req.json();
+
+    // /business/01a0a4cb-446c-717b-ae8c-71af2a62773e/plans/01a0967d-de6b-70c7-971b-bd3580ccaad9/order/nigeria
+    //  `/business/${business_id}/plans/${plan_id}/order/nigeria`,
     const { response, data } = await apiFetch(
-      `/business/${business_id}/plans/${plan_id}/order/nigeria`,
+      `/business/${business_id}/plans/${plan_id}/order/usa`,
       {
         method: "POST",
         headers: {

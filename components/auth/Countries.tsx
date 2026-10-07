@@ -48,7 +48,7 @@ function Countries() {
     }
 
     if (country.code === "US") {
-      router.push(`/usa?countryId=${country.id}`);
+      router.push(`/register-business?countryId=${country.id}`);
     }
   };
   return (
