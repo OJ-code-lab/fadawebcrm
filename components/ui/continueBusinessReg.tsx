@@ -5,7 +5,8 @@ import { apiFetch } from "@/lib/api";
 import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
 // import { BusinessDetails } from "@/src/types/businessTypes";
 import GetStartedModal, { BusinessDetailsInitial } from "./CompleteReg";
-import GetStartedUSModal from "./getStartedUSModal";
+import GetStartedUSModal from "./CompleteUsReg";
+// import GetStartedUSModal from "./getStartedUSModal";
 
 interface ContinueBusinessRegProps {
   businessId?: string;
@@ -66,14 +67,14 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
   };
 
   return (
-    <div className="bg-red-100/50 py-6 px-8 flex flex-col justify-between items-center gap-6 lg:gap-11.5 rounded-[16px] lg:flex-row">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="bg-red-100/50 py-6 px-8 flex flex-col justify-between items-center gap-6 rounded-[16px] lg:flex-row">
+      <div className="flex flex-row gap-6">
         <span className="text-red-700 h-8 w-8 p-2">
           <TriangleAlert size={28} />
         </span>
 
         <div>
-          <p className="text-sm border lg:text-lg font-normal lg:text-start">
+          <p className="text-sm lg:text-lg font-normal lg:text-start">
             Please provide your company details to access our services
             seamlessly, whether forming a new company or adding existing
             information.{" "}
@@ -88,7 +89,7 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
       )}
       {countryId?.code === "US" && (
         <div>
-          <GetStartedUSModal businessId={businessId} initial={initial} />
+          <GetStartedUSModal businessId={businessId} />
         </div>
       )}
     </div>

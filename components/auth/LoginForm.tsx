@@ -91,8 +91,8 @@ function LoginForm() {
   };
 
   return (
-    <div className="  max-w-350 mx-auto my-4 grid grid-cols-1 place-items-center lg:grid-cols-2 gap-16 w-full">
-      <div className="w-full relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center  h-screen rounded-4xl p-10 overflow-hidden">
+    <div className="mx-auto grid min-h-dvh w-full max-w-350 grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
+      <div className="w-full relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center rounded-4xl p-10 overflow-hidden">
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
         <div className="relative z-10 flex flex-col top-80">
@@ -109,7 +109,7 @@ function LoginForm() {
         </div>
       </div>
 
-      <div className=" h-screen w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
+      <div className=" w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
         <h2 className="font-medium text-3xl lg:text-4xl text-black">
           Your business starts here.
         </h2>

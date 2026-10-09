@@ -25,6 +25,7 @@ const documents = [
 
 import { notFound, redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/business";
+import { Suspense } from "react";
 // import { getBusinessDetails} from '@/lib/business-api';
 
 export async function DashboardPageContent({
@@ -51,17 +52,15 @@ export async function DashboardPageContent({
     business.members.length === 0 || !business.entity_type;
   return (
     <div className="flex flex-col gap-12 justify-between ">
-      {/* erro message */}
-
-      {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
-      {/* {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />} */}
+      <Suspense>
+        {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
+      </Suspense>
 
       {/* user info */}
       <div className="grid grid-cols-1 items-stretch lg:grid-cols-4 gap-8">
         <Card className="min-w-0 py-6 px-8">
           <span className="border rounded-full inline-flex items-center justify-center  mb-6 h-8 w-8">
-            {" "}
-            <BriefcaseBusinessIcon size={20} />{" "}
+            <BriefcaseBusinessIcon size={20} />
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">
@@ -80,7 +79,10 @@ export async function DashboardPageContent({
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">Business ID</p>
-            <p className="font-semibold text-xl  "> {business.id ?? "Null"} </p>
+            <p className="font-semibold text-xl  ">
+              {" "}
+              {business.business_number ?? "Null"}{" "}
+            </p>
           </div>
         </Card>
         <Card className="min-w-0 py-6 px-8">

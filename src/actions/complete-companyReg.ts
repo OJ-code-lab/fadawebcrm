@@ -202,7 +202,24 @@ export async function createServiceOrder(serviceId: string) {
 
 export async function completeUsCompanyReg(
   businessId: string,
-  payload: FormData,
+  // payload: FormData,
+  body: {
+    name: string;
+    ssn?: string;
+    members: {
+      first_name: string;
+      last_name: string;
+      ownership_percentage: string;
+      director: boolean;
+      address: {
+        address: string;
+        state: string;
+        city: string;
+        country: string;
+        postal_code: string;
+      };
+    }[];
+  },
 ) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
@@ -212,11 +229,17 @@ export async function completeUsCompanyReg(
       `/business/${businessId}/editUs`,
       {
         method: "PUT",
+        // headers: {
+        //   "X-API-KEY": process.env.API_KEY || "",
+        //   Authorization: `Bearer ${accessToken}`,
+        // },
+        // body: payload,
         headers: {
+          "Content-Type": "application/json", // NEW
           "X-API-KEY": process.env.API_KEY || "",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: payload,
+        body: JSON.stringify(body), // CHANGED
       },
     );
 

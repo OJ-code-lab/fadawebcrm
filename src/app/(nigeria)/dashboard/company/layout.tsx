@@ -31,10 +31,9 @@ export default async function CompanyLayout({
     business.members.length === 0 || !business.entity_type;
   return (
     <div className="  ">
-      {/* <ContinueBusinessReg businessId={businessId} /> */}
-      {/* <ContinueBusinessReg businessId={businessId} />
-       */}
-      {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
+      <Suspense>
+        {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
+      </Suspense>
 
       <Suspense fallback={<main>{information}</main>}>
         <CompanyTabs information={information} mydocument={mydocument} />

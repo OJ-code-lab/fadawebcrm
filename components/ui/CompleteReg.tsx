@@ -1013,7 +1013,7 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
         What is your company&apos;s information?
       </h4>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <TextField
           id="companyName"
           label="Company name"
@@ -1025,6 +1025,22 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
           id="entityType"
           label="Entity type"
           value={data.entityType}
+          onChange={() => {}}
+          disabled
+        />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <TextField
+          id="industryName"
+          label="Business category"
+          value={data.industryName}
+          onChange={() => {}}
+          disabled
+        />
+        <TextField
+          id="Citizenship"
+          label="citizenship"
+          value={data.citizenship}
           onChange={() => {}}
           disabled
         />
@@ -1073,23 +1089,6 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
           value={data.companyCity}
           onChange={(v) => onChange("companyCity", v)}
           placeholder="Enter city"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TextField
-          id="industryName"
-          label="Business category"
-          value={data.industryName}
-          onChange={() => {}}
-          disabled
-        />
-        <TextField
-          id="Citizenship"
-          label="citizenship"
-          value={data.citizenship}
-          onChange={() => {}}
-          disabled
         />
       </div>
 
@@ -1679,8 +1678,8 @@ export function GetStartedModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger className="bg-transparent border rounded-3xl px-4 py-2 hover:bg-primary">
-          GetStarted
+        <DialogTrigger className="bg-transparent border rounded-3xl text-nowrap px-4 py-2 hover:bg-primary">
+          Get Started
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-1rem)] min-w-0 overflow-y-auto px-4 py-4 sm:max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100dvh-2rem)]   lg:max-w-4xl lg:px-8">
           <DialogHeader>

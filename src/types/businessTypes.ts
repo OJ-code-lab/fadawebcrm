@@ -13,6 +13,7 @@ export interface BusinessDetails {
   industry: string;
   business_country: string;
   entity_type: string;
+  business_number: string;
   citizenship: string;
   state: string;
   state_fee: number;

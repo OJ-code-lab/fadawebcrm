@@ -10,37 +10,22 @@ import { Dialog, DialogContent, DialogTrigger } from "./dialog";
 import { Button } from "./button";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import { completeUsCompanyReg } from "@/src/actions/complete-companyReg";
-import type { BusinessDetailsInitial } from "./CompleteReg";
 
 /* ---------------------------------- types --------------------------------- */
 
+// What the GET endpoint returns inside "data"
 export interface UsBusiness {
   id: string;
   name: string;
   status: string;
   industry: string;
   business_country: string;
-  business_country_id?: string;
   business_number: string | null;
   entity_type: string;
-  industry_id?: string;
   citizenship: string;
   state: string;
   state_fee?: string;
-  ssn?: string;
   ein?: string;
-  members: {
-    first_name: string;
-    last_name: string;
-    ownership_percentage: string;
-  }[];
-  addresses: {
-    address: string;
-    state: string;
-    city: string;
-    country: string;
-    postal_code: string;
-  }[];
 }
 
 interface BusinessResponse {
@@ -50,6 +35,7 @@ interface BusinessResponse {
   error: string | null;
 }
 
+// One owner as the user fills it in (details + address together)
 interface Owner {
   first_name: string;
   last_name: string;
@@ -59,7 +45,9 @@ interface Owner {
   city: string;
   country: string;
   postal_code: string;
+  director: boolean; // NEW: every owner has this checkbox
 }
+
 const emptyOwner: Owner = {
   first_name: "",
   last_name: "",
@@ -69,7 +57,10 @@ const emptyOwner: Owner = {
   city: "",
   country: "",
   postal_code: "",
+  director: false,
 };
+
+/* ------------------------------ small pieces ------------------------------ */
 
 function Field({
   id,
@@ -91,6 +82,7 @@ function Field({
     </div>
   );
 }
+
 function StepProgressBar({
   currentStep,
   totalSteps,
@@ -143,7 +135,7 @@ function OwnerFields({
   owner: Owner;
   index: number;
   canRemove: boolean;
-  onChange: (field: keyof Owner, value: string) => void;
+  onChange: (field: keyof Owner, value: string | boolean) => void;
   onRemove: () => void;
 }) {
   const id = (field: string) => `owner-${index}-${field}`;
@@ -227,6 +219,17 @@ function OwnerFields({
         />
       </div>
 
+      {/* NEW: same checkbox on every owner (required for owner 1, optional for the rest) */}
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={owner.director}
+          onChange={(e) => onChange("director", e.target.checked)}
+          className="m-0 w-auto p-0"
+        />
+        <span>This is a director in the company</span>
+      </label>
+
       {canRemove && (
         <button
           type="button"
@@ -242,60 +245,39 @@ function OwnerFields({
 
 /* -------------------------------- component -------------------------------- */
 
-interface GetStartedUSModalProps {
-  businessId?: string;
-  initial?: BusinessDetailsInitial;
-}
-
-// FIXED: React components must start with a capital letter, otherwise hooks
-// inside them throw "invalid hook call". Rename the import where you use it.
-export function GetStartedUSModal({
-  businessId,
-  initial,
-}: GetStartedUSModalProps) {
+// CHANGED: the "initial" prop is gone. Everything comes from the fetch.
+export function GetStartedUSModal({ businessId }: { businessId: string }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Data from the API (read-only except the company name)
+  // From the API (shown, but only the company name can be edited)
   const [business, setBusiness] = useState<UsBusiness | null>(null);
-  const [companyName, setCompanyName] = useState(initial?.companyName ?? "");
+  const [companyName, setCompanyName] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  // What the user types
   const [owners, setOwners] = useState<Owner[]>([{ ...emptyOwner }]);
-  const [isOwner, setIsOwner] = useState(false);
   const [ssn, setSsn] = useState("");
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const isUS =
-    business?.citizenship?.toLowerCase() === "us" ||
-    initial?.citizenship?.toLowerCase() === "us";
+  // CHANGED: only the fetched data decides this now
+  const isUS = business?.citizenship?.toLowerCase() === "us";
   const totalSteps = isUS ? 3 : 2;
-
   const isLastStep = currentStep === totalSteps;
 
   useEffect(() => {
     const loadBusiness = async () => {
       try {
-        const id = businessId;
-        if (!id) {
-          setLoadError(
-            "We could not load your business details. Please refresh.",
-          );
-          return;
-        }
-
-        const response = await fetch(`/api/get/business/${id}`);
+        const response = await fetch(`/api/get/business/${businessId}`);
         const result: BusinessResponse = await response.json();
-        if (!response.ok || !result.status || !result.data) {
+        if (!response.ok || !result.data) {
           throw new Error(result.message || "Unable to load business details.");
         }
-
-        const businessData = result.data;
-        setBusiness(businessData);
-        setCompanyName((prev) => prev || businessData.name);
+        setBusiness(result.data);
+        setCompanyName(result.data.name);
       } catch (err) {
         console.error("Failed to load business:", err);
         setLoadError(
@@ -303,13 +285,16 @@ export function GetStartedUSModal({
         );
       }
     };
-
-    void loadBusiness();
+    loadBusiness();
   }, [businessId]);
 
-  /* ---------------------------- owners handlers ---------------------------- */
+  /* ------------------------------ owners logic ------------------------------ */
 
-  const updateOwner = (index: number, field: keyof Owner, value: string) => {
+  const updateOwner = (
+    index: number,
+    field: keyof Owner,
+    value: string | boolean,
+  ) => {
     setOwners((prev) =>
       prev.map((owner, i) =>
         i === index ? { ...owner, [field]: value } : owner,
@@ -328,27 +313,25 @@ export function GetStartedUSModal({
   );
   const percentageIsValid = Math.abs(totalPercentage - 100) < 0.01;
 
-  /* ------------------------------- validation ------------------------------ */
+  /* ------------------------------- validation ------------------------------- */
+
+  // every text field filled (director is a checkbox, so it is left out)
+  //   const isOwnerComplete = ({ director, ...fields }: Owner) =>
+  //     Object.values(fields).every((value) => value.trim() !== "");
 
   const isOwnerComplete = (o: Owner) =>
-    Object.values(o).every((value) => value.trim() !== "") &&
-    Number(o.ownership_percentage) > 0;
+    Object.values(o).every((value) =>
+      typeof value === "string" ? value.trim() !== "" : value,
+    );
 
-  const isStepValid = (step: number): boolean => {
-    switch (step) {
-      case 1:
-        return companyName.trim() !== "";
-      case 2:
-        return isOwner && owners.every(isOwnerComplete) && percentageIsValid;
-      case 3:
-        return ssn.trim() !== "";
-      default:
-        return false;
-    }
-  };
-  const currentValid = isStepValid(currentStep);
+  const currentValid =
+    currentStep === 1
+      ? companyName.trim() !== ""
+      : currentStep === 2
+        ? owners.every(isOwnerComplete) && percentageIsValid
+        : ssn.trim() !== "";
 
-  /* ------------------------------ navigation ------------------------------- */
+  /* ------------------------------- navigation ------------------------------- */
 
   const handleNext = () => {
     if (currentValid && !isLastStep) setCurrentStep((prev) => prev + 1);
@@ -358,41 +341,39 @@ export function GetStartedUSModal({
     if (currentStep > 1) setCurrentStep((prev) => prev - 1);
   };
 
+  /* --------------------------------- submit --------------------------------- */
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const nextBusinessId = business?.id ?? businessId;
-    if (!nextBusinessId || !isLastStep || !currentValid) return;
+    if (!business || !isLastStep || !currentValid) return;
 
     setSubmitError(null);
-    setIsSubmitting(true); // shows the loading card
+    setIsSubmitting(true);
+
+    // CHANGED: the PUT wants "address" as an object (no [ ] around it)
+    // and "director" comes from each owner's own checkbox.
+    const members = owners.map((owner) => ({
+      first_name: owner.first_name.trim(),
+      last_name: owner.last_name.trim(),
+      ownership_percentage: owner.ownership_percentage,
+      director: owner.director,
+      address: {
+        address: owner.address.trim(),
+        state: owner.state.trim(),
+        city: owner.city.trim(),
+        country: owner.country.trim(),
+        postal_code: owner.postal_code.trim(),
+      },
+    }));
 
     try {
-      const payload = new FormData();
-      payload.append("name", companyName);
-      payload.append("ssn", isUS ? ssn : "");
-      payload.append("is_owner", String(isOwner));
-
-      owners.forEach((owner, index) => {
-        payload.append(
-          `members[${index}][first_name]`,
-          owner.first_name.trim(),
-        );
-        payload.append(`members[${index}][last_name]`, owner.last_name.trim());
-        payload.append(
-          `members[${index}][ownership_percentage]`,
-          owner.ownership_percentage,
-        );
-        payload.append(`addresses[${index}][address]`, owner.address.trim());
-        payload.append(`addresses[${index}][state]`, owner.state.trim());
-        payload.append(`addresses[${index}][city]`, owner.city.trim());
-        payload.append(`addresses[${index}][country]`, owner.country.trim());
-        payload.append(
-          `addresses[${index}][postal_code]`,
-          owner.postal_code.trim(),
-        );
+      // CHANGED: a plain object, no FormData and no .append.
+      // ssn is only included for US (undefined is dropped by JSON.stringify).
+      const result = await completeUsCompanyReg(business.id, {
+        name: companyName,
+        ssn: isUS ? ssn : undefined,
+        members,
       });
-
-      const result = await completeUsCompanyReg(nextBusinessId, payload);
 
       if (!result.success) {
         console.error(
@@ -402,7 +383,7 @@ export function GetStartedUSModal({
         throw new Error(result.error);
       }
 
-      // Success: keep the loading card up while the redirect happens
+      // Success: the loading card stays up while we redirect
       setIsOpen(false);
       router.push("/dashboard");
     } catch (err) {
@@ -412,9 +393,11 @@ export function GetStartedUSModal({
           ? err.message
           : "Something went wrong. Please try again.",
       );
-      setIsSubmitting(false); // failure: hide loading, keep every answer
+      setIsSubmitting(false); // keep every answer so the user can retry
     }
   };
+
+  /* ----------------------------------- UI ----------------------------------- */
 
   return (
     <>
@@ -428,13 +411,12 @@ export function GetStartedUSModal({
           {loadError && <p className="text-sm text-red-600">{loadError}</p>}
 
           <form className="min-w-0 space-y-4" onSubmit={handleSubmit}>
-            {/* STEP 1: company info (from the API) */}
+            {/* STEP 1: company info (fetched, read-only except the name) */}
             {currentStep === 1 && (
               <div className="space-y-4">
                 <h3 className="font-bold text-3xl">Company Information</h3>
 
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {/* the only editable field */}
                   <Field
                     id="name"
                     label="Company name"
@@ -483,32 +465,18 @@ export function GetStartedUSModal({
                 <h3 className="font-bold text-3xl">Owners Information</h3>
 
                 {owners.map((owner, index) => (
-                  <div key={index} className="space-y-3">
-                    <OwnerFields
-                      owner={owner}
-                      index={index}
-                      canRemove={index > 0}
-                      onChange={(field, value) =>
-                        updateOwner(index, field, value)
-                      }
-                      onRemove={() => removeOwner(index)}
-                    />
-
-                    {index === 0 && (
-                      <label className="flex items-center gap-2 text-sm">
-                        <input
-                          type="checkbox"
-                          checked={isOwner}
-                          onChange={(e) => setIsOwner(e.target.checked)}
-                          className="m-0 w-auto p-0"
-                        />
-                        <span>This is the owner of the company</span>
-                      </label>
-                    )}
-                  </div>
+                  <OwnerFields
+                    key={index}
+                    owner={owner}
+                    index={index}
+                    canRemove={index > 0}
+                    onChange={(field, value) =>
+                      updateOwner(index, field, value)
+                    }
+                    onRemove={() => removeOwner(index)}
+                  />
                 ))}
 
-                {/* NEW: add another owner (no maximum) */}
                 <button
                   type="button"
                   onClick={addOwner}
@@ -527,7 +495,7 @@ export function GetStartedUSModal({
               </div>
             )}
 
-            {/* STEP 3: SSN/TIN (only exists when citizenship is US) */}
+            {/* STEP 3: SSN/TIN (US only) */}
             {isUS && currentStep === 3 && (
               <div className="space-y-4">
                 <h3 className="font-bold text-3xl">Input your SSN/TIN</h3>
@@ -546,7 +514,6 @@ export function GetStartedUSModal({
               <p className="text-sm text-red-600">{submitError}</p>
             )}
 
-            {/* Navigation controls */}
             <div className="flex justify-between pt-4">
               <Button
                 type="button"
@@ -592,6 +559,7 @@ export function GetStartedUSModal({
           </form>
         </DialogContent>
       </Dialog>
+
       {isSubmitting && <LoadingOverlay />}
     </>
   );
