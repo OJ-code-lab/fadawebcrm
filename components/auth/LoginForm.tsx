@@ -20,7 +20,11 @@ import GoogleButton from "./GoogleButton";
 
 // import { Label } from "../ui/label";
 
-function LoginForm() {
+interface LoginFormProps {
+  googleError?: string;
+}
+
+function LoginForm({ googleError }: LoginFormProps) {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -35,7 +39,7 @@ function LoginForm() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [generalError, setGeneralError] = useState("");
+  const [generalError, setGeneralError] = useState(googleError ?? "");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

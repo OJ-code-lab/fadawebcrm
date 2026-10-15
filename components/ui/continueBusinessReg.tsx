@@ -68,7 +68,7 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
 
   return (
     <div className="bg-red-100/50 py-6 px-8 flex flex-col justify-between items-center gap-6 rounded-[16px] lg:flex-row">
-      <div className="flex flex-row gap-6">
+      <div className="flex flex-col lg:flex-row justify-center items-center gap-6">
         <span className="text-red-700 h-8 w-8 p-2">
           <TriangleAlert size={28} />
         </span>
@@ -83,7 +83,7 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
       </div>
 
       {countryId && ["NG", "NGN"].includes(countryId.code) && (
-        <div>
+        <div className="">
           <GetStartedModal businessId={businessId} initial={initial} />
         </div>
       )}

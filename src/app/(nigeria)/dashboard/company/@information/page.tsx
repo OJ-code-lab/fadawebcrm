@@ -8,15 +8,15 @@ export default async function InformationPage() {
   const business = await getBusinessDetails(businessId);
   return (
     <div className="grid gris-col-1 lg:grid-cols-2 gap-6 ">
-      <Card className="p-8">
+      <Card className="p-4">
         <CardHeader className="text-2xl font-semibold">
           Business Information
         </CardHeader>
 
         <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Business Name</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 ite1s-center">
               {business?.name ?? "—"}
               <span>
                 {" "}
@@ -24,9 +24,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Entity</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               {business?.entity_type ?? "—"}
               <span>
                 {" "}
@@ -34,9 +34,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Industry</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               {business?.industry ?? "—"}
               <span>
                 {" "}
@@ -44,9 +44,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Country</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               {business?.business_country ?? "—"}
               <span>
                 {" "}
@@ -54,9 +54,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> State</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               {business?.state ?? "—"}
               <span>
                 {" "}
@@ -64,9 +64,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Email Address</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 ite1s-center">
               Null{" "}
               <span>
                 {" "}
@@ -74,9 +74,9 @@ export default async function InformationPage() {
               </span>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <span> Phone Number</span>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               Null{" "}
               <span>
                 {" "}
@@ -87,403 +87,131 @@ export default async function InformationPage() {
         </div>
       </Card>
 
-      <Card className="p-8">
-        <CardHeader className="text-2xl font-semibold">
-          Witness information
-        </CardHeader>
+      {business?.members?.map((member, index) => {
+        const memberData = member as Omit<typeof member, "address"> & {
+          id?: string;
+          director?: boolean | number;
+          shareholder?: boolean | number;
+          witness?: boolean | number;
+          address:
+            | typeof member.address
+            | Array<Partial<typeof member.address>>;
+        };
+        const memberAddress = Array.isArray(memberData.address)
+          ? memberData.address[0]
+          : memberData.address;
+        const position = [
+          memberData.director === true || memberData.director === 1
+            ? "director"
+            : null,
+          memberData.shareholder === true || memberData.shareholder === 1
+            ? "shareholder"
+            : null,
+          memberData.witness === true || memberData.witness === 1
+            ? "witness"
+            : null,
+        ]
+          .filter((role) => role !== null)
+          .join(" & ");
 
-        <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
-          <div className="flex justify-between">
-            <span> Surname</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span>First Name</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Other Name </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Email Address</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Phone Number</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Occupation </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> State</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> LGA</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> City</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Card>
+        return (
+          <Card
+            className="p-4"
+            key={
+              memberData.id ??
+              `${memberData.first_name}-${memberData.last_name}-${index}`
+            }
+          >
+            <CardHeader className="text-2xl font-semibold">
+              Member information
+            </CardHeader>
 
-      <Card className="p-8">
-        <CardHeader className="text-2xl font-semibold">
-          Direction information
-        </CardHeader>
+            <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
+              <div className="flex justify-between gap-4">
+                <span>First name</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberData.first_name || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Last name</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberData.last_name || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Email</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberData.email || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Tel</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberData.phone_number || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
 
-        <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
-          <div className="flex justify-between">
-            <span> Surname</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span>First Name</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Other Name </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Email Address</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Phone Number</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Means of ID </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> State</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> LGA</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> City</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-8">
-        <CardHeader className="text-2xl font-semibold">
-          Shareholdefr information
-        </CardHeader>
-
-        <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
-          <div className="flex justify-between">
-            <span> Surname</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span>First Name</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Other Name </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Email Address</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Phone Number</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> Means of ID </span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> State</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> LGA</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <span> City</span>
-            <div className="flex gap-2 items-center">
-              Null{" "}
-              <span>
-                {" "}
-                <Copy size={15} />{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {business.map((busInfo) => (
-        <Card className="p-8" key={busInfo.id}>
-          <CardHeader className="text-2xl font-semibold">
-            Shareholdefr information
-          </CardHeader>
-
-          <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
-            <div className="flex justify-between">
-              <span> Surname</span>
-              <div className="flex gap-2 items-center">
-                {busInfo.data.members.first_name}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
+              <div className="flex justify-between gap-7">
+                <span>Position</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {position || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Ownership</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberData.ownership_percentage || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>State</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberAddress?.state || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>City</span>
+                <div className="flex gap-1 items-center text-wrap">
+                  {memberAddress?.city || "—"}
+                  <span>
+                    {" "}
+                    <Copy size={15} />{" "}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="flex justify-between">
-              <span>First Name</span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> Other Name </span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> Email Address</span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> Phone Number</span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> Means of ID </span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> Position</span>
-              <div className="flex gap-2 items-center">
-                {busInfo.data.members.direct}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> LGA</span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span> City</span>
-              <div className="flex gap-2 items-center">
-                Null{" "}
-                <span>
-                  {" "}
-                  <Copy size={15} />{" "}
-                </span>
-              </div>
-            </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        );
+      })}
     </div>
   );
 }

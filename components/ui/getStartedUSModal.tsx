@@ -59,6 +59,7 @@ interface Owner {
   city: string;
   country: string;
   postal_code: string;
+  director: boolean;
 }
 const emptyOwner: Owner = {
   first_name: "",
@@ -69,6 +70,7 @@ const emptyOwner: Owner = {
   city: "",
   country: "",
   postal_code: "",
+  director: false,
 };
 
 function Field({
@@ -143,7 +145,7 @@ function OwnerFields({
   owner: Owner;
   index: number;
   canRemove: boolean;
-  onChange: (field: keyof Owner, value: string) => void;
+  onChange: (field: keyof Owner, value: string | boolean) => void;
   onRemove: () => void;
 }) {
   const id = (field: string) => `owner-${index}-${field}`;
@@ -227,6 +229,16 @@ function OwnerFields({
         />
       </div>
 
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={owner.director}
+          onChange={(e) => onChange("director", e.target.checked)}
+          className="m-0 w-auto p-0"
+        />
+        <span>This is a director in the company</span>
+      </label>
+
       {canRemove && (
         <button
           type="button"
@@ -309,7 +321,11 @@ export function GetStartedUSModal({
 
   /* ---------------------------- owners handlers ---------------------------- */
 
-  const updateOwner = (index: number, field: keyof Owner, value: string) => {
+  const updateOwner = (
+    index: number,
+    field: keyof Owner,
+    value: string | boolean,
+  ) => {
     setOwners((prev) =>
       prev.map((owner, i) =>
         i === index ? { ...owner, [field]: value } : owner,
@@ -330,9 +346,9 @@ export function GetStartedUSModal({
 
   /* ------------------------------- validation ------------------------------ */
 
-  const isOwnerComplete = (o: Owner) =>
-    Object.values(o).every((value) => value.trim() !== "") &&
-    Number(o.ownership_percentage) > 0;
+  const isOwnerComplete = ({ director: _director, ...fields }: Owner) =>
+    Object.values(fields).every((value) => value.trim() !== "") &&
+    Number(fields.ownership_percentage) > 0;
 
   const isStepValid = (step: number): boolean => {
     switch (step) {
@@ -367,32 +383,25 @@ export function GetStartedUSModal({
     setIsSubmitting(true); // shows the loading card
 
     try {
-      const payload = new FormData();
-      payload.append("name", companyName);
-      payload.append("ssn", isUS ? ssn : "");
-      payload.append("is_owner", String(isOwner));
+      const members = owners.map((owner) => ({
+        first_name: owner.first_name.trim(),
+        last_name: owner.last_name.trim(),
+        ownership_percentage: owner.ownership_percentage,
+        director: owner.director,
+        address: {
+          address: owner.address.trim(),
+          state: owner.state.trim(),
+          city: owner.city.trim(),
+          country: owner.country.trim(),
+          postal_code: owner.postal_code.trim(),
+        },
+      }));
 
-      owners.forEach((owner, index) => {
-        payload.append(
-          `members[${index}][first_name]`,
-          owner.first_name.trim(),
-        );
-        payload.append(`members[${index}][last_name]`, owner.last_name.trim());
-        payload.append(
-          `members[${index}][ownership_percentage]`,
-          owner.ownership_percentage,
-        );
-        payload.append(`addresses[${index}][address]`, owner.address.trim());
-        payload.append(`addresses[${index}][state]`, owner.state.trim());
-        payload.append(`addresses[${index}][city]`, owner.city.trim());
-        payload.append(`addresses[${index}][country]`, owner.country.trim());
-        payload.append(
-          `addresses[${index}][postal_code]`,
-          owner.postal_code.trim(),
-        );
+      const result = await completeUsCompanyReg(nextBusinessId, {
+        name: companyName.trim(),
+        ssn: isUS ? ssn : undefined,
+        members,
       });
-
-      const result = await completeUsCompanyReg(nextBusinessId, payload);
 
       if (!result.success) {
         console.error(

@@ -62,7 +62,10 @@ export default async function DashboardLayout({
           <aside className="order-3 fixed inset-x-0 bottom-0 z-50 bg-primary p-2 lg:order-0 lg:sticky lg:top-6 lg:self-start lg:row-span-2 lg:max-h-163.5 lg:flex lg:flex-col lg:justify-between lg:gap-8 lg:rounded-[12px] lg:pt-18.25 lg:pb-8 lg:pl-4 lg:pr-2 lg:mt-6">
             {" "}
             <Navbar className="hidden lg:block" country="nigeria" />
-            <MobileNavbar className="lg:hidden" country="nigeria" />
+            <MobileNavbar
+              className="lg:hidden flex flex-col justify-center items-center  "
+              country="nigeria"
+            />
           </aside>
           <header className="order-1 lg:mt-6 rounded-[12px] border border-primary bg-primary p-6 lg:order-0">
             {" "}

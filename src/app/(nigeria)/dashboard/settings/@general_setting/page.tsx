@@ -27,7 +27,7 @@ async function generalSettingsPage() {
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
       <div className=" lg:flex-3/5">
-        <Card className="py-6 px-8 border bg-transparent border-gray-100">
+        <Card className="py-6 px-4 lg:px-8 border bg-transparent border-gray-100">
           <div>
             <CardHeader className="font-bold text-2xl text-gray-600">
               General settings
@@ -42,7 +42,7 @@ async function generalSettingsPage() {
       </div>
 
       <div className=" lg:flex-2/5">
-        <Card className="py-6 px-8 border bg-transparent border-gray-100">
+        <Card className="py-6 px-4 lg:px-8 border bg-transparent border-gray-100">
           <CardHeader className="font-bold text-2xl text-gray-600">
             Help and support
           </CardHeader>

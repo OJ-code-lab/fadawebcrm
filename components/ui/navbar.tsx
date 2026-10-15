@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
+import Image from "next/image";
 
 interface NavbarProps {
   className?: string;
@@ -74,7 +75,12 @@ export default function Sidebar({ className }: NavbarProps) {
     >
       <div>
         <div className="px-4 py-3 font-bold text-lg text-gray-800 tracking-wide">
-          LOGO
+          <Image
+            src="/img/Fadawebs.png"
+            alt="company logo"
+            width={120}
+            height={40}
+          />
         </div>
 
         {/* Top Navigation List */}

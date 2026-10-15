@@ -36,34 +36,13 @@ type Document = {
 };
 
 const initialDocuments: Document[] = [
-  {
-    id: "doc-1",
-    name: "Certificate of Incorporation",
-    type: "PDF",
-    createdAt: "2026-01-15",
-    category: "Company Documents",
-  },
-  {
-    id: "doc-2",
-    name: "Memorandum of Association",
-    type: "PDF",
-    createdAt: "2026-01-15",
-    category: "Company Documents",
-  },
-  {
-    id: "doc-4",
-    name: "TIN Registration Clearance",
-    type: "PDF",
-    createdAt: "2026-03-01",
-    category: "Tax",
-  },
-  {
-    id: "doc-5",
-    name: "VAT Clearance Certificate",
-    type: "PDF",
-    createdAt: "2026-03-12",
-    category: "Tax",
-  },
+  // {
+  //   id: "",
+  //   name: "",
+  //   type: "",
+  //   createdAt: "",
+  //   category: "All documents",
+  // },
 ];
 
 export default function MyDocumentPage() {

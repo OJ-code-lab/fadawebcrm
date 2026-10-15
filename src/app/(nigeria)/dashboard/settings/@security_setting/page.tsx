@@ -21,7 +21,7 @@ export default async function SecuritySettingsPage() {
         </Card>
       </div>
       <div className=" lg:flex-2/5">
-        <Card className="py-6 lg:px-8 border bg-transparent border-gray-100">
+        <Card className="py-6 px-4 sm:px-8 border bg-transparent border-gray-100">
           <CardHeader className="font-bold text-2xl text-gray-600">
             Help and support
           </CardHeader>

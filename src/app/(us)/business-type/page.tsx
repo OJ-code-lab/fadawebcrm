@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
-import React from "react";
 
 interface BusinessTypePageProps {
   searchParams: Promise<{ countryId?: string }>;
@@ -10,8 +9,9 @@ interface BusinessTypePageProps {
 async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
   const { countryId } = await searchParams;
   const us = countryId
-    ? `/register-business?${encodeURIComponent(countryId)}`
-    : "/register-business";
+    ? `/register-business?countryId=${encodeURIComponent(countryId)}`
+    : //  `/register-business?${encodeURIComponent(countryId)}`
+      "/register-business";
 
   return (
     <div className=" grid place-items-center h-screen">
@@ -40,5 +40,4 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
     </div>
   );
 }
-
 export default BusinessTypePage;

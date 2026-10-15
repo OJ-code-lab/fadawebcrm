@@ -36,30 +36,32 @@ function MobileNavbar({ className }: NavbarProps) {
       href: "/dashboard/services",
       icon: BriefcaseBusiness,
     },
-    { label: "My Orders", href: "/dashboard/my-orders", icon: Package },
+    { label: "Orders", href: "/dashboard/my-orders", icon: Package },
     { label: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (
     <nav className={cn("flex flex-col bg-transparent", className)}>
-      <div className="py-2 px-4 *:text-light-black font-normal text-xs">
-        <div className="flex gap-4 justify-center items-center">
+      <div className="w-full py-2 px-1 *:text-light-black font-normal text-xs">
+        <div className="flex w-full items-center">
           {mainNavItems.map((item) => {
             const active = isActive(item.href);
-            if (item.label === "My Orders") {
+            if (item.href === "/dashboard/my-orders") {
               return (
                 <button
                   key={item.label}
                   type="button"
                   onClick={openOrders}
-                  className={`flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-left font-medium transition ${
+                  className={`flex flex-1 flex-col items-center justify-center rounded-lg px-1 py-2.5 font-medium transition ${
                     isOrdersOpen
                       ? "bg-blue-card text-white shadow-sm"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
-                  <item.icon size={18} />
-                  <span>{item.label}</span>
+                  <span className="flex flex-col items-center justify-center">
+                    <item.icon size={18} />
+                    <span>{item.label}</span>
+                  </span>
                 </button>
               );
             }
@@ -68,14 +70,16 @@ function MobileNavbar({ className }: NavbarProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition ${
+                className={`flex flex-1 items-center justify-center rounded-lg px-1 py-2.5 font-medium transition ${
                   active
                     ? "bg-blue-card text-white shadow-sm"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
-                <item.icon size={18} />
-                <span>{item.label}</span>
+                <span className="flex flex-col justify-center items-center">
+                  <item.icon size={18} />
+                  <span>{item.label}</span>
+                </span>
               </Link>
             );
           })}

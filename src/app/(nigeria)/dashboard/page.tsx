@@ -4,6 +4,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ContinueBusinessReg from "@/components/ui/continueBusinessReg";
+import { apiFetch } from "@/lib/api";
+import { getActiveBusinessId } from "@/lib/business";
 import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
 // import { getBusinessDetails } from "@/src/app/api/business-details/route";
 import {
@@ -13,20 +15,84 @@ import {
   Download,
   ShieldCheck,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-
-// import { useEffect, useState } from "react";
-
-const documents = [
-  { type: "Company Documents", date: "26 March, 2026" },
-  { type: "Company Documents", date: "26 March, 2026" },
-  { type: "Company Documents", date: "26 March, 2026" },
-];
-
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import { getActiveBusinessId } from "@/lib/business";
 import { Suspense } from "react";
 // import { getBusinessDetails} from '@/lib/business-api';
+
+type BusinessDocument = {
+  id: string;
+  name: string;
+  type: string;
+  date: string;
+};
+
+async function getBusinessDocuments(): Promise<BusinessDocument[]> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) {
+    return [];
+  }
+
+  try {
+    const { data } = await apiFetch("/business/business-documents", {
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.documents)
+        ? data.documents
+        : Array.isArray(data)
+          ? data
+          : [];
+
+    return payload.map((item: Record<string, unknown>, index: number) => {
+      const id =
+        (item.id as string | undefined) ??
+        (item.businessDocument as string | undefined) ??
+        (item.business_document as string | undefined) ??
+        (item.document_id as string | undefined) ??
+        String(index + 1);
+
+      const name =
+        (item.name as string | undefined) ??
+        (item.file_name as string | undefined) ??
+        (item.document_name as string | undefined) ??
+        (item.title as string | undefined) ??
+        `Document ${index + 1}`;
+
+      const type =
+        (item.type as string | undefined) ??
+        (item.category as string | undefined) ??
+        (item.document_type as string | undefined) ??
+        "Document";
+
+      const date =
+        (item.created_at as string | undefined) ??
+        (item.createdAt as string | undefined) ??
+        (item.uploaded_at as string | undefined) ??
+        (item.date as string | undefined) ??
+        "N/A";
+
+      return {
+        id: String(id),
+        name: String(name),
+        type: String(type),
+        date: String(date),
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching business documents:", error);
+    return [];
+  }
+}
 
 export async function DashboardPageContent({
   businessId,
@@ -34,14 +100,10 @@ export async function DashboardPageContent({
   businessId: string;
 }) {
   // Fetch business details and documents in parallel on the server
-  const [business] = await Promise.all([
+  const [business, documents] = await Promise.all([
     getBusinessDetails(businessId),
-    // getBusinessDocuments(businessId),
+    getBusinessDocuments(),
   ]);
-  //   const [business, documents] = await Promise.all([
-  //     getBusinessDetails(businessId),
-  //     getBusinessDocuments(businessId),
-  //   ]);
 
   if (!business) {
     notFound();
@@ -163,44 +225,70 @@ export async function DashboardPageContent({
           <Card className="h-full min-h-66.75 px-8 py-6">
             <h6 className="mb-5 text-lg font-semibold text-black">Docs</h6>
             <div className="overflow-hidden text-black text-sm">
-              <table className="w-full border-separate border-spacing-0">
-                <thead>
-                  <tr className="bg-primary">
-                    <th className="rounded-l-[8px] px-3 py-3 text-left text-xs font-normal">
-                      Type
-                    </th>
-                    <th className="px-3 py-3 text-left text-xs font-normal">
-                      Date
-                    </th>
-                    <th className="rounded-r-[8px] px-3 py-3 text-left text-xs font-normal">
-                      Download
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody className="">
-                  {documents.map((document, index) => (
-                    <tr key={index}>
-                      <td className="px-3 py-3.5 text-xs font-semibold text-light-black">
-                        {document.type}
-                      </td>
-
-                      <td className="px-3 py-3.5 text-xs text-gray-400">
-                        {document.date}
-                      </td>
-
-                      <td className="px-3 py-3.5 text-gray-400">
-                        <button
-                          type="button"
-                          aria-label={`Download ${document.type}`}
-                        >
-                          <Download size={18} strokeWidth={1.5} />
-                        </button>
-                      </td>
+              {documents.length === 0 ? (
+                <div className="mt-8">
+                  <div>
+                    <Image
+                      src="/img/undraw_file-searching_yska.png"
+                      alt="A person searching through a folder"
+                      width={160}
+                      height={120}
+                      className="mx-auto"
+                    />
+                  </div>
+                  <div className="mt-4 space-y-4 text-center">
+                    <p className="text-xl font-medium text-gray-700">
+                      No documents available
+                    </p>
+                    <p className="text-base font-medium text-light-black">
+                      There are no documents available in this category. As
+                      documents are added to this section, they will appear
+                      here.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <table className="w-full border-separate border-spacing-0">
+                  <thead>
+                    <tr className="bg-primary">
+                      <th className="rounded-l-[8px] px-3 py-3 text-left text-xs font-normal">
+                        Type
+                      </th>
+                      <th className="px-3 py-3 text-left text-xs font-normal">
+                        Date
+                      </th>
+                      <th className="rounded-r-[8px] px-3 py-3 text-left text-xs font-normal">
+                        Download
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody className="">
+                    {documents.map((document) => (
+                      <tr key={document.id}>
+                        <td className="px-3 py-3.5 text-xs font-semibold text-light-black">
+                          {document.name || document.type}
+                        </td>
+
+                        <td className="px-3 py-3.5 text-xs text-gray-400">
+                          {document.date}
+                        </td>
+
+                        <td className="px-3 py-3.5 text-gray-400">
+                          <a
+                            href={`/api/v1/business/business-documents/${encodeURIComponent(document.id)}/download`}
+                            download
+                            aria-label={`Download ${document.name || document.type}`}
+                            className="inline-flex"
+                          >
+                            <Download size={18} strokeWidth={1.5} />
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </Card>
         </div>
