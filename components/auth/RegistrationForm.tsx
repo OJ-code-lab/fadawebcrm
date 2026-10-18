@@ -88,9 +88,9 @@ function RegistrationForm() {
 
   return (
     <div className=" max-w-350 mx-auto my-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
-      <div className="relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center h-screen rounded-4xl p-10 overflow-hidden">
+      <div className="relative hidden flex-col justify-end lg:flex bg-[url('/img/auth.jpg')] bg-cover bg-center h-screen rounded-4xl p-10 overflow-hidden">
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
-        <div className="relative z-10 flex flex-col top-80">
+        <div className="relative z-10 flex flex-col">
           <h1 className="font-bold text-5xl text-white">
             Create your account.
             <br /> Build your business.

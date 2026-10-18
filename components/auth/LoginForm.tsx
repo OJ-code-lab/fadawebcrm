@@ -96,10 +96,13 @@ function LoginForm({ googleError }: LoginFormProps) {
 
   return (
     <div className="mx-auto grid min-h-dvh w-full max-w-350 grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
-      <div className="w-full relative hidden lg:block bg-[url('/img/auth.jpg')] bg-cover bg-center rounded-4xl p-10 overflow-hidden">
-        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+      <div className="w-full  h-full  flex-col justify-end  relative hidden lg:flex bg-[url('/img/auth.jpg')] bg-cover bg-center rounded-4xl p-10 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-black/50 flex flex-col"
+          aria-hidden="true"
+        />
 
-        <div className="relative z-10 flex flex-col top-80">
+        <div className="relative z-10 flex flex-col">
           <h1 className="font-bold text-5xl text-white">
             Create your account.
             <br /> Build your business.

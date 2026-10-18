@@ -59,19 +59,21 @@ function ForgotPasswordForm() {
   return (
     <div className="grid  place-items-center h-screen mx-6">
       <Card className="mx-4 flex w-full max-w-2xl flex-col items-center justify-center space-y-3 px-6 py-8.5 text-center bg-primary sm:mx-6  sm:h-100">
-        <h4 className="font-medium text-4xl text-black">Forgot Password</h4>
-
         {isSubmitted ? (
-          <div className="w-full max-w-md text-green-500 text-base">
-            <h2>Check your email</h2>
-
+          <div className="w-full max-w-md text-base">
+            <h2 className="text-xl pb-2">Check your email</h2>
             <p>{successMessage}</p>
           </div>
         ) : (
-          <div className="w-full">
-            <p className="font-normal text-base mb-2 text-black">
-              Rest your password
-            </p>
+          <div className="w-full space-y-7">
+            <div>
+              <h4 className="font-medium py-3 text-2xl text-black">
+                Forgot Password
+              </h4>
+              <p className="font-normal text-base mb-2 text-black">
+                Rest your password
+              </p>
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="w-full ">
                 {errors.email?.[0] && (
@@ -83,7 +85,7 @@ function ForgotPasswordForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="Email"
-                  className="border-light-black/50 rounded-lg my-2.5"
+                  className="border-light-black/50 rounded-lg"
                 />
               </div>
               <div className="w-full my-5">
