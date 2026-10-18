@@ -227,7 +227,7 @@ function RegistrationForm() {
               <p>
                 Already have an account?{" "}
                 <span>
-                  <Link href="/auth/sign-in" className="text-blue-600">
+                  <Link href="/" className="text-blue-600">
                     {" "}
                     Sign In
                   </Link>

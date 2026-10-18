@@ -34,6 +34,14 @@ export async function POST(request: NextRequest) {
 
     const accessToken = data.data?.login.access_token;
 
+    console.log("Login diagnostic:", {
+      backendStatus: response.status,
+      topLevelKeys: Object.keys(data ?? {}),
+      dataKeys: Object.keys(data?.data ?? {}),
+      loginKeys: Object.keys(data?.data?.login ?? {}),
+      hasAccessToken: Boolean(data?.data?.login?.access_token),
+    });
+
     if (!accessToken) {
       return NextResponse.json(
         {

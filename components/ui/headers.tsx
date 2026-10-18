@@ -23,7 +23,7 @@ export default async function Headers({
     },
   });
   return (
-    <header className="flex justify-between gap-6 items-center p-4 bg-white">
+    <header className="flex justify-between gap-6 items-center bg-white">
       <h1 className=" text-xl leading-8 sm:text-2xl font-bold ">
         Welcome {data.user?.first_name}
       </h1>
