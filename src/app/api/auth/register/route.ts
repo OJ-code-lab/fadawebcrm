@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify(body),
     });
-
+    console.log("Registration response:", response);
     return NextResponse.json(data, {
       status: response.status,
     });

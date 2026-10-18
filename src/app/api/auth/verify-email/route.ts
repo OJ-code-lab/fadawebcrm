@@ -13,6 +13,17 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
+    if (!response.ok) {
+      return NextResponse.json(
+        data && typeof data === "object" ? data : {
+          status: false,
+          message: "Unable to verify email.",
+          data: null,
+        },
+        { status: response.status },
+      );
+    }
+
     return NextResponse.json(data, {
       status: response.status,
     });
@@ -22,7 +33,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         status: false,
-        message: "something went wrong.",
+        message: error instanceof Error ? error.message : "something went wrong.",
         error_code: "server_eror",
         data: null,
       },
