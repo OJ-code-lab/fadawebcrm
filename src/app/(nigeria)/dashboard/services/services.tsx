@@ -15,7 +15,7 @@ export default function ServicesClient({ allServices }: ServicesClientProps) {
   );
 
   return (
-    <>
+    <div className="h-full min-h-0 overflow-y-auto lg:h-auto lg:overflow-visible">
       <ServicesCard
         services={allServices}
         onBuy={(id) => setSelectedServiceId(id)}
@@ -27,6 +27,6 @@ export default function ServicesClient({ allServices }: ServicesClientProps) {
           onClose={() => setSelectedServiceId(null)}
         />
       )}
-    </>
+    </div>
   );
 }

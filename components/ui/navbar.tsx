@@ -80,11 +80,13 @@ export default function Sidebar({ className }: NavbarProps) {
             alt="company logo"
             width={120}
             height={40}
+            loading="eager"
+            className="h-auto max-w-full"
           />
         </div>
 
         {/* Top Navigation List */}
-        <div className="mt-4 space-y-1">
+        <div className="mt-4 space-y-3">
           {mainNavItems.map((item) => {
             const active = isActive(item.href);
             if (item.label === "My Orders") {
