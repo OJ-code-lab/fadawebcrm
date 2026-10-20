@@ -108,11 +108,11 @@ function RegistrationForm() {
       </div>
 
       <div className="bg-transparent h-screen grid place-items-center p-4 ">
-        <h2 className="font-medium text-base lg:text-3xl text-black">
-          Your business starts here.{" "}
+        <h2 className="font-medium text-3xl lg:text-4xl text-black">
+          Your business starts here.
         </h2>
         <GoogleButton label="Sign up with Google" />
-        <p className=" font-medium text-base text-center mt-3">Or</p>
+        <p className=" font-medium text-base text-center ">Or</p>
         <div className="w-full">
           <form onSubmit={handleSubmit}>
             <div className="flex justify-between gap-4 items-center my-2.5">
