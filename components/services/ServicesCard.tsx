@@ -19,7 +19,7 @@ export default function ServicesCard({ services, onBuy }: ServiceProps) {
           alt="A person searching through a folder"
           width={160}
           height={120}
-          className="mx-auto"
+          className="mx-auto h-auto max-w-full"
         />
         <div className="text-center space-y-4 mt-4">
           <p className="font-medium text-xl text-gray-700">

@@ -13,7 +13,6 @@ import {
   ChevronRight,
   Dot,
   Download,
-  ShieldCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -113,7 +112,7 @@ export async function DashboardPageContent({
   const isSetupIncomplete =
     business.members.length === 0 || !business.entity_type;
   return (
-    <div className="flex flex-col gap-12 justify-between ">
+    <div className="h-full min-h-0 flex flex-col justify-between gap-12 overflow-y-auto lg:h-auto lg:overflow-visible">
       <Suspense>
         {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
       </Suspense>
@@ -215,8 +214,14 @@ export async function DashboardPageContent({
                   </Link>
                 </div>
               </div>
-              <div className=" hidden  lg:inline-flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-blue-card text-white shadow-inner">
-                <ShieldCheck size={54} strokeWidth={1.5} />
+
+              <div className="hidden lg:inline-flex h-28 w-28 rounded-full ">
+                <Image
+                  src="/img/Rectangle 9521.png"
+                  alt="shileld"
+                  width={154}
+                  height={156}
+                />
               </div>
             </div>
           </Card>
@@ -233,7 +238,7 @@ export async function DashboardPageContent({
                       alt="A person searching through a folder"
                       width={160}
                       height={120}
-                      className="mx-auto"
+                      className="mx-auto h-auto max-w-full"
                     />
                   </div>
                   <div className="mt-4 space-y-4 text-center">

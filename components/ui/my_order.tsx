@@ -40,7 +40,7 @@ function MyOrder({ orders = [] }: MyOrderProps) {
                   alt="A person searching through a folder"
                   width={160}
                   height={120}
-                  className="mx-auto"
+                  className="mx-auto h-auto max-w-full"
                 />
               </div>
               <div className="text-center space-y-4 mt-4">

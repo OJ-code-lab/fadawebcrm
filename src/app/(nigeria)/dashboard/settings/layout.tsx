@@ -20,7 +20,7 @@ function SettingsContent({
       : "general_setting";
 
   return (
-    <div className="lg:p-6">
+    <div className="lg:p-6 h-full min-h-0 overflow-y-auto lg:h-auto lg:overflow-visible">
       <nav className="mb-6 flex gap-6 pb-2 mt-8">
         <Link
           href="/dashboard/settings?tab=general_setting"

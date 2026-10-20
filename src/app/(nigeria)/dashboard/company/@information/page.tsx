@@ -7,7 +7,7 @@ export default async function InformationPage() {
   const businessId = await getActiveBusinessId();
   const business = await getBusinessDetails(businessId);
   return (
-    <div className="grid gris-col-1 lg:grid-cols-2 gap-6 ">
+    <div className="grid grid-cols-1 gap-6 py-2 lg:grid-cols-2">
       <Card className="p-4">
         <CardHeader className="text-2xl font-semibold">
           Business Information

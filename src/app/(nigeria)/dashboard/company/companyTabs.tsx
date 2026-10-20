@@ -9,14 +9,17 @@ interface CompanyTabsProps {
   mydocument: React.ReactNode;
 }
 
-export default function CompanyTabs({ information, mydocument }: CompanyTabsProps) {
+export default function CompanyTabs({
+  information,
+  mydocument,
+}: CompanyTabsProps) {
   const searchParams = useSearchParams();
   const activeTab =
     searchParams.get("tab") === "mydocument" ? "mydocument" : "information";
 
   return (
-    <>
-      <nav className="mb-6 flex gap-6 pb-2 mt-8">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <nav className="mb-6 mt-8 flex shrink-0 gap-6 bg-primary pb-2 pt-2">
         <Link
           href="/dashboard/company?tab=information"
           className={`pb-1 ${activeTab === "information" ? "border-b-2 border-blue-600 font-semibold" : "text-gray-500"}`}
@@ -43,7 +46,9 @@ export default function CompanyTabs({ information, mydocument }: CompanyTabsProp
         </Link>
       </nav>
 
-      <main>{activeTab === "mydocument" ? mydocument : information}</main>
-    </>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {activeTab === "mydocument" ? mydocument : information}
+      </div>
+    </div>
   );
 }

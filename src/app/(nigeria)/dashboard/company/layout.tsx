@@ -30,12 +30,18 @@ export default async function CompanyLayout({
   const isSetupIncomplete =
     business.members.length === 0 || !business.entity_type;
   return (
-    <div className="  ">
+    <div className="z-20 flex h-full min-h-0 flex-col overflow-hidden lg:h-[calc(100dvh-12rem)]">
       <Suspense>
         {isSetupIncomplete && <ContinueBusinessReg businessId={businessId} />}
       </Suspense>
 
-      <Suspense fallback={<main>{information}</main>}>
+      <Suspense
+        fallback={
+          <div className="h-full min-h-0 flex-1 overflow-y-auto">
+            {information}
+          </div>
+        }
+      >
         <CompanyTabs information={information} mydocument={mydocument} />
       </Suspense>
     </div>
