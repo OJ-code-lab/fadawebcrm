@@ -107,7 +107,7 @@ function RegistrationForm() {
         </div>
       </div>
 
-      <div className="w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4 ">
+      <div className="w-full h-screen mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-3 ">
         <h2 className="font-medium text-3xl text-center lg:text-4xl text-black">
           Your business starts here.
         </h2>
