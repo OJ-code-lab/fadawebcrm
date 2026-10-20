@@ -83,7 +83,7 @@ export default async function DashboardLayout({
               className="lg:hidden"
             />
           </header>
-          <main className="order-2 min-h-0 overflow-hidden rounded-[12px] bg-primary mx-4 lg:mx-0 p-6 pb-24 mt-8 lg:mt-0 lg:order-0 lg:h-auto lg:min-h-0 lg:overflow-visible lg:px-8 lg:py-6 lg:pb-6">
+          <main className="order-2 min-h-0 overflow-hidden rounded-[12px] bg-primary mx-4 lg:mx-0 p-6 mb-10 pb-8 mt-4 lg:mt-0 lg:order-0 lg:h-auto lg:min-h-0 lg:overflow-visible lg:px-8 lg:py-6 lg:pb-6">
             {children}
           </main>
         </div>

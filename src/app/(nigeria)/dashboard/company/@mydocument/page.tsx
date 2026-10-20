@@ -60,7 +60,7 @@ export default function MyDocumentPage() {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 py-2">
         {sections.map((section) => (
           <Card
             key={section}
@@ -84,8 +84,8 @@ export default function MyDocumentPage() {
           }
         }}
       >
-        <DrawerContent className="flex flex-col p-6 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none">
-          <DrawerHeader className="flex flex-row items-center justify-between mt-8 shrink-0">
+        <DrawerContent className="flex flex-col  px-6 sm:p-6 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none">
+          <DrawerHeader className="flex flex-row items-center justify-between mt-2 shrink-0">
             <DrawerTitle className="font-bold text-xl">
               {selectedSection}
             </DrawerTitle>
@@ -95,7 +95,7 @@ export default function MyDocumentPage() {
             </DrawerClose>
           </DrawerHeader>
 
-          <InputGroup className="bg-gray-100/40 py-6 mt-4 shrink-0">
+          <InputGroup className="bg-gray-100/40 w-full  py-3 mt-4 shrink-0">
             <InputGroupInput
               id="inline-start-input"
               placeholder="Search documents..."
@@ -108,7 +108,7 @@ export default function MyDocumentPage() {
             </InputGroupAddon>
           </InputGroup>
 
-          <div className="flex flex-col gap-4 mt-8 px-1 overflow-y-auto flex-1 min-h-0">
+          <div className="flex flex-col gap-4 mt-4 px-1 overflow-y-auto flex-1 min-h-0">
             {filteredDocuments.length === 0 ? (
               <div className="mt-8">
                 <div>

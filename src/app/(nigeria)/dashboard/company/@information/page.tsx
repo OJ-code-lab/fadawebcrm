@@ -13,7 +13,7 @@ export default async function InformationPage() {
           Business Information
         </CardHeader>
 
-        <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
+        <div className="text-light-black space-y-4 mt-4 text-xs sm:text-base font-normal">
           <div className="flex justify-between gap-4">
             <span> Business Name</span>
             <div className="flex gap-1 ite1s-center">
@@ -126,10 +126,10 @@ export default async function InformationPage() {
               Member information
             </CardHeader>
 
-            <div className="text-light-black space-y-4 mt-4 text-lg font-normal">
+            <div className="text-light-black space-y-4 mt-4 text-xs sm:text-base font-normal">
               <div className="flex justify-between gap-4">
                 <span>First name</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberData.first_name || "—"}
                   <span>
                     {" "}
@@ -139,7 +139,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>Last name</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberData.last_name || "—"}
                   <span>
                     {" "}
@@ -149,7 +149,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>Email</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberData.email || "—"}
                   <span>
                     {" "}
@@ -159,7 +159,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>Tel</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberData.phone_number || "—"}
                   <span>
                     {" "}
@@ -170,7 +170,7 @@ export default async function InformationPage() {
 
               <div className="flex justify-between gap-7">
                 <span>Position</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {position || "—"}
                   <span>
                     {" "}
@@ -180,7 +180,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>Ownership</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberData.ownership_percentage || "—"}
                   <span>
                     {" "}
@@ -190,7 +190,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>State</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberAddress?.state || "—"}
                   <span>
                     {" "}
@@ -200,7 +200,7 @@ export default async function InformationPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span>City</span>
-                <div className="flex gap-1 items-center text-wrap">
+                <div className="flex gap-1 items-center text-wrap capitalize">
                   {memberAddress?.city || "—"}
                   <span>
                     {" "}
