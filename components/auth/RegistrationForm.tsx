@@ -107,7 +107,7 @@ function RegistrationForm() {
         </div>
       </div>
 
-      <div className="bg-transparent h-screen grid place-items-center p-4 ">
+      <div className="bg-transparent  grid place-items-center p-4 ">
         <h2 className="font-medium text-3xl lg:text-4xl text-black">
           Your business starts here.
         </h2>
