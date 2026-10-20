@@ -12,7 +12,7 @@ function GoogleButton({ label }: { label: string }) {
     <Button
       type="button"
       variant="outline"
-      className="w-full rounded-4xl font-bold"
+      className="w-full py-2.5 h-14 font-bold border-0 bg-gray-100 my-3"
       onClick={handleClick}
     >
       <span className="px-2 py-3 font-bold text-lg text-gray-800 tracking-wide">

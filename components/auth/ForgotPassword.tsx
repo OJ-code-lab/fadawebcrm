@@ -14,6 +14,8 @@ function ForgotPasswordForm() {
 
   const [email, setEmail] = useState("");
 
+  const hasEnteredEmail = email.trim().length > 0;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -85,14 +87,25 @@ function ForgotPasswordForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="Email"
-                  className="border-light-black/50 rounded-lg"
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent"
                 />
               </div>
               <div className="w-full my-5">
-                <Button
-                  className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card"
+                {/* <Button
+                  className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card py-2.5 h-14 "
                   type="submit"
                   disabled={isLoading}
+                >
+                  {isLoading ? "Sending..." : "Send reset link"}
+                </Button> */}
+                <Button
+                  className={`w-full rounded-4xl text-white py-2.5 h-14 ${
+                    hasEnteredEmail
+                      ? "bg-blue-card hover:bg-blue-900"
+                      : "bg-gray-400"
+                  }`}
+                  type="submit"
+                  disabled={isLoading || !hasEnteredEmail}
                 >
                   {isLoading ? "Sending..." : "Send reset link"}
                 </Button>

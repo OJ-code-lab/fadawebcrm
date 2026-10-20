@@ -41,6 +41,9 @@ function LoginForm({ googleError }: LoginFormProps) {
 
   const [generalError, setGeneralError] = useState(googleError ?? "");
 
+  const hasEnteredCredentials =
+    email.trim().length > 0 || password.trim().length > 0;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -95,7 +98,7 @@ function LoginForm({ googleError }: LoginFormProps) {
   };
 
   return (
-    <div className="mx-auto grid min-h-dvh w-full max-w-350 grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
+    <div className=" max-w-300 min-[1400px]:max-w-350 px-6 mx-auto grid min-h-dvh w-full grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
       <div className="w-full  h-full  flex-col justify-end  relative hidden lg:flex bg-[url('/img/auth.jpg')] bg-cover bg-center rounded-4xl p-10 overflow-hidden">
         <div
           className="absolute inset-0 bg-black/50 flex flex-col"
@@ -116,7 +119,7 @@ function LoginForm({ googleError }: LoginFormProps) {
         </div>
       </div>
 
-      <div className=" w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
+      <div className="  w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
         <h2 className="font-medium text-3xl lg:text-4xl text-black">
           Your business starts here.
         </h2>
@@ -135,7 +138,7 @@ function LoginForm({ googleError }: LoginFormProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="Email"
-                  className="border-light-black/50 rounded-lg"
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent"
                 />
 
                 {errors.email?.[0] && (
@@ -149,6 +152,7 @@ function LoginForm({ googleError }: LoginFormProps) {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="py-2.5 h-14 bg-transparent"
                 />
 
                 {errors.password?.[0] && (
@@ -161,9 +165,13 @@ function LoginForm({ googleError }: LoginFormProps) {
 
             <div className="w-full my-5">
               <Button
-                className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card"
+                className={`w-full rounded-4xl text-white py-2.5 h-14 ${
+                  hasEnteredCredentials
+                    ? "bg-blue-card hover:bg-blue-900"
+                    : "bg-gray-400"
+                }`}
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !hasEnteredCredentials}
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
