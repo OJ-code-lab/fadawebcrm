@@ -23,8 +23,8 @@ function MyOrder({ orders = [] }: MyOrderProps) {
 
   return (
     <Drawer open={isOrdersOpen} onOpenChange={setIsOrdersOpen}>
-      <DrawerContent className="flex flex-col p-6 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none ">
-        <DrawerHeader className="flex flex-row items-center justify-between mt-8">
+      <DrawerContent className="flex flex-col p-4 h-dvh w-full max-h-dvh rounded-none lg:max-w-120 lg:rounded-l-[12px] lg:rounded-r-none ">
+        <DrawerHeader className="flex flex-row items-center justify-between ">
           <DrawerTitle>My Order</DrawerTitle>
           <DrawerClose>
             <X size={25} />
