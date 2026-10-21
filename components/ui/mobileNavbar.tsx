@@ -42,7 +42,7 @@ function MobileNavbar({ className }: NavbarProps) {
 
   return (
     <nav className={cn("flex flex-col bg-transparent", className)}>
-      <div className="w-full py-2 px-1 *:text-light-black font-normal text-xs">
+      <div className="w-full px-1 *:text-light-black font-normal text-xs">
         <div className="flex gap-2 w-full items-center">
           {mainNavItems.map((item) => {
             const active = isActive(item.href);

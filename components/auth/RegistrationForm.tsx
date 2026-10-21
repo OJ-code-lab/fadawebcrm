@@ -36,6 +36,10 @@ function RegistrationForm() {
     terms_conditions: false,
   });
 
+  const hasEnteredFormData = Object.values(formData).some(
+    (value) => typeof value === "string" && value.trim().length > 0,
+  );
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
 
@@ -118,7 +122,7 @@ function RegistrationForm() {
                   onChange={handleChange}
                   value={formData.first_name}
                   placeholder="First name"
-                  className="border-light-black/50 rounded-lg"
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent"
                 />
                 {errors.first_name && (
                   <p className="text-sm text-red-500">{errors.first_name[0]}</p>
@@ -130,7 +134,7 @@ function RegistrationForm() {
                   onChange={handleChange}
                   value={formData.last_name}
                   placeholder="Last name"
-                  className="border-light-black/50 rounded-lg  "
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent"
                 />
                 {errors.last_name && (
                   <p className="text-sm text-red-500">{errors.last_name[0]}</p>
@@ -145,7 +149,7 @@ function RegistrationForm() {
                   value={formData.email}
                   type="email"
                   placeholder="Email"
-                  className="border-light-black/50 rounded-lg "
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent "
                 />
                 {errors.email && (
                   <p className="text-sm text-red-500">{errors.email[0]}</p>
@@ -158,7 +162,7 @@ function RegistrationForm() {
                   value={formData.phone_number}
                   type="tel"
                   placeholder="Phone number"
-                  className="border-light-black/50 rounded-lg "
+                  className="border-light-black/50 rounded-lg py-2.5 h-14 bg-transparent"
                 />
                 {errors.phone_number && (
                   <p className="text-sm text-red-500">
@@ -172,7 +176,7 @@ function RegistrationForm() {
                   onChange={handleChange}
                   value={formData.password}
                   placeholder="Password"
-                  className="my-2.5"
+                  className="my-2.5 py-2.5 h-14 bg-transparent"
                 />
                 {errors.password && (
                   <p className="text-sm text-red-500">{errors.password[0]}</p>
@@ -184,6 +188,7 @@ function RegistrationForm() {
                   onChange={handleChange}
                   value={formData.password_confirmation}
                   placeholder="Confirm Password"
+                  className="py-2.5 h-14 bg-transparent"
                 />
                 {errors.password_confirmation && (
                   <p className="text-sm text-red-500">
@@ -216,9 +221,13 @@ function RegistrationForm() {
             </div> */}
             <div className="w-full my-5">
               <Button
-                className="w-full rounded-4xl bg-gray-400  text-white hover:bg-blue-card"
+                className={`w-full rounded-4xl text-white py-2.5 h-14 ${
+                  hasEnteredFormData
+                    ? "bg-blue-card hover:bg-blue-900"
+                    : "bg-gray-400"
+                }`}
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !hasEnteredFormData}
               >
                 {isLoading ? "Creating account..." : " Sign Up"}
               </Button>
