@@ -98,7 +98,7 @@ function LoginForm({ googleError }: LoginFormProps) {
   };
 
   return (
-    <div className="mx-auto grid min-h-dvh w-full max-w-350 grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
+    <div className=" max-w-300 min-[1400px]:max-w-350 px-6 mx-auto grid min-h-dvh w-full grid-cols-1 items-stretch gap-16 lg:grid-cols-2 lg:my-2">
       <div className="w-full  h-full  flex-col justify-end  relative hidden lg:flex bg-[url('/img/auth.jpg')] bg-cover bg-center rounded-4xl p-10 overflow-hidden">
         <div
           className="absolute inset-0 bg-black/50 flex flex-col"
@@ -119,7 +119,7 @@ function LoginForm({ googleError }: LoginFormProps) {
         </div>
       </div>
 
-      <div className=" w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
+      <div className="  w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4">
         <h2 className="font-medium text-3xl lg:text-4xl text-black">
           Your business starts here.
         </h2>
