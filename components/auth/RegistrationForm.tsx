@@ -107,8 +107,8 @@ function RegistrationForm() {
         </div>
       </div>
 
-      <div className="bg-transparent  grid place-items-center p-4 ">
-        <h2 className="font-medium text-3xl lg:text-4xl text-black">
+      <div className="w-full mx-auto bg-transparent flex flex-col justify-center items-center gap-2.5 p-4 lg:w-full lg:min-h-0 space-y-4 ">
+        <h2 className="font-medium text-3xl text-center lg:text-4xl text-black">
           Your business starts here.
         </h2>
         <GoogleButton label="Sign up with Google" />
