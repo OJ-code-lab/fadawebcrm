@@ -53,7 +53,7 @@ async function onboardingFormPage({ searchParams }: PageProps) {
     }
 
     return (
-      <div className="grid place-items-center h-screen">
+      <div className="grid min-h-screen place-items-center">
         <OnBoardingForm
           entityTypes={entityTypes}
           countryId={countryId}
@@ -65,7 +65,7 @@ async function onboardingFormPage({ searchParams }: PageProps) {
     console.error("Entity types fetch failed:", error);
 
     return (
-      <div className="grid place-items-center h-screen">
+      <div className="grid min-h-screen place-items-center ">
         <OnBoardingForm
           entityTypes={[]}
           countryId={countryId}

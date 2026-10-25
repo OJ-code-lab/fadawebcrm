@@ -230,8 +230,8 @@ function OnBoardingForm({
           {currentStep === 1 && (
             <Card className="w-full max-w-2xl px-4 py-8.5 bg-transparent  text-center ">
               <div className="space-y-8">
-                <h4 className="font-semibold text-2xl text-center">
-                  What state are you operating from?
+                <h4 className="font-semibold text-lg sm:text-2xl text-center">
+                  What state will you be operating from?
                 </h4>
 
                 <div className=" ">
@@ -244,7 +244,7 @@ function OnBoardingForm({
                           updateField("state", value)
                         }
                       >
-                        <SelectTrigger className="w-full p-6">
+                        <SelectTrigger className="w-full px-6 h-12.5 sm:h-14">
                           <SelectValue placeholder="Select your state" />
                         </SelectTrigger>
                         <SelectContent>
@@ -276,11 +276,11 @@ function OnBoardingForm({
           {currentStep === 2 && (
             <Card className="w-full max-w-2xl sm:max-w-lg px-4 py-8.5 bg-transparent  text-center">
               <div className="space-y-6">
-                <h4 className="font-semibold  text-lg sm:text-2xl  text-center ">
+                <h4 className="font-bold  text-lg sm:text-2xl  text-center ">
                   What do you want to name your company?
                 </h4>
 
-                <p className="font-light text-base text-light-black">
+                <p className="font-light text-sm sm:text-base text-light-black">
                   You can change your name even after paying. We&apos;ll ask you
                   for final confirmation later.
                 </p>
@@ -294,7 +294,7 @@ function OnBoardingForm({
                       updateField("company_name", e.target.value)
                     }
                     placeholder="Enter Company Name (required)"
-                    className="w-full p-6 mb-1 text-center capitalize"
+                    className="w-full h-12.5 sm:h-14 mb-1 text-center capitalize"
                   />
                   <Label
                     htmlFor="company_name"
@@ -312,7 +312,7 @@ function OnBoardingForm({
                       updateField("companySecondName", e.target.value)
                     }
                     placeholder="Enter Company Name (optional)"
-                    className="w-full p-6 mb-1 text-center capitalize"
+                    className="w-full h-12.5 sm:h-14 mb-1 text-center capitalize"
                   />
                   <Label
                     htmlFor="companySecondName"
@@ -344,7 +344,7 @@ function OnBoardingForm({
                           updateField("registration_type", value)
                         }
                       >
-                        <SelectTrigger className="w-full p-6">
+                        <SelectTrigger className="w-full px-6 h-12.5 sm:h-14">
                           <SelectValue placeholder="Select registration type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -385,7 +385,7 @@ function OnBoardingForm({
                           updateField("industry_id", value)
                         }
                       >
-                        <SelectTrigger className="w-full p-6">
+                        <SelectTrigger className="w-full px-6 h-12.5 sm:h-14">
                           <SelectValue placeholder="Select industry">
                             {industriesType.find(
                               (industry) =>
@@ -421,7 +421,7 @@ function OnBoardingForm({
               variant="outline"
               onClick={handleBack}
               disabled={currentStep === 1}
-              className={`rounded-4xl text-black min-w-35 sm:w-56
+              className={`rounded-4xl text-black h-12.5 sm:h-14 min-w-37 sm:w-56
                  ${
                    !isStepValid(currentStep, formData)
                      ? " bg-amber-500/30 hover:bg-amber-500/50"
@@ -440,7 +440,7 @@ function OnBoardingForm({
                 type="button"
                 onClick={handleNext}
                 disabled={!isStepValid(currentStep, formData)}
-                className={`rounded-4xl text-white border-0 sm:w-56 min-w-35
+                className={`rounded-4xl text-white h-12.5 sm:h-14 border-0 sm:w-56 min-w-37
                  ${
                    !isStepValid(currentStep, formData)
                      ? " bg-gray-400"
@@ -457,7 +457,7 @@ function OnBoardingForm({
               <Button
                 type="submit"
                 disabled={!isStepValid(currentStep, formData) || isSubmitting}
-                className={`rounded-4xl sm:w-56 min-w-35 text-white
+                className={`rounded-4xl sm:w-56 min-w-37 h-12.5 sm:h-14 text-white
                  ${
                    !isStepValid(currentStep, formData)
                      ? " bg-green-300"

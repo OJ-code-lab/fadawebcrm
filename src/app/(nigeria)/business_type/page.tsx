@@ -18,7 +18,7 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
   return (
     <div className=" grid place-items-center h-screen">
       <Card className=" border border-gray-200/60 w-full max-w-2xl mx-4 px-6 py-8.5 bg-transparent  text-center sm:mx-6">
-        <div className=" flex justify-center sm:mb-4 ">
+        <div className=" hidden sm:flex justify-center sm:mb-4 ">
           <Image
             src="/img/Fadawebs.png"
             alt="company logo"
@@ -28,7 +28,7 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
             className="h-auto max-w-full"
           />
         </div>
-        <h4 className="font-semibold text-2xl text-black">
+        <h4 className="font-bold text-lg sm:text-2xl text-black">
           Where do you want to register your business
         </h4>
         <p className="font-light text-base text-light-black">
