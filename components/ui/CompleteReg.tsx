@@ -219,10 +219,6 @@ interface StepProps {
   onChange: UpdateField;
 }
 
-// ============================================================================
-// 3. DROPDOWN OPTIONS
-// ============================================================================
-
 interface Option {
   label: string;
   value: string | null; // null = the "nothing chosen yet" row
@@ -244,7 +240,6 @@ const OWNERSHIP_OPTIONS: Option[] = [
   })),
 ];
 
-// TODO: my guess at Nigerian ID types. Change to match your backend.
 const ID_TYPE_OPTIONS: Option[] = [
   { label: "Select ID type", value: null },
   { label: "National ID (NIN)", value: "nin" },
@@ -255,10 +250,6 @@ const ID_TYPE_OPTIONS: Option[] = [
 
 const labelOf = (items: Option[], value: string): string =>
   items.find((o) => o.value === value)?.label ?? value;
-
-// ============================================================================
-// 4. VALIDATION AND PEOPLE HELPERS (pure functions, no React)
-// ============================================================================
 
 const pct = (p: Person): number => Number(p.ownershipPercentage || 0);
 
@@ -284,8 +275,6 @@ const isAddressValid = (p: Person): boolean =>
 const isIdValid = (p: Person): boolean =>
   p.idType !== "" && p.idNumber.trim() !== "";
 
-// "Nothing typed yet". `role` matters because a shareholder draft starts with
-// isShareholder = true, while a director draft starts with false.
 const isDraftBlank = (p: Person, role: Role): boolean =>
   [
     p.firstName,
@@ -308,8 +297,7 @@ const isDraftBlank = (p: Person, role: Role): boolean =>
   p.ownershipPercentage === "";
 
 // Total ownership across directors who ticked "owner" AND shareholders.
-// A COMPLETE draft counts too, so the running total reacts as you type. If that
-// draft is an edit of a saved person, the draft replaces the saved copy.
+
 const ownershipTotal = (data: WizardData): number => {
   let total = 0;
   (["director", "shareholder"] as const).forEach((role) => {
@@ -326,9 +314,6 @@ const ownershipTotal = (data: WizardData): number => {
   return total;
 };
 
-// Move a COMPLETE draft into its list and start a fresh draft.
-// New draft (id "") gets an id and is appended. Existing id is replaced in place.
-// An incomplete draft is left alone, so nothing half-finished is saved.
 const saveDraft = (data: WizardData, role: Role): WizardData => {
   const { listKey, draftKey } = ROLE_CONFIG[role];
   const draft = data[draftKey];
@@ -607,6 +592,10 @@ function toCompanyFormData(payload: CompanyReg): FormData {
 // 6. SMALL REUSABLE FIELDS
 // ============================================================================
 
+// same sizes as the previous modal's inputs
+const INPUT_SIZE =
+  "h-11 sm:h-14 text-sm sm:text-base md:text-base placeholder:text-sm sm:placeholder:text-base";
+
 interface TextFieldProps {
   id: string;
   label: string;
@@ -627,7 +616,7 @@ function TextField({
   disabled = false,
 }: TextFieldProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <Input
         id={id}
         type={type}
@@ -635,6 +624,7 @@ function TextField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
+        className={` capitalize ${INPUT_SIZE}`}
       />
       <Label htmlFor={id}>{label}</Label>
     </div>
@@ -664,7 +654,7 @@ function SelectField({
         disabled={disabled}
         onValueChange={(v) => typeof v === "string" && onChange(v)}
       >
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full text-sm sm:text-base data-[size=default]:h-11 sm:data-[size=default]:h-14">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -691,8 +681,10 @@ function PhoneField({
 }) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <span className="rounded-md border px-3 py-2 text-sm">+234</span>
+      <div className="flex items-center gap-2 bg-gray-100">
+        <span className="flex  items-center rounded-md border px-3 text-sm sm:text-base">
+          +234
+        </span>
         <Input
           id="phone"
           type="tel"
@@ -700,6 +692,7 @@ function PhoneField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Phone number"
+          className={` border-0 ${INPUT_SIZE}`}
         />
       </div>
       <Label htmlFor="phone">Enter phone number</Label>
@@ -835,10 +828,6 @@ function PersonDetailsFields({
   );
 }
 
-// The "Means of identification" modal.
-// It keeps a WORKING COPY of the two fields. Nothing reaches the person until
-// "Done" is pressed, and "Back" (or Escape) throws the copy away.
-// It is only mounted while open, so the copy always starts from the saved values.
 interface IdDialogProps {
   initialType: string;
   initialNumber: string;
@@ -913,7 +902,6 @@ function IdDialog({
   );
 }
 
-// Address components and the "Add identification" button + its modal.
 function PersonAddressFields({
   person,
   onPatch,
@@ -1008,7 +996,7 @@ function PersonAddressFields({
 
 function CompanyInfoStep({ data, onChange }: StepProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 ">
       <h4 className="font-semibold text-2xl text-center">
         What is your company&apos;s information?
       </h4>
@@ -1047,7 +1035,7 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
       </div>
 
       <h5 className="font-semibold">Registered company address</h5>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <TextField
           id="companyAddress"
           label="Address"
@@ -1103,8 +1091,6 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
   );
 }
 
-// The "<Role> Information [+]" bar. Closed = bar with "+".
-// Open = the summary card(s) with an X that only collapses the panel.
 function SavedPeople({
   label,
   people,
@@ -1215,7 +1201,7 @@ function PeopleDetailsStep({
 
       <OwnershipNote total={ownershipTotal(data)} />
 
-      <div className="space-y-6 rounded-xl bg-gray-50 p-4">
+      <div className="space-y-6 ">
         {isEditing && (
           <div className="flex items-center justify-between text-sm">
             <span>Editing {draft.firstName}</span>
@@ -1304,8 +1290,6 @@ function PeopleAddressStep({
   );
 }
 
-// Witness: ONE person, edited directly in `data.witness`. No saved cards,
-// no "Add other", no ownership, and (on the address screen) no ID.
 function WitnessDetailsStep({ data, onChange }: StepProps) {
   const witness = data.witness;
   const patch = (p: Partial<Person>) =>
@@ -1520,7 +1504,6 @@ function SummaryStep({
 
       <OwnershipNote total={ownershipTotal(data)} />
 
-      {/* Terms sit under the summary */}
       <div className="flex items-start gap-2">
         <input
           type="checkbox"
@@ -1541,10 +1524,6 @@ function SummaryStep({
   );
 }
 
-// ============================================================================
-// 9. PROGRESS BAR
-// ============================================================================
-
 function StepProgressBar({
   currentIndex,
   total,
@@ -1553,7 +1532,7 @@ function StepProgressBar({
   total: number;
 }) {
   return (
-    <div className="mb-6 flex w-full items-center gap-2">
+    <div className="mb-6 flex w-full items-center pt-3 gap-2">
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
@@ -1569,10 +1548,6 @@ function StepProgressBar({
     </div>
   );
 }
-
-// ============================================================================
-// 10. THE MODAL (owns all state)
-// ============================================================================
 
 export function GetStartedModal({
   businessId,
@@ -1678,7 +1653,7 @@ export function GetStartedModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger className="bg-transparent border rounded-3xl text-nowrap px-4 py-2 hover:bg-primary">
+        <DialogTrigger className="bg-transparent rounded-3xl text-nowrap px-4 py-2 hover:bg-primary">
           Get Started
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-1rem)] min-w-0 overflow-y-auto px-4 py-4 sm:max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100dvh-2rem)]   lg:max-w-4xl lg:px-8">
@@ -1691,7 +1666,7 @@ export function GetStartedModal({
             total={SECTIONS.length}
           />
 
-          <form onSubmit={handleSubmit} className="min-w-0 space-y-4">
+          <form onSubmit={handleSubmit} className="min-w-0 space-y-4 px-6">
             {stepId === "company" && (
               <CompanyInfoStep data={formData} onChange={updateField} />
             )}
@@ -1746,13 +1721,13 @@ export function GetStartedModal({
               />
             )}
 
-            <div className="flex justify-between pt-4">
+            <div className="flex justify-between sm:justify-end gap-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleBack}
                 disabled={stepIndex === 0 || isSubmitting}
-                className="rounded-4xl text-black bg-amber-500/20 hover:bg-amber-500/70"
+                className="rounded-4xl text-black bg-amber-500/20 h-12.5 sm:h-14 w-37 sm:w-43.5 hover:bg-amber-500/40"
               >
                 <ArrowLeftFromLine />
                 Back
@@ -1762,7 +1737,7 @@ export function GetStartedModal({
                 <Button
                   type="submit"
                   disabled={!canProceed || isSubmitting}
-                  className="rounded-4xl text-white bg-green-500 hover:bg-green-600"
+                  className="rounded-4xl h-12.5 sm:h-14 w-37 sm:w-43.5 text-white bg-green-600 hover:bg-green-700/90"
                 >
                   Submit
                 </Button>
@@ -1771,7 +1746,7 @@ export function GetStartedModal({
                   type="button"
                   onClick={handleNext}
                   disabled={!canProceed}
-                  className={`rounded-4xl text-white border-0 ${
+                  className={`rounded-4xl h-12.5 sm:h-14 w-37 sm:w-43.5 text-white border-0 ${
                     canProceed
                       ? "bg-blue-card hover:bg-blue-900"
                       : "bg-gray-400"
