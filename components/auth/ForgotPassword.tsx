@@ -69,7 +69,7 @@ function ForgotPasswordForm() {
         ) : (
           <div className="w-full space-y-7">
             <div>
-              <h4 className="font-medium py-3 text-2xl text-black">
+              <h4 className="font-semibold py-3 text-2xl text-black">
                 Forgot Password
               </h4>
               <p className="font-normal text-base mb-2 text-black">

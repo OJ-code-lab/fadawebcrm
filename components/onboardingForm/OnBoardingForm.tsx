@@ -22,6 +22,7 @@ import { Field } from "../ui/field";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import { Card } from "../ui/card";
 import { NIGERIAN_STATES } from "@/src/app/(nigeria)/location";
+import Image from "next/image";
 
 // ----------------------------------------------------------
 // ------------------------------------
@@ -82,7 +83,7 @@ interface ProgressBarProps {
 
 function StepProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
   return (
-    <div className="mb-6 flex w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
+    <div className="my-2 flex w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
       {Array.from({ length: totalSteps }).map((_, index) => {
         const stepNumber = index + 1;
         // const isCompleted = stepNumber < currentStep;
@@ -211,9 +212,19 @@ function OnBoardingForm({
   };
   return (
     <>
-      <div className="border rounded-4xl bg-primary p-8">
+      <div className=" rounded-4xl bg-primary p-8">
+        <div className=" hidden lg:flex justify-center sm:mb-6 lg:mb-8">
+          <Image
+            src="/img/Fadawebs.png"
+            alt="company logo"
+            width={120}
+            height={40}
+            loading="eager"
+            className="h-auto max-w-full"
+          />
+        </div>
         <StepProgressBar currentStep={currentStep} totalSteps={4} />
-        <form onSubmit={handleSubmit} className="min-w-0 space-y-4">
+        <form onSubmit={handleSubmit} className="min-w-0 space-y-2">
           {/* STEP 1 */}
           {/* choose state */}
           {currentStep === 1 && (
@@ -265,7 +276,7 @@ function OnBoardingForm({
           {currentStep === 2 && (
             <Card className="w-full max-w-2xl sm:max-w-lg px-4 py-8.5 bg-transparent  text-center">
               <div className="space-y-6">
-                <h4 className="font-semibold text-2xl text-center ">
+                <h4 className="font-semibold  text-lg sm:text-2xl  text-center ">
                   What do you want to name your company?
                 </h4>
 
@@ -283,7 +294,7 @@ function OnBoardingForm({
                       updateField("company_name", e.target.value)
                     }
                     placeholder="Enter Company Name (required)"
-                    className="w-full p-6 mb-1 text-center"
+                    className="w-full p-6 mb-1 text-center capitalize"
                   />
                   <Label
                     htmlFor="company_name"
@@ -301,7 +312,7 @@ function OnBoardingForm({
                       updateField("companySecondName", e.target.value)
                     }
                     placeholder="Enter Company Name (optional)"
-                    className="w-full p-6 mb-1 text-center "
+                    className="w-full p-6 mb-1 text-center capitalize"
                   />
                   <Label
                     htmlFor="companySecondName"
@@ -375,14 +386,13 @@ function OnBoardingForm({
                         }
                       >
                         <SelectTrigger className="w-full p-6">
-                          {/* <SelectValue placeholder="Select industry">
+                          <SelectValue placeholder="Select industry">
                             {industriesType.find(
                               (industry) =>
                                 String(industry.id ?? industry.name) ===
                                 formData.industry_id,
                             )?.name ?? "Select industry"}
-                          </SelectValue> */}
-                          <SelectValue placeholder="Select industry" />
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
@@ -405,17 +415,17 @@ function OnBoardingForm({
           )}
 
           {/* Navigation Controls */}
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-evenly gap-2 sm:gap-6 ">
             <Button
               type="button"
               variant="outline"
               onClick={handleBack}
               disabled={currentStep === 1}
-              className={`rounded-4xl text-black
+              className={`rounded-4xl text-black min-w-35 sm:w-56
                  ${
                    !isStepValid(currentStep, formData)
-                     ? " bg-amber-500/40 hover:bg-amber-500/70"
-                     : "bg-amber-500/20 hover:bg-amber-500/70"
+                     ? " bg-amber-500/30 hover:bg-amber-500/50"
+                     : "bg-amber-500/10 hover:bg-amber-500/50"
                  }
                 `}
             >
@@ -430,7 +440,7 @@ function OnBoardingForm({
                 type="button"
                 onClick={handleNext}
                 disabled={!isStepValid(currentStep, formData)}
-                className={`rounded-4xl text-white border-0
+                className={`rounded-4xl text-white border-0 sm:w-56 min-w-35
                  ${
                    !isStepValid(currentStep, formData)
                      ? " bg-gray-400"
@@ -447,10 +457,10 @@ function OnBoardingForm({
               <Button
                 type="submit"
                 disabled={!isStepValid(currentStep, formData) || isSubmitting}
-                className={`rounded-4xl text-white
+                className={`rounded-4xl sm:w-56 min-w-35 text-white
                  ${
                    !isStepValid(currentStep, formData)
-                     ? " bg-green-500"
+                     ? " bg-green-300"
                      : "bg-green-500 hover:bg-green-600"
                  }
                 `}

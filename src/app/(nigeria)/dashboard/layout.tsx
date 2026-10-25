@@ -68,7 +68,7 @@ export default async function DashboardLayout({
               country="nigeria"
             />
           </aside>
-          <header className="sticky top-0 z-50 order-1 w-full lg:rounded-[12px] border border-primary bg-primary p-2 lg:static lg:order-0 lg:mt-6 lg:p-4">
+          <header className="sticky top-0 z-50 order-1 w-full lg:rounded-[12px] border border-primary bg-primary py-2 px-4 lg:static lg:order-0 lg:mt-6 lg:p-4">
             {" "}
             <Headers
               userName={userName}

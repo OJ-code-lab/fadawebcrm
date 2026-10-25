@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -17,12 +18,22 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
   return (
     <div className=" grid place-items-center h-screen">
       <Card className=" border border-gray-200/60 w-full max-w-2xl mx-4 px-6 py-8.5 bg-transparent  text-center sm:mx-6">
-        <h4 className="font-medium text-4xl text-black">
+        <div className=" flex justify-center sm:mb-4 ">
+          <Image
+            src="/img/Fadawebs.png"
+            alt="company logo"
+            width={120}
+            height={40}
+            loading="eager"
+            className="h-auto max-w-full"
+          />
+        </div>
+        <h4 className="font-semibold text-2xl text-black">
           Where do you want to register your business
         </h4>
         <p className="font-light text-base text-light-black">
           {" "}
-          Select business type.
+          Select the country where you want to establish your business.e.
         </p>
 
         <div className="flex flex-col space-y-4 mt-6">

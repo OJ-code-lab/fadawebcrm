@@ -103,6 +103,9 @@ export default function BusinessPlan({
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedGateway, setSelectedGateway] = useState<string>("");
+  const [expandedFeaturePlans, setExpandedFeaturePlans] = useState<
+    Record<string, boolean>
+  >({});
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [summaryData, setSummaryData] = useState<BusinessSummary | null>(null);
   const [loadingSummary, setLoadingSummary] = useState(false);
@@ -248,6 +251,8 @@ export default function BusinessPlan({
               {businessPlanType.map((plan) => {
                 const isSelected = selectedPlan === plan.id;
                 const isGrowthPlan = plan.name.toLowerCase() === "growth";
+                const planFeatures = plan.service ?? [];
+                const showAllFeatures = expandedFeaturePlans[plan.id] ?? false;
 
                 return (
                   <Card
@@ -283,46 +288,38 @@ export default function BusinessPlan({
                     </Button>
                     <div>
                       <ul className="space-y-4 text-sm">
-                        {plan.service?.map((s) => (
-                          <li key={s.id}>✓ {s.title}</li>
+                        {planFeatures.map((feature, index) => (
+                          <li
+                            key={feature.id}
+                            className={
+                              !showAllFeatures && index >= 2
+                                ? "hidden sm:list-item"
+                                : undefined
+                            }
+                          >
+                            ✓ {feature.title}
+                          </li>
                         ))}
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
                       </ul>
+                      {planFeatures.length > 2 && (
+                        <Button
+                          type="button"
+                          variant="link"
+                          aria-expanded={showAllFeatures}
+                          className="mt-4 h-auto p-0 text-sm font-semibold text-blue-700 sm:hidden"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setExpandedFeaturePlans((current) => ({
+                              ...current,
+                              [plan.id]: !showAllFeatures,
+                            }));
+                          }}
+                        >
+                          {showAllFeatures
+                            ? "Hide features"
+                            : "See all features"}
+                        </Button>
+                      )}
                     </div>
                   </Card>
                 );

@@ -29,7 +29,7 @@ export default async function MobileHeaders({
         <MobileMenu />
       </div>
 
-      <div className="px-4 py-3 font-bold text-lg text-gray-800 tracking-wide">
+      <div className="py-1.5 font-bold text-lg text-gray-800 tracking-wide">
         <Image
           src="/img/Fadawebs.png"
           alt="company logo"

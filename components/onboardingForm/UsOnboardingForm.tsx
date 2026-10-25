@@ -86,7 +86,7 @@ function getSteps(basedInUs: FormData["based_in_us"]): StepKey[] {
 const isStepValid = (step: StepKey, data: FormData): boolean => {
   switch (step) {
     case "based":
-      return data.based_in_us !== "" && data.citizenship !== "";
+      return data.based_in_us !== "";
     case "residence":
       return data.citizenship.trim() !== "";
     case "state":
@@ -154,7 +154,7 @@ function RadioOption({
     <div className="my-4">
       <label
         htmlFor={id}
-        className={`flex items-center gap-3 w-full py-3 px-5 rounded-4xl cursor-pointer transition-all ${
+        className={`flex items-center h-12.5 sm:h-14 justify-center w-full py-3 px-5 rounded-4xl cursor-pointer transition-all ${
           checked ? "bg-blue-card text-white" : "bg-gray-100"
         }`}
       >
@@ -165,9 +165,13 @@ function RadioOption({
           value={value}
           checked={checked}
           onChange={() => onSelect(value)}
-          className="sr-only"
+          className="sr-only h-12.5"
         />
-        <span className={checked ? "text-white" : "text-black"}>{label}</span>
+        <span
+          className={`w-full text-center ${checked ? "text-white" : "text-black"}`}
+        >
+          {label}
+        </span>
       </label>
     </div>
   );
@@ -220,11 +224,11 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
         citizenship: "US",
       }));
     } else {
-      setFormData((prev) =>
-        prev.based_in_us === "no"
-          ? prev
-          : { ...prev, based_in_us: "no", citizenship: "" },
-      );
+      setFormData((prev) => ({
+        ...prev,
+        based_in_us: "no",
+        citizenship: "",
+      }));
     }
   };
 
@@ -301,7 +305,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
   };
 
   return (
-    <div className="border rounded-4xl bg-primary p-8">
+    <div className=" rounded-4xl bg-primary p-8">
       <StepProgressBar
         currentStep={currentIndex + 1}
         totalSteps={steps.length}
@@ -309,8 +313,8 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
       <form onSubmit={handleSubmit} className="min-w-0 space-y-4">
         {/* Based in the US? */}
         {currentStep === "based" && (
-          <Card className="w-full max-w-2xl px-4 py-8.5 bg-transparent text-center">
-            <h4 className="font-bold text-2xl text-black">
+          <Card className="w-full border-0 max-w-2xl px-4 py-8.5 bg-transparent text-center">
+            <h4 className="font-bold text-lg sm:text-2xl text-black">
               Are you personally based in the US?
             </h4>
             <div>
@@ -336,8 +340,8 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
 
         {/* Country of residence (only when the answer was "No") */}
         {currentStep === "residence" && (
-          <Card className="w-full max-w-2xl px-4 py-8.5 bg-transparent text-center">
-            <h4 className="font-bold text-2xl text-black">
+          <Card className="w-full border-0 max-w-2xl px-4  bg-transparent text-center">
+            <h4 className="font-bold text-lg sm:text-2xl text-black">
               Which country do you reside in?
             </h4>
             <div>
@@ -358,13 +362,13 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
 
         {/* Business state */}
         {currentStep === "state" && (
-          <Card className="w-full max-w-2xl px-4 py-8.5 bg-transparent text-center">
+          <Card className="w-full  border-0 max-w-2xl px-4 py-8.5 bg-transparent text-center">
             <div className="space-y-8">
-              <h4 className="font-semibold text-2xl text-center">
-                What state are you operating from?
+              <h4 className="font-semibold text-lg sm:text-2xl text-center">
+                What state will you be operating from?
               </h4>
               <div className="space-y-4">
-                <Field className="w-full">
+                <Field className="w-full ">
                   <Select
                     value={formData.business_state_id}
                     onValueChange={(value) =>
@@ -372,7 +376,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
                       updateField("business_state_id", value)
                     }
                   >
-                    <SelectTrigger className="w-full p-6">
+                    <SelectTrigger className="w-full h-12.5 sm:h-14">
                       <SelectValue placeholder="Select your state">
                         {states.find((s) => s.id === formData.business_state_id)
                           ?.name ?? "Select your state"}
@@ -399,11 +403,11 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
         {currentStep === "name" && (
           <Card className="w-full max-w-2xl sm:max-w-lg px-4 py-8.5 bg-transparent text-center">
             <div className="space-y-6">
-              <h4 className="font-bold text-2xl text-center">
+              <h4 className="font-bold text-lg sm:text-2xl text-center">
                 What do you want to name your company?
               </h4>
 
-              <p className="font-light text-base text-light-black">
+              <p className="font-light text-sm sm:text-base text-light-black">
                 You can change your name even after paying. We&apos;ll ask you
                 for final confirmation later.
               </p>
@@ -415,7 +419,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
                   value={formData.name}
                   onChange={(e) => updateField("name", e.target.value)}
                   placeholder="Enter Company Name (required)"
-                  className="w-full p-6 mb-1 text-center"
+                  className="w-full p-6 mb-1 text-center h-12.5 sm:h-14 "
                 />
                 <Label
                   htmlFor="company_name"
@@ -433,7 +437,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
                     updateField("companySecondName", e.target.value)
                   }
                   placeholder="Enter Company Name (optional)"
-                  className="w-full p-6 mb-1 text-center"
+                  className="w-full p-6 mb-1 text-center h-12.5 sm:h-14"
                 />
                 <Label
                   htmlFor="companySecondName"
@@ -449,7 +453,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
         {/* Entity type */}
         {currentStep === "entity" && (
           <Card className="w-full max-w-2xl sm:max-w-lg min-w-xs px-4 py-8.5 bg-transparent text-center">
-            <h4 className="font-bold text-2xl text-black">
+            <h4 className="font-bold text-lg sm:text-2xl text-black">
               What entity does your business need?
             </h4>
             <div>
@@ -472,7 +476,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
         {currentStep === "industry" && (
           <Card className="w-full max-w-2xl sm:max-w-lg min-w-xs px-4 py-8.5 bg-transparent text-center">
             <div className="space-y-8">
-              <h4 className="font-semibold text-2xl text-center">
+              <h4 className="font-semibold text-lg sm:text-2xl text-center">
                 Select Line of Business
               </h4>
               <div className="space-y-4">
@@ -484,8 +488,14 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
                       updateField("industry_id", value)
                     }
                   >
-                    <SelectTrigger className="w-full p-6">
-                      <SelectValue placeholder="Select industry" />
+                    <SelectTrigger className="w-full h-12.5 sm:h-14">
+                      <SelectValue placeholder="Select industry">
+                        {industriesType.find(
+                          (industry) =>
+                            String(industry.id ?? industry.name) ===
+                            formData.industry_id,
+                        )?.name ?? "Select industry"}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -507,13 +517,13 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
         )}
 
         {/* Navigation Controls */}
-        <div className="flex justify-between pt-4">
+        <div className="flex justify-between gap-3 sm:gap-6">
           <Button
             type="button"
             variant="outline"
             onClick={handleBack}
             disabled={currentIndex === 0}
-            className="rounded-4xl text-black bg-amber-500/20 hover:bg-amber-500/70"
+            className="rounded-4xl h-12.5  border-0 min-w-35 sm:w-57 text-black bg-amber-500/20 hover:bg-amber-500/70"
           >
             <span>
               <ArrowLeftFromLine />
@@ -526,7 +536,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
               type="button"
               onClick={handleNext}
               disabled={!currentValid}
-              className={`rounded-4xl text-white border-0 ${
+              className={`rounded-4xl  min-w-35 sm:w-57 h-12.5  text-white border-0 ${
                 currentValid ? "bg-blue-card hover:bg-blue-900" : "bg-gray-400"
               }`}
             >
@@ -539,7 +549,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
             <Button
               type="submit"
               disabled={!currentValid || isSubmitting}
-              className="rounded-4xl text-white bg-green-500 hover:bg-green-600"
+              className="rounded-4xl border-0 min-w-35  sm:w-57 h-12.5  text-white bg-green-500 hover:bg-green-600"
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
