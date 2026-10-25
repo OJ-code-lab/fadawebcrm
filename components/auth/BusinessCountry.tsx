@@ -12,7 +12,7 @@ import { ArrowRightFromLine } from "lucide-react";
 
 function BusinessCountry() {
   return (
-    <div className="grid min-h-dvh place-items-center px-5">
+    <div className="grid min-h-dvh place-items-center px-3">
       <Card className="w-full max-w-2xl mx-4 px-4 lg:px-6 py-8.5 bg-primary text-center sm:mx-2">
         <CardHeader>
           <CardTitle className="font-bold text-2xl lg:text-3xl">

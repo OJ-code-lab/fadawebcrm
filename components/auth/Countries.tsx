@@ -53,12 +53,12 @@ function Countries() {
     }
   };
   return (
-    <div className="grid place-items-center h-screen mx-6">
+    <div className="grid place-items-center h-screen mx-3">
       <Card className="w-full max-w-2xl mx-4 px-6 py-8.5 bg-primary text-center sm:mx-6">
-        <h4 className="font-medium text-4xl text-black">
+        <h4 className="font-bold text-lg sm:text-2xl text-black">
           Where do you want to register your business
         </h4>
-        <p className="font-light text-base text-light-black">
+        <p className="font-light text-sm sm:text-base text-light-black">
           {" "}
           Select the country where you want to establish your business.
         </p>
@@ -118,7 +118,7 @@ function Countries() {
         <div>
           <Button
             onClick={handleNext}
-            className="bg-blue-card w-full rounded-3xl py-6 text-white hover:bg-blue-900"
+            className="bg-blue-card w-full rounded-3xl h-12.5 sm:h-14 text-white hover:bg-blue-900"
           >
             Next{" "}
             <span>
