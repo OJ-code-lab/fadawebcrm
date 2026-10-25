@@ -9,7 +9,7 @@ export default function BusinessType({ value, onChange }: businessTypeProps) {
       {/* Heading */}
       <div className="text-center p-2">
         <p className="text-center">Start</p>
-        <h1 className="text-[18px] font-semibold leading-tight tracking-[-0.5px] text-[#172033] mt-5">
+        <h1 className=" sm:text-lg text-sm  font-semibold leading-tight tracking-[-0.5px] text-[#172033] mt-5">
           What type of business do you want to register
         </h1>
 
