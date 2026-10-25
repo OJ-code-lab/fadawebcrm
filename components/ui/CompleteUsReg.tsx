@@ -8,7 +8,12 @@ import {
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogTrigger } from "./dialog";
 import { Button } from "./button";
-import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
+import {
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
+  Plus,
+  Minus,
+} from "lucide-react";
 import { completeUsCompanyReg } from "@/src/actions/complete-companyReg";
 
 /* ---------------------------------- types --------------------------------- */
@@ -45,7 +50,7 @@ interface Owner {
   city: string;
   country: string;
   postal_code: string;
-  director: boolean; // NEW: every owner has this checkbox
+  director: boolean; // every owner has this checkbox
 }
 
 const emptyOwner: Owner = {
@@ -69,12 +74,12 @@ function Field({
   ...inputProps
 }: { id: string; label: string } & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-3 ${className}`}>
       <input
         id={id}
         name={id}
         {...inputProps}
-        className="bg-transparent border-[0.5px] border-gray-400 py-3 px-3 rounded-4xl text-base font-medium focus-visible:none disabled:border-0 disabled:bg-gray-50/70 disabled:text-gray-500 capitalize"
+        className="bg-gray-100  py-3 px-4 h-11 sm:h-14 rounded-4xl text-sm sm:text-base font-medium focus-visible:none disabled:border-0 disabled:bg-gray-100 disabled:text-gray-500 capitalize placeholder:text-sm sm:placeholder:text-base "
       />
       <label htmlFor={id} className="block text-sm font-medium text-gray-400">
         {label}
@@ -91,7 +96,7 @@ function StepProgressBar({
   totalSteps: number;
 }) {
   return (
-    <div className="mb-6 flex w-full gap-2">
+    <div className="mb-6 flex w-50 sm:w-100 gap-2">
       {Array.from({ length: totalSteps }).map((_, index) => {
         const stepNumber = index + 1;
         return (
@@ -129,123 +134,145 @@ function OwnerFields({
   owner,
   index,
   canRemove,
+  collapsible,
+  open,
+  onToggle,
   onChange,
   onRemove,
 }: {
   owner: Owner;
   index: number;
   canRemove: boolean;
+  collapsible: boolean; // false when there is only one owner
+  open: boolean;
+  onToggle: () => void;
   onChange: (field: keyof Owner, value: string | boolean) => void;
   onRemove: () => void;
 }) {
   const id = (field: string) => `owner-${index}-${field}`;
 
+  const fullName =
+    `${owner.first_name} ${owner.last_name}`.trim() || `Director ${index + 1}`;
+
   return (
-    <fieldset className="space-y-4 rounded-2xl border p-4">
-      <legend className="px-2 font-semibold">Owner {index + 1}</legend>
-
-      <div className="grid gap-5 sm:grid-cols-3 lg:mb-5">
-        <Field
-          id={id("first_name")}
-          label="First name"
-          placeholder="Enter first name"
-          value={owner.first_name}
-          onChange={(e) => onChange("first_name", e.target.value)}
-          required
-        />
-        <Field
-          id={id("last_name")}
-          label="Last name"
-          placeholder="Enter last name"
-          value={owner.last_name}
-          onChange={(e) => onChange("last_name", e.target.value)}
-          required
-        />
-        <Field
-          id={id("ownership_percentage")}
-          label="Ownership percentage"
-          type="number"
-          min={0}
-          max={100}
-          step="any"
-          placeholder="55.5"
-          value={owner.ownership_percentage}
-          onChange={(e) => onChange("ownership_percentage", e.target.value)}
-          required
-        />
-      </div>
-
-      <Field
-        id={id("address")}
-        label="Address"
-        placeholder="Enter address"
-        value={owner.address}
-        onChange={(e) => onChange("address", e.target.value)}
-        required
-      />
-
-      <div className="grid gap-8 sm:grid-cols-2">
-        <Field
-          id={id("city")}
-          label="City"
-          placeholder="Enter city"
-          value={owner.city}
-          onChange={(e) => onChange("city", e.target.value)}
-          required
-        />
-        <Field
-          id={id("state")}
-          label="State/Province/Region"
-          placeholder="Enter state"
-          value={owner.state}
-          onChange={(e) => onChange("state", e.target.value)}
-          required
-        />
-        <Field
-          id={id("postal_code")}
-          label="Postal code"
-          placeholder="Enter postal code"
-          value={owner.postal_code}
-          onChange={(e) => onChange("postal_code", e.target.value)}
-          required
-        />
-        <Field
-          id={id("country")}
-          label="Country"
-          placeholder="Enter country"
-          value={owner.country}
-          onChange={(e) => onChange("country", e.target.value)}
-          required
-        />
-      </div>
-
-      {/* NEW: same checkbox on every owner (required for owner 1, optional for the rest) */}
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={owner.director}
-          onChange={(e) => onChange("director", e.target.checked)}
-          className="m-0 w-auto p-0"
-        />
-        <span>This is a director in the company</span>
-      </label>
-
-      {canRemove && (
+    <div className={collapsible ? "px-4 sm:px-6" : "space-y-4 p-4 sm:p-6"}>
+      {/* header only shows once there is more than one owner */}
+      {collapsible && (
         <button
           type="button"
-          onClick={onRemove}
-          className="text-sm text-red-600 hover:underline"
+          onClick={onToggle}
+          className="flex w-full items-center justify-between rounded-2xl bg-gray-100 px-4 py-5 mb-4 text-left text-sm font-medium capitalize"
         >
-          Remove owner
+          <span>{fullName}</span>
+          {open ? <Minus className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
         </button>
       )}
-    </fieldset>
+
+      {/* hidden, not unmounted, so the typed values are kept */}
+      <div className={!collapsible || open ? "space-y-4" : "hidden"}>
+        <div className="space-y-6 rounded-2xl sm:border sm:p-7">
+          <div className="grid gap-6 sm:gap-5 sm:grid-cols-3 ">
+            <Field
+              id={id("first_name")}
+              label="First name"
+              placeholder="Enter first name"
+              value={owner.first_name}
+              onChange={(e) => onChange("first_name", e.target.value)}
+              required
+            />
+            <Field
+              id={id("last_name")}
+              label="Last name"
+              placeholder="Enter last name"
+              value={owner.last_name}
+              onChange={(e) => onChange("last_name", e.target.value)}
+              required
+            />
+            <Field
+              id={id("ownership_percentage")}
+              label="Ownership percentage"
+              type="number"
+              min={0}
+              max={100}
+              step="any"
+              placeholder="55.5"
+              value={owner.ownership_percentage}
+              onChange={(e) => onChange("ownership_percentage", e.target.value)}
+              required
+            />
+          </div>
+
+          <Field
+            id={id("address")}
+            label="Address"
+            placeholder="Enter address"
+            value={owner.address}
+            onChange={(e) => onChange("address", e.target.value)}
+            required
+          />
+
+          <div className="grid gap-8 sm:grid-cols-2">
+            <Field
+              id={id("city")}
+              label="City"
+              placeholder="Enter city"
+              value={owner.city}
+              onChange={(e) => onChange("city", e.target.value)}
+              required
+            />
+            <Field
+              id={id("state")}
+              label="State/Province/Region"
+              placeholder="Enter state"
+              value={owner.state}
+              onChange={(e) => onChange("state", e.target.value)}
+              required
+            />
+            <Field
+              id={id("postal_code")}
+              label="Postal code"
+              placeholder="Enter postal code"
+              value={owner.postal_code}
+              onChange={(e) => onChange("postal_code", e.target.value)}
+              required
+            />
+            <Field
+              id={id("country")}
+              label="Country"
+              placeholder="Enter country"
+              value={owner.country}
+              onChange={(e) => onChange("country", e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={owner.director}
+            onChange={(e) => onChange("director", e.target.checked)}
+            className="m-0 w-auto p-0"
+          />
+          <span>This is a director in the company</span>
+        </label>
+
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Remove owner
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
 /* -------------------------------- component -------------------------------- */
 
-// CHANGED: the "initial" prop is gone. Everything comes from the fetch.
 export function GetStartedUSModal({ businessId }: { businessId: string }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -257,13 +284,14 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
 
   // What the user types
   const [owners, setOwners] = useState<Owner[]>([{ ...emptyOwner }]);
+  const [openIndex, setOpenIndex] = useState<number | null>(0); // which owner is expanded
   const [ssn, setSsn] = useState("");
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // CHANGED: only the fetched data decides this now
+  // only the fetched data decides this
   const isUS = business?.citizenship?.toLowerCase() === "us";
   const totalSteps = isUS ? 3 : 2;
   const isLastStep = currentStep === totalSteps;
@@ -302,10 +330,24 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
     );
   };
 
-  const addOwner = () => setOwners((prev) => [...prev, { ...emptyOwner }]);
+  // new owner opens, the earlier ones collapse
+  const addOwner = () => {
+    setOwners((prev) => [...prev, { ...emptyOwner }]);
+    setOpenIndex(owners.length);
+  };
 
-  const removeOwner = (index: number) =>
+  const removeOwner = (index: number) => {
     setOwners((prev) => prev.filter((_, i) => i !== index));
+    setOpenIndex((prev) =>
+      prev === null
+        ? null
+        : prev === index
+          ? index - 1
+          : prev > index
+            ? prev - 1
+            : prev,
+    );
+  };
 
   const totalPercentage = owners.reduce(
     (sum, owner) => sum + (Number(owner.ownership_percentage) || 0),
@@ -314,10 +356,6 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
   const percentageIsValid = Math.abs(totalPercentage - 100) < 0.01;
 
   /* ------------------------------- validation ------------------------------- */
-
-  // every text field filled (director is a checkbox, so it is left out)
-  //   const isOwnerComplete = ({ director, ...fields }: Owner) =>
-  //     Object.values(fields).every((value) => value.trim() !== "");
 
   const isOwnerComplete = (o: Owner) =>
     Object.values(o).every((value) =>
@@ -350,7 +388,7 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
     setSubmitError(null);
     setIsSubmitting(true);
 
-    // CHANGED: the PUT wants "address" as an object (no [ ] around it)
+    // the PUT wants "address" as an object (no [ ] around it)
     // and "director" comes from each owner's own checkbox.
     const members = owners.map((owner) => ({
       first_name: owner.first_name.trim(),
@@ -367,7 +405,7 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
     }));
 
     try {
-      // CHANGED: a plain object, no FormData and no .append.
+      // a plain object, no FormData and no .append.
       // ssn is only included for US (undefined is dropped by JSON.stringify).
       const result = await completeUsCompanyReg(business.id, {
         name: companyName,
@@ -413,10 +451,12 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
           <form className="min-w-0 space-y-4" onSubmit={handleSubmit}>
             {/* STEP 1: company info (fetched, read-only except the name) */}
             {currentStep === 1 && (
-              <div className="space-y-4">
-                <h3 className="font-bold text-3xl">Company Information</h3>
+              <div className="space-y-6">
+                <h3 className="font-bold pb-2 sm:text-2xl text-lg text-center ">
+                  Company Information
+                </h3>
 
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-6 sm:gap-6 sm:grid-cols-2">
                   <Field
                     id="name"
                     label="Company name"
@@ -461,8 +501,10 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
 
             {/* STEP 2: owners */}
             {currentStep === 2 && (
-              <div className="space-y-4">
-                <h3 className="font-bold text-3xl">Owners Information</h3>
+              <div className="space-y-3">
+                <h3 className="font-bold text-lg sm:text-3xl text-center mb-6">
+                  Owners Information
+                </h3>
 
                 {owners.map((owner, index) => (
                   <OwnerFields
@@ -470,6 +512,11 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
                     owner={owner}
                     index={index}
                     canRemove={index > 0}
+                    collapsible={owners.length > 1}
+                    open={openIndex === index}
+                    onToggle={() =>
+                      setOpenIndex(openIndex === index ? null : index)
+                    }
                     onChange={(field, value) =>
                       updateOwner(index, field, value)
                     }
@@ -498,7 +545,9 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
             {/* STEP 3: SSN/TIN (US only) */}
             {isUS && currentStep === 3 && (
               <div className="space-y-4">
-                <h3 className="font-bold text-3xl">Input your SSN/TIN</h3>
+                <h3 className="font-bold text-lg sm:text-2xl text-center py-4">
+                  Input your SSN/TIN
+                </h3>
                 <Field
                   id="ssn"
                   label="SSN/TIN"
@@ -514,13 +563,13 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
               <p className="text-sm text-red-600">{submitError}</p>
             )}
 
-            <div className="flex justify-between pt-4">
+            <div className="flex justify-between sm:justify-end gap-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleBack}
                 disabled={currentStep === 1 || isSubmitting}
-                className="rounded-4xl text-black bg-amber-500/20 hover:bg-amber-500/70"
+                className="rounded-4xl text-black bg-amber-500/20 h-12.5 sm:h-14 w-37 sm:w-43.5 hover:bg-amber-500/40"
               >
                 <span>
                   <ArrowLeftFromLine />
@@ -534,7 +583,7 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
                   type="button"
                   onClick={handleNext}
                   disabled={!currentValid}
-                  className={`rounded-4xl text-white border-0 ${
+                  className={`rounded-4xl h-12.5 sm:h-14 w-37 sm:w-43.5 text-white border-0 ${
                     currentValid
                       ? "bg-blue-card hover:bg-blue-900"
                       : "bg-gray-400"
@@ -550,7 +599,7 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
                   key="submit"
                   type="submit"
                   disabled={!currentValid || isSubmitting}
-                  className="rounded-4xl text-white bg-green-500 hover:bg-green-600"
+                  className="rounded-4xl h-12.5 sm:h-14 w-37 sm:w-43.5 text-white bg-green-600 hover:bg-green-700/90"
                 >
                   Submit
                 </Button>

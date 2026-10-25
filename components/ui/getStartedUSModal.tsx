@@ -440,7 +440,9 @@ export function GetStartedUSModal({
             {/* STEP 1: company info (from the API) */}
             {currentStep === 1 && (
               <div className="space-y-4">
-                <h3 className="font-bold text-3xl">Company Information</h3>
+                <h3 className="font-bold sm:text-2xl text-lg text-center">
+                  Company Information
+                </h3>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   {/* the only editable field */}
