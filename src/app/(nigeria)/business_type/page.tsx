@@ -17,7 +17,7 @@ async function BusinessTypePage({ searchParams }: BusinessTypePageProps) {
 
   return (
     <div className=" grid place-items-center h-screen">
-      <Card className=" border border-gray-200/60 w-full max-w-2xl mx-4 px-6 py-8.5 bg-transparent  text-center sm:mx-6">
+      <Card className="mx-4 px-6 py-8.5 border border-gray-200/60 w-full max-w-2xl  bg-transparent  text-center sm:mx-6">
         <div className=" hidden sm:flex justify-center sm:mb-4 ">
           <Image
             src="/img/Fadawebs.png"
