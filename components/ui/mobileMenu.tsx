@@ -19,7 +19,7 @@ export function MobileMenu() {
         <SheetTrigger
           render={
             <button>
-              <TextAlignJustify size={30} />
+              <TextAlignJustify size={25} />
             </button>
           }
         />

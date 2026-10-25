@@ -9,6 +9,7 @@ import {
   Lightbulb,
   Loader2,
 } from "lucide-react";
+import Image from "next/image";
 
 // types for selecting business plain (GET)
 export type BusinessPlanItem = {
@@ -23,6 +24,7 @@ export type BusinessPlanItem = {
 type BusinessPlanService = {
   id: string;
   title: string;
+  description: string;
 };
 
 // types to display business summary (GET)
@@ -72,7 +74,7 @@ function StepProgressBar({
   totalSteps: number;
 }) {
   return (
-    <div className="mb-6 flex max-w-6xl mx-auto w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
+    <div className=" sm:mb-6 flex max-w-6xl mx-auto w-full items-center justify-between gap-1 overflow-x-auto pb-1 sm:gap-2">
       {Array.from({ length: totalSteps }).map((_, index) => {
         const stepNumber = index + 1;
         const isCurrent = stepNumber === currentStep;
@@ -103,6 +105,9 @@ export default function BusinessPlan({
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedGateway, setSelectedGateway] = useState<string>("");
+  const [expandedFeaturePlans, setExpandedFeaturePlans] = useState<
+    Record<string, boolean>
+  >({});
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [summaryData, setSummaryData] = useState<BusinessSummary | null>(null);
   const [loadingSummary, setLoadingSummary] = useState(false);
@@ -231,15 +236,25 @@ export default function BusinessPlan({
 
   return (
     <div className="grid place-items-center pt-8  px-4">
+      <div className=" hidden sm:flex justify-center sm:mb-8 ">
+        <Image
+          src="/img/Fadawebs.png"
+          alt="company logo"
+          width={120}
+          height={40}
+          loading="eager"
+          className="h-auto max-w-full"
+        />
+      </div>
       <StepProgressBar currentStep={currentStep} totalSteps={3} />
 
       <form onSubmit={handleSubmitPayment} className="w-full space-y-6">
         {/* STEP 1: SELECT SUBSCRIPTION PLAN */}
         {currentStep === 1 && (
           <div className="max-w-6xl mx-auto">
-            <div className="my-4 text-center">
-              <h3 className="font-bold text-3xl">
-                Choose your subscription plan
+            <div className="  sm:my-3 text-center hidden sm:block">
+              <h3 className="font-bold text-4xl pb-2">
+                {`Let's make it official.`}
               </h3>
               <p className="text-gray-600">
                 Select the plan that works best for your business.
@@ -249,6 +264,8 @@ export default function BusinessPlan({
               {businessPlanType.map((plan) => {
                 const isSelected = selectedPlan === plan.id;
                 const isGrowthPlan = plan.name.toLowerCase() === "growth";
+                const planFeatures = plan.service ?? [];
+                const showAllFeatures = expandedFeaturePlans[plan.id] ?? false;
 
                 return (
                   <Card
@@ -262,7 +279,7 @@ export default function BusinessPlan({
                       <h4 className="text-xl font-bold">{plan.name}</h4>
                       <p
                         className={`text-sm mb-4 ${
-                          isGrowthPlan ? "text-gray-50/70" : "text-light-black"
+                          isGrowthPlan ? "text-gray-100/80" : "text-light-black"
                         }`}
                       >
                         {plan.description}
@@ -284,46 +301,47 @@ export default function BusinessPlan({
                     </Button>
                     <div>
                       <ul className="space-y-4 text-sm">
-                        {plan.service?.map((s) => (
-                          <li key={s.id}>✓ {s.title}</li>
+                        {planFeatures.map((feature, index) => (
+                          <li
+                            key={feature.id}
+                            className={
+                              !showAllFeatures && index >= 2
+                                ? "hidden sm:list-item"
+                                : undefined
+                            }
+                          >
+                            <h3>✓ {feature.title}</h3>
+                            <p
+                              className={`pl-4  ${
+                                isGrowthPlan
+                                  ? "text-gray-100/80"
+                                  : "text-light-black"
+                              }`}
+                            >
+                              {feature.description}
+                            </p>
+                          </li>
                         ))}
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
-                        <li>
-                          <h3>
-                            <span>✓</span> {""}LLC filed in 1–2 business days
-                          </h3>
-                          <p className={`pl-4 text-light-black`}>
-                            Articles of organization + operating agreement
-                            included
-                          </p>
-                        </li>
                       </ul>
+                      {planFeatures.length > 2 && (
+                        <Button
+                          type="button"
+                          variant="link"
+                          aria-expanded={showAllFeatures}
+                          className="mt-4 h-auto p-0 text-sm font-semibold text-blue-700 sm:hidden"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setExpandedFeaturePlans((current) => ({
+                              ...current,
+                              [plan.id]: !showAllFeatures,
+                            }));
+                          }}
+                        >
+                          {showAllFeatures
+                            ? "Hide features"
+                            : "See all features"}
+                        </Button>
+                      )}
                     </div>
                   </Card>
                 );
@@ -334,36 +352,41 @@ export default function BusinessPlan({
 
         {/* STEP 2: OVERVIEW & TERMS */}
         {currentStep === 2 && (
-          <div className="space-y-6">
-            <h4 className="font-bold text-2xl text-center">
-              Review Order Summary
-            </h4>
+          <div className=" space-y-6">
+            <div>
+              <h4 className="font-bold text-lg sm:text-2xl text-center py-3">
+                Review your details
+              </h4>
+              <p className=" sm:hidden text-xs text-center leading-6 text-gray-500">
+                {"You'll be able to change your company name after payment."}
+              </p>
+            </div>
             {loadingSummary ? (
               <div className="flex justify-center p-12">
                 <Loader2 className="animate-spin h-8 w-8 text-blue-600" />
               </div>
             ) : (
               summaryData && (
-                <div className=" p-6 space-y-4">
+                <div className=" sm:p-6 space-y-4">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     {/* box1 */}
-                    <div className="flex-1  bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
-                      <h2 className="font-bold text-2xl mb-5 capitalize">
+                    <div className="flex-1  bg-blue-100/80  p-8 rounded-[32px] font-normal text-sm sm:text-base leading-7 text-black space-y-2">
+                      <h2 className="font-bold text-xl sm:text-2xl mb-5 capitalize">
                         Company
                       </h2>
-                      <div className="flex justify-between gap-16 pb-2">
+                      <div className="flex justify-between gap-6 pb-2">
                         <span>Business Name:</span>
                         <span>{summaryData.business?.name}</span>
                       </div>
-                      <div className="flex justify-between gap-16 pb-2">
+                      <div className="flex justify-between gap-6 pb-2">
                         <span>Entity Type:</span>
                         <span>{summaryData.business?.entity_type}</span>
                       </div>
-                      <div className="flex justify-between gap-16 pb-2">
+                      <div className="flex justify-between gap-6 pb-2">
                         <span>State:</span>
                         <span>{summaryData.business?.state}</span>
                       </div>
-                      <div className="flex justify-between gap-16 pb-2">
+                      <div className="flex justify-between gap-6 pb-2">
                         <span>Package Total:</span>
                         <span className="font-bold">
                           {summaryData.business?.formatted}
@@ -373,22 +396,22 @@ export default function BusinessPlan({
                     {/* box2 */}
                     <div className="flex-1 space-y-6 ">
                       <div className=" bg-gray-200/40  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
-                        <h2 className="font-bold text-2xl mb-5 capitalize">
+                        <h2 className="font-bold text-xl sm:text-2xl mb-5 capitalize">
                           Subscription
                         </h2>
-                        <div className="flex justify-between gap-16 pb-2">
+                        <div className="flex justify-between gap-6 pb-2">
                           <span>Package Plan</span>
                           <span>{summaryData.name}</span>
                         </div>
-                        <div className="flex justify-between gap-16 pb-2">
+                        <div className="flex justify-between gap-6 pb-2">
                           <span>Price</span>
-                          <span>{summaryData.business?.entity_type}</span>
+                          {/* <span>{summaryData.business?.entity_type}</span> */}
                         </div>
-                        <div className="flex justify-between gap-16 pb-2">
+                        <div className="flex justify-between gap-6 pb-2">
                           <span>Billing</span>
-                          <span>{summaryData.business?.state}</span>
+                          {/* <span>{summaryData.business?.state}</span> */}
                         </div>
-                        {/* <div className="flex justify-between gap-16 pb-2">
+                        {/* <div className="flex justify-between gap-6 pb-2">
                         <span>Package Total:</span>
                         <span className="font-bold">{summaryData.formatted}</span>
                       </div> */}
@@ -413,25 +436,26 @@ export default function BusinessPlan({
                     {/* box3 */}
                     <div className="flex-1 space-y-6">
                       <div className="bg-blue-100/80  p-8 rounded-[32px] font-normal text-base leading-7 text-black space-y-2">
-                        <h2 className="font-bold text-2xl mb-5 capitalize">
+                        <h2 className="font-bold text-xl sm:text-2xl mb-5 capitalize">
                           your plan
                         </h2>
-                        <div className="flex justify-between gap-16 pb-2">
+                        <div className="flex justify-between gap-6 pb-2">
                           <span>Tax and Compliance</span>
-                          <span>{summaryData.business?.name}</span>
+                          {/* <span>{summaryData.business?.name}</span> */}
                         </div>
-                        <div className="flex justify-between gap-16 pb-2">
+                        <div className="flex justify-between gap-6 pb-2">
                           <span>State Fee</span>
                           <span>{summaryData.business?.state_fee}</span>
                         </div>
-                        <div className="flex justify-between gap-16 pb-2">
-                          <span>Discount (20%)</span>
-                          <span>{summaryData.business?.state}</span>
+                        <div className="flex justify-between gap-6 pb-2">
+                          <span>Discount</span>
+                          {/* <span>{summaryData.business?.state}</span> */}
                         </div>
                       </div>
-                      <div className="bg-gray-200/40  p-8 rounded-[32px] font-normal text-base leading-7 text-black ">
+
+                      <div className="bg-gray-300/20  p-8 rounded-[32px] font-normal text-xs sm:text-base leading-7 text-black ">
                         <span>
-                          <Lightbulb className="text-blue-500 mb-6" />
+                          <Lightbulb className="text-blue-500  mb-6" />
                         </span>
                         <p>
                           {
@@ -448,11 +472,11 @@ export default function BusinessPlan({
                       id="terms"
                       checked={termsAgreed}
                       onChange={(e) => setTermsAgreed(e.target.checked)}
-                      className="h-4 w-4"
+                      className=" h-6 w-6"
                     />
                     <label
                       htmlFor="terms"
-                      className="text-sm cursor-pointer mt-2"
+                      className=" text-xs sm:text-sm cursor-pointer mt-2"
                     >
                       I agree to the Terms and Conditions and confirm details
                       above are accurate.
@@ -502,8 +526,9 @@ export default function BusinessPlan({
             variant="outline"
             onClick={handleBack}
             disabled={currentStep === 1}
+            className={`bg-amber-500/30 hover:bg-amber-500/50 border-0 rounded-4xl py-5.5 sm:w-56 min-w-35`}
           >
-            <ArrowLeftFromLine className="mr-2 h-4 w-4" /> Back
+            <ArrowLeftFromLine className="mr-2 h-4 w-4 " /> Back
           </Button>
 
           {currentStep < 3 ? (
@@ -511,6 +536,13 @@ export default function BusinessPlan({
               type="button"
               onClick={handleNext}
               disabled={!isStepValid(currentStep)}
+              className={`rounded-4xl text-white border-0 py-5.5 sm:w-56 min-w-35
+                 ${
+                   !isStepValid(currentStep)
+                     ? " bg-gray-400"
+                     : "bg-blue-card hover:bg-blue-900"
+                 }
+                `}
             >
               Next
               <ArrowRightFromLine className="ml-2 h-4 w-4" />
@@ -519,7 +551,7 @@ export default function BusinessPlan({
             <Button
               type="submit"
               disabled={!isStepValid(3) || isSubmitting}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 hover:bg-green-700 rounded-4xl  py-5.5 sm:w-56 min-w-35"
             >
               {isSubmitting ? "Processing..." : "Complete Order"}
             </Button>

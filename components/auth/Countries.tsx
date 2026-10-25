@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Card } from "../ui/card";
-import { ArrowRightFromLine, Flag } from "lucide-react";
+import { ArrowRightFromLine } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Country = {
   id: string;
@@ -67,7 +68,7 @@ function Countries() {
             <div key={country.id} className="my-4">
               <label
                 htmlFor={country.id}
-                className={`flex items-center gap-3 w-full p-4 rounded-3xl cursor-pointer transition-all border-2 ${
+                className={`flex justify-center   gap-3 w-full p-4 rounded-3xl cursor-pointer transition-all border ${
                   selectedCountry === country.id
                     ? "bg-blue-card text-white"
                     : ""
@@ -83,15 +84,31 @@ function Countries() {
                   className="sr-only"
                 />
 
-                <span>
-                  <Flag />
-                </span>
-                <span
-                  className={`text-black ${
-                    selectedCountry === country.id ? "text-white" : ""
-                  }`}
-                >
-                  {country.country}
+                <span className="mx-auto  flex w-35 sm:w-40 items-center gap-3 text-left">
+                  {(["NG", "NGN"].includes(country.code) ||
+                    country.code === "US") && (
+                    <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                      <Image
+                        src={
+                          ["NG", "NGN"].includes(country.code)
+                            ? "/img/Nigeria-flag.jpg"
+                            : "/img/us-flag.jpg"
+                        }
+                        alt={`${country.country} flag`}
+                        width={50}
+                        height={50}
+                        loading="eager"
+                        className="h-full w-full object-cover"
+                      />
+                    </span>
+                  )}
+                  <span
+                    className={`text-black ${
+                      selectedCountry === country.id ? "text-white" : ""
+                    }`}
+                  >
+                    {country.country}
+                  </span>
                 </span>
               </label>
             </div>
@@ -101,7 +118,7 @@ function Countries() {
         <div>
           <Button
             onClick={handleNext}
-            className="bg-blue-card text-white hover:bg-blue-900"
+            className="bg-blue-card w-full rounded-3xl py-6 text-white hover:bg-blue-900"
           >
             Next{" "}
             <span>

@@ -14,7 +14,7 @@ export default function BusinessType({ value, onChange }: businessTypeProps) {
         </h1>
 
         <p className="mt-3 text-[12px] leading-5 text-[#667085]">
-          Select your business types.
+          Select the country where you want to establish your business.
         </p>
       </div>
 
