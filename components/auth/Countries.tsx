@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Card } from "../ui/card";
-import { ArrowRightFromLine } from "lucide-react";
+import { ArrowRightFromLine, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -15,6 +15,7 @@ type Country = {
 function Countries() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const countries = async () => {
@@ -34,7 +35,7 @@ function Countries() {
     countries();
   }, []);
   const handleNext = () => {
-    if (!selectedCountry) return;
+    if (!selectedCountry || isNavigating) return;
 
     const country = countries.find((country) => country.id === selectedCountry);
 
@@ -45,10 +46,12 @@ function Countries() {
     // }
 
     if (["NG", "NGN"].includes(country.code)) {
+      setIsNavigating(true);
       router.push(`/business_type?countryId=${country.id}`);
     }
 
     if (country.code === "US") {
+      setIsNavigating(true);
       router.push(`/register-business?countryId=${country.id}`);
     }
   };
@@ -118,12 +121,20 @@ function Countries() {
         <div>
           <Button
             onClick={handleNext}
+            disabled={!selectedCountry || isNavigating}
             className="bg-blue-card w-full rounded-3xl h-12.5 sm:h-14 text-white hover:bg-blue-900"
           >
-            Next{" "}
-            <span>
-              <ArrowRightFromLine />
-            </span>
+            {isNavigating ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Loading...
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRightFromLine />
+              </>
+            )}
           </Button>
         </div>
       </Card>

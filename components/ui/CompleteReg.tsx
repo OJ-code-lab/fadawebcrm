@@ -868,7 +868,11 @@ function IdDialog({
         if (!open) onClose(); // Escape / outside click = Back
       }}
     >
-      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+      <DialogContent
+        className="sm:max-w-sm"
+        overlayClassName="supports-backdrop-filter:backdrop-blur-2xl"
+        showCloseButton={false}
+      >
         <DialogHeader>
           <DialogTitle className="text-center">
             Means of identification
@@ -896,7 +900,7 @@ function IdDialog({
             type="button"
             variant="outline"
             onClick={onClose}
-            className="rounded-4xl text-black bg-amber-500/20 hover:bg-amber-500/70"
+            className="rounded-4xl text-black bg-amber-500/20 hover:bg-amber-500/30"
           >
             <ArrowLeftFromLine />
             Back
@@ -1289,9 +1293,9 @@ function PeopleAddressStep({
       <h4 className="font-semibold text-lg sm:text-2xl text-center">
         {label} address and ID
       </h4>
-      <p className="text-center text-sm text-muted-foreground">
+      {/* <p className="text-center text-sm text-muted-foreground">
         {draft.firstName} {draft.lastName}
-      </p>
+      </p> */}
 
       <div className="space-y-6">
         <PersonAddressFields person={draft} onPatch={patch} withId />
@@ -1355,9 +1359,9 @@ function WitnessAddressStep({ data, onChange }: StepProps) {
       <h4 className="font-semibold text-lg sm:text-2xl text-center">
         Witness address
       </h4>
-      <p className="text-center text-sm text-muted-foreground">
+      {/* <p className="text-center text-sm text-muted-foreground">
         {witness.firstName} {witness.lastName}
-      </p>
+      </p> */}
       <div className="space-y-6">
         <PersonAddressFields person={witness} onPatch={patch} withId />
       </div>

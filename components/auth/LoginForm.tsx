@@ -11,6 +11,7 @@ import { Input } from "../ui/input";
 import PasswordBotton from "../ui/passwordBotton";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 import { Field } from "../ui/field";
 
@@ -46,12 +47,14 @@ function LoginForm({ googleError }: LoginFormProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
 
     setErrors({});
 
     setGeneralError("");
 
     setIsLoading(true);
+    let isNavigating = false;
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -80,6 +83,7 @@ function LoginForm({ googleError }: LoginFormProps) {
       const user = data.data.login.user;
 
       if (!user.email_verified) {
+        isNavigating = true;
         router.push(
           `/auth/verify-email?email=${encodeURIComponent(user.email)}`,
         );
@@ -87,13 +91,14 @@ function LoginForm({ googleError }: LoginFormProps) {
         return;
       }
 
+      isNavigating = true;
       router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
 
       setGeneralError("Something went wrong. Please try again.");
     } finally {
-      setIsLoading(false);
+      if (!isNavigating) setIsLoading(false);
     }
   };
 
@@ -173,7 +178,14 @@ function LoginForm({ googleError }: LoginFormProps) {
                 type="submit"
                 disabled={isLoading || !hasEnteredCredentials}
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </div>
 
