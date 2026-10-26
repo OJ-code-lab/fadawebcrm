@@ -32,6 +32,7 @@ import {
   X,
 } from "lucide-react";
 import { completeCompanyReg } from "@/src/actions/complete-companyReg";
+import Image from "next/image";
 
 const CITIZENSHIP = "NG";
 
@@ -59,6 +60,7 @@ const ROLE_CONFIG: Record<Role, RoleConfig> = {
 // Order of this array IS the order of the wizard.
 const STEPS = [
   "company",
+  "company-address",
   "director-details",
   "director-address",
   "witness-details",
@@ -79,6 +81,7 @@ const SECTIONS = [
 ] as const;
 const STEP_SECTION: Record<StepId, number> = {
   company: 0,
+  "company-address": 0,
   "director-details": 1,
   "director-address": 1,
   "witness-details": 2,
@@ -338,7 +341,10 @@ const isStepValid = (step: StepId, data: WizardData): boolean => {
       return (
         data.companyName.trim() !== "" &&
         data.industryId !== "" &&
-        data.businessCountryId !== "" &&
+        data.businessCountryId !== ""
+      );
+    case "company-address":
+      return (
         data.companyAddress.trim() !== "" &&
         data.state.trim() !== "" &&
         data.companyLga.trim() !== "" &&
@@ -681,10 +687,20 @@ function PhoneField({
 }) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 bg-gray-100">
-        <span className="flex  items-center rounded-md border px-3 text-sm sm:text-base">
-          +234
-        </span>
+      <div className="flex items-center gap-2 bg-[#f5f6f8] px-2 py-1.5 rounded-full h-12.5 sm:h-14">
+        {/* Country Code Badge */}
+        <div className="flex items-center gap-2 bg-[#e5e7eb] h-10 px-4 rounded-full text-sm font-medium text-gray-900 shrink-0">
+          <Image
+            src="/img/Nigeria-flag.jpg"
+            alt="Nigeria Flag"
+            className="w-5 h-5 rounded-full object-cover"
+            width={20}
+            height={20}
+          />
+          <span>+234</span>
+        </div>
+
+        {/* Input Field */}
         <Input
           id="phone"
           type="tel"
@@ -692,7 +708,7 @@ function PhoneField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Phone number"
-          className={` border-0 ${INPUT_SIZE}`}
+          className="flex-1 border-none bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400 h-full text-sm sm:text-base px-2"
         />
       </div>
       <Label htmlFor="phone">Enter phone number</Label>
@@ -997,7 +1013,7 @@ function PersonAddressFields({
 function CompanyInfoStep({ data, onChange }: StepProps) {
   return (
     <div className="space-y-8 ">
-      <h4 className="font-semibold text-2xl text-center">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
         What is your company&apos;s information?
       </h4>
 
@@ -1034,7 +1050,23 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
         />
       </div>
 
-      <h5 className="font-semibold">Registered company address</h5>
+      {/* <TextField
+        id="ein"
+        label="EIN"
+        value={data.ein}
+        onChange={(v) => onChange("ein", v)}
+        placeholder="Enter EIN"
+      /> */}
+    </div>
+  );
+}
+
+function CompanyAddressStep({ data, onChange }: StepProps) {
+  return (
+    <div className="space-y-8">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
+        What is your company&apos;s registered address?
+      </h4>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <TextField
           id="companyAddress"
@@ -1079,14 +1111,6 @@ function CompanyInfoStep({ data, onChange }: StepProps) {
           placeholder="Enter city"
         />
       </div>
-
-      {/* <TextField
-        id="ein"
-        label="EIN"
-        value={data.ein}
-        onChange={(v) => onChange("ein", v)}
-        placeholder="Enter EIN"
-      /> */}
     </div>
   );
 }
@@ -1174,7 +1198,6 @@ function SavedPeople({
   );
 }
 
-// Details screen for a role that can have MANY people (director, shareholder)
 function PeopleDetailsStep({
   role,
   data,
@@ -1187,7 +1210,7 @@ function PeopleDetailsStep({
 
   return (
     <div className="space-y-6">
-      <h4 className="font-semibold text-2xl text-center">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
         {label} Information
       </h4>
 
@@ -1237,7 +1260,7 @@ function PeopleDetailsStep({
             }
             className="h-4 w-4 shrink-0"
           />
-          <Label htmlFor="isShareholder">
+          <Label htmlFor="isShareholder" className="mt-2">
             This is the owner of the company
           </Label>
         </div>
@@ -1246,7 +1269,6 @@ function PeopleDetailsStep({
   );
 }
 
-// Address + ID screen for director / shareholder, with "Add other owners"
 function PeopleAddressStep({
   role,
   data,
@@ -1264,14 +1286,14 @@ function PeopleAddressStep({
 
   return (
     <div className="space-y-6">
-      <h4 className="font-semibold text-2xl text-center">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
         {label} address and ID
       </h4>
       <p className="text-center text-sm text-muted-foreground">
         {draft.firstName} {draft.lastName}
       </p>
 
-      <div className="space-y-6 rounded-xl bg-gray-50 p-4">
+      <div className="space-y-6">
         <PersonAddressFields person={draft} onPatch={patch} withId />
       </div>
 
@@ -1284,7 +1306,7 @@ function PeopleAddressStep({
         className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed py-3 text-sm disabled:opacity-50"
       >
         <Plus className="h-4 w-4" />
-        Add other owners
+        Add other shareholder
       </button>
     </div>
   );
@@ -1297,10 +1319,10 @@ function WitnessDetailsStep({ data, onChange }: StepProps) {
 
   return (
     <div className="space-y-6">
-      <h4 className="font-semibold text-2xl text-center">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
         Witness Information
       </h4>
-      <div className="space-y-6 rounded-xl bg-gray-50 p-4">
+      <div className="space-y-6">
         <PersonDetailsFields
           person={witness}
           onPatch={patch}
@@ -1314,7 +1336,9 @@ function WitnessDetailsStep({ data, onChange }: StepProps) {
             onChange={(e) => patch({ isWitness: e.target.checked })}
             className="h-4 w-4 shrink-0"
           />
-          <Label htmlFor="isWitness">This person is a witness</Label>
+          <Label htmlFor="isWitness" className="mt-2">
+            This person is a witness
+          </Label>
         </div>
       </div>
     </div>
@@ -1328,11 +1352,13 @@ function WitnessAddressStep({ data, onChange }: StepProps) {
 
   return (
     <div className="space-y-6">
-      <h4 className="font-semibold text-2xl text-center">Witness address</h4>
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
+        Witness address
+      </h4>
       <p className="text-center text-sm text-muted-foreground">
         {witness.firstName} {witness.lastName}
       </p>
-      <div className="space-y-6 rounded-xl bg-gray-50 p-4">
+      <div className="space-y-6">
         <PersonAddressFields person={witness} onPatch={patch} withId />
       </div>
     </div>
@@ -1424,8 +1450,6 @@ function PersonSummaryBlock({
   );
 }
 
-// Everything the user filled in, then the terms UNDER it. The Submit button
-// lives in the navigation row of the modal (this is the last step).
 function SummaryStep({
   data,
   onChange,
@@ -1434,7 +1458,7 @@ function SummaryStep({
 }: StepProps & { onEditStep: (step: StepId) => void; error: string | null }) {
   return (
     <div className="space-y-6">
-      <h4 className="font-semibold text-2xl text-center">
+      <h4 className="font-semibold text-lg sm:text-2xl text-center">
         Review your details
       </h4>
 
@@ -1504,7 +1528,7 @@ function SummaryStep({
 
       <OwnershipNote total={ownershipTotal(data)} />
 
-      <div className="flex items-start gap-2">
+      <div className="flex  items-center gap-2">
         <input
           type="checkbox"
           id="terms"
@@ -1669,6 +1693,9 @@ export function GetStartedModal({
           <form onSubmit={handleSubmit} className="min-w-0 space-y-4 px-6">
             {stepId === "company" && (
               <CompanyInfoStep data={formData} onChange={updateField} />
+            )}
+            {stepId === "company-address" && (
+              <CompanyAddressStep data={formData} onChange={updateField} />
             )}
 
             {stepId === "director-details" && (
