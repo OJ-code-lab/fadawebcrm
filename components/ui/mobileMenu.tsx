@@ -23,6 +23,7 @@ import {
   TextAlignJustify,
 } from "lucide-react";
 import { useOrdersDrawer } from "@/src/app/@context/my_order_context";
+import Image from "next/image";
 
 export function MobileMenu() {
   const pathname = usePathname();
@@ -72,12 +73,23 @@ export function MobileMenu() {
             </button>
           }
         />
-        <SheetContent
-          side="left"
-          className="w-4/5 max-w-sm"
-        >
-          <SheetHeader className="border-b">
-            <SheetTitle>Menu</SheetTitle>
+        <SheetContent side="left" className="w-4/5 max-w-sm">
+          <SheetHeader>
+            <SheetTitle>
+              <div
+                // href={"/dashboard"}
+                className="py-1.5 font-bold text-lg text-gray-800 tracking-wide"
+              >
+                <Image
+                  src="/img/Fadawebs.png"
+                  alt="company logo"
+                  width={120}
+                  height={40}
+                  loading="eager"
+                  className="h-auto max-w-full"
+                />
+              </div>
+            </SheetTitle>
           </SheetHeader>
 
           <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 pb-4">
