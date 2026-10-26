@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import PasswordBotton from "../ui/passwordBotton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 // import { apiFetch } from "@/lib/api";
 import { Field } from "../ui/field";
 import GoogleButton from "./GoogleButton";
@@ -56,11 +57,13 @@ function RegistrationForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isLoading) return;
 
     console.time("registration");
 
     setIsLoading(true);
     setErrors({});
+    let isNavigating = false;
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -80,13 +83,14 @@ function RegistrationForm() {
         return;
       }
 
+      isNavigating = true;
       router.push(
         `/auth/verify-email?email=${encodeURIComponent(formData.email)}`,
       );
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
-      setIsLoading(false);
+      if (!isNavigating) setIsLoading(false);
     }
   }
 
@@ -229,7 +233,14 @@ function RegistrationForm() {
                 type="submit"
                 disabled={isLoading || !hasEnteredFormData}
               >
-                {isLoading ? "Creating account..." : " Sign Up"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
             </div>
             <div className="font-normal text-base text-gray-500 text-center">
