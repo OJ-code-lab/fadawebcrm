@@ -1681,12 +1681,12 @@ export function GetStartedModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger className="bg-transparent rounded-3xl text-nowrap px-4 py-2 hover:bg-primary">
+        <DialogTrigger className="w-full h-12.5 sm:h-14 border border-black rounded-[999px] bg-transparent px-4 py-2 text-nowrap hover:bg-primary lg:w-auto">
           Get Started
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-1rem)] min-w-0 overflow-y-auto px-4 py-4 sm:max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100dvh-2rem)]   lg:max-w-4xl lg:px-8">
           <DialogHeader>
-            <DialogTitle className="sr-only">Get started</DialogTitle>
+            <DialogTitle className="sr-only  ">Get started</DialogTitle>
           </DialogHeader>
 
           <StepProgressBar

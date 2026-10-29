@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import OnBoardingForm from "@/components/onboardingForm/OnBoardingForm";
 import { apiFetch } from "@/lib/api";
+import { industryOptions } from "@/src/data/industry";
 
 interface PageProps {
   searchParams: Promise<{ countryId?: string }>;
@@ -22,34 +23,10 @@ async function onboardingFormPage({ searchParams }: PageProps) {
       },
     });
 
-    // console.log("registration type: ", data);
     const entityTypes = Array.isArray(data?.data) ? data.data : [];
 
     if (!response.ok) {
       console.error("Failed to fetch entity types:", response.status, data);
-    }
-
-    // industries
-
-    const { response: industriesResponse, data: industriesData } =
-      await apiFetch("/industries", {
-        method: "GET",
-        headers: {
-          "X-API-KEY": process.env.API_KEY || "",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-    const industrieTypes = Array.isArray(industriesData?.data)
-      ? industriesData.data
-      : [];
-
-    if (!industriesResponse.ok) {
-      console.error(
-        "Failed to fetch industry types:",
-        industriesResponse.status,
-        industriesData,
-      );
     }
 
     return (
@@ -57,7 +34,7 @@ async function onboardingFormPage({ searchParams }: PageProps) {
         <OnBoardingForm
           entityTypes={entityTypes}
           countryId={countryId}
-          industriesType={industrieTypes}
+          industriesType={industryOptions}
         />
       </div>
     );
@@ -69,7 +46,7 @@ async function onboardingFormPage({ searchParams }: PageProps) {
         <OnBoardingForm
           entityTypes={[]}
           countryId={countryId}
-          industriesType={[]}
+          industriesType={industryOptions}
         />
       </div>
     );

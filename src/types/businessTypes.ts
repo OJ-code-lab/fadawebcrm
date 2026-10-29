@@ -17,6 +17,8 @@ export interface BusinessDetails {
   citizenship: string;
   state: string;
   state_fee: number;
+  email: string;
+  phone_number: string;
   members: Member[];
   addresses: Address[];
 }
@@ -34,7 +36,7 @@ interface Member {
   is_director: boolean;
   is_shareholder: boolean;
   is_witness: boolean;
-  ownership_percentage: number;
+  ownership_percentage: string;
   address: {
     address: string;
     state: string;

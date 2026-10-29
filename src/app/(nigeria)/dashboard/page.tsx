@@ -120,8 +120,28 @@ export async function DashboardPageContent({
       {/* user info */}
       <div className="grid grid-cols-1 items-stretch lg:grid-cols-4 gap-8">
         <Card className="min-w-0 py-6 px-8">
-          <span className="border rounded-full inline-flex items-center justify-center  mb-6 h-8 w-8">
-            <BriefcaseBusinessIcon size={20} />
+          <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+            {/* <BriefcaseBusinessIcon size={20} /> */}
+            {business.business_country === "united state" ? (
+              <Image
+                src="/img/us-flag.jpg"
+                alt={`${business.business_country} flag`}
+                width={50}
+                height={50}
+                loading="eager"
+                className="h-full w-full object-cover border rounded-full"
+              />
+            ) : (
+              <Image
+                src="/img/Nigeria-flag.jpg"
+                // alt="company logo"
+                alt={`${business.business_country} flag`}
+                width={50}
+                height={50}
+                loading="eager"
+                className="h-full w-full object-cover border rounded-full"
+              />
+            )}
           </span>
           <div className="flex flex-col gap-2">
             <p className="text-light-black font-medium text-sm ">
