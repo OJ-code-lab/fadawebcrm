@@ -1,7 +1,7 @@
 import { Card, CardHeader } from "@/components/ui/card";
+import CopyButton from "@/components/ui/CopyButton";
 import { getActiveBusinessId } from "@/lib/business";
 import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
-import { Copy } from "lucide-react";
 
 export default async function InformationPage() {
   const businessId = await getActiveBusinessId();
@@ -16,71 +16,78 @@ export default async function InformationPage() {
         <div className="text-light-black space-y-4 mt-4 text-xs sm:text-base font-normal">
           <div className="flex justify-between gap-4">
             <span> Business Name</span>
-            <div className="flex gap-1 ite1s-center">
+            <div className="flex gap-2 items-center">
               {business?.name ?? "—"}
               <span>
-                {" "}
-                <Copy size={15} />{" "}
+                {business?.name && <CopyButton copyText={business.name} />}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> Entity</span>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-2 items-center">
               {business?.entity_type ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.entity_type && (
+                  <CopyButton copyText={business.entity_type} />
+                )}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> Industry</span>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-2 items-center">
               {business?.industry ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.industry && (
+                  <CopyButton copyText={business.industry} />
+                )}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> Country</span>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-2 items-center">
               {business?.business_country ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.business_country && (
+                  <CopyButton copyText={business.business_country} />
+                )}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> State</span>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-2 items-center">
               {business?.state ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.state && <CopyButton copyText={business.state} />}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> Email Address</span>
-            <div className="flex gap-1 ite1s-center">
-              Null{" "}
+            <div className="flex gap-2 items-center">
+              {business?.email ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.email && <CopyButton copyText={business.email} />}
               </span>
             </div>
           </div>
           <div className="flex justify-between gap-4">
             <span> Phone Number</span>
-            <div className="flex gap-1 items-center">
-              Null{" "}
+            <div className="flex gap-2 items-center">
+              {business?.phone_number ?? "—"}
               <span>
                 {" "}
-                <Copy size={15} />{" "}
+                {business?.phone_number && (
+                  <CopyButton copyText={business.phone_number} />
+                )}
               </span>
             </div>
           </div>
@@ -129,82 +136,93 @@ export default async function InformationPage() {
             <div className="text-light-black space-y-4 mt-4 text-xs sm:text-base font-normal">
               <div className="flex justify-between gap-4">
                 <span>First name</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberData.first_name || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberData.first_name && (
+                      <CopyButton copyText={memberData.first_name} />
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>Last name</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberData.last_name || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberData.last_name && (
+                      <CopyButton copyText={memberData.last_name} />
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>Email</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberData.email || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberData.email && (
+                      <CopyButton copyText={memberData.email} />
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>Tel</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberData.phone_number || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberData.phone_number && (
+                      <CopyButton copyText={memberData.phone_number} />
+                    )}
                   </span>
                 </div>
               </div>
 
               <div className="flex justify-between gap-7">
                 <span>Position</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {position || "—"}
-                  <span>
-                    {" "}
-                    <Copy size={15} />{" "}
-                  </span>
+                  <span> {position && <CopyButton copyText={position} />}</span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>Ownership</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberData.ownership_percentage || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberData.ownership_percentage && (
+                      <CopyButton copyText={memberData.ownership_percentage} />
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>State</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberAddress?.state || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberAddress?.state && (
+                      <CopyButton copyText={memberAddress?.state} />
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between gap-4">
                 <span>City</span>
-                <div className="flex gap-1 items-center text-wrap capitalize">
+                <div className="flex gap-2 items-center text-wrap capitalize">
                   {memberAddress?.city || "—"}
                   <span>
                     {" "}
-                    <Copy size={15} />{" "}
+                    {memberAddress?.city && (
+                      <CopyButton copyText={memberAddress?.city} />
+                    )}
                   </span>
                 </div>
               </div>

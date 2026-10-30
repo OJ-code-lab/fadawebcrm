@@ -3,6 +3,7 @@ import { TriangleAlert } from "lucide-react";
 import { cookies } from "next/headers";
 import { apiFetch } from "@/lib/api";
 import { getBusinessDetails } from "@/src/app/business-details/businessDetails";
+import { industryOptions } from "@/src/data/industry";
 // import { BusinessDetails } from "@/src/types/businessTypes";
 import GetStartedModal, { BusinessDetailsInitial } from "./CompleteReg";
 import GetStartedUSModal from "./CompleteUsReg";
@@ -22,17 +23,11 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
     "X-API-KEY": process.env.API_KEY || "",
     Authorization: `Bearer ${accessToken}`,
   };
-  const [countryResult, industryResult] = await Promise.all([
-    apiFetch("/country", { headers: lookupHeaders }).catch(() => null),
-    apiFetch("/industries", { headers: lookupHeaders }).catch(() => null),
-  ]);
+  const countryResult = await apiFetch("/country", {
+    headers: lookupHeaders,
+  }).catch(() => null);
   const countries: { id: string; code: string; country?: string }[] =
     Array.isArray(countryResult?.data?.data) ? countryResult.data.data : [];
-  const industries: { id?: string; name: string }[] = Array.isArray(
-    industryResult?.data?.data,
-  )
-    ? industryResult.data.data
-    : [];
   // The API may return the business country as a code or a country name.
   const businessCountryValue = business?.business_country?.trim().toLowerCase();
   const countryId = countries.find((country) => {
@@ -50,7 +45,7 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
   });
   const industryName = business?.industry ?? "";
   const industryId =
-    industries.find(
+    industryOptions.find(
       (industry) =>
         industry.name?.trim().toLowerCase() ===
         industryName.trim().toLowerCase(),
@@ -83,12 +78,12 @@ async function ContinueBusinessReg({ businessId }: ContinueBusinessRegProps) {
       </div>
 
       {countryId && ["NG", "NGN"].includes(countryId.code) && (
-        <div className="">
+        <div className="w-full lg:w-auto">
           <GetStartedModal businessId={businessId} initial={initial} />
         </div>
       )}
       {countryId?.code === "US" && (
-        <div>
+        <div className="w-full lg:w-auto">
           <GetStartedUSModal businessId={businessId} />
         </div>
       )}

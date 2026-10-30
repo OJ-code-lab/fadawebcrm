@@ -440,7 +440,7 @@ export function GetStartedUSModal({ businessId }: { businessId: string }) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger className="bg-transparent text-nowrap border rounded-3xl px-4 py-2 hover:bg-primary">
+        <DialogTrigger className="w-full h-12.5 sm:h-14 rounded-[999px] border border-black bg-transparent px-4 py-2 text-nowrap hover:bg-primary lg:w-auto">
           Get Started
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-1rem)] min-w-0 overflow-y-auto px-4 py-4 sm:max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100dvh-2rem)] lg:max-w-4xl lg:px-8">
