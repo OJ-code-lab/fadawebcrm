@@ -265,7 +265,7 @@ function UsOnBoardingForm({ countryId, industriesType }: OnBoardingFormProps) {
       companySecondName: formData.companySecondName,
       business_state_id: formData.business_state_id,
       entity_type: formData.entity_type,
-      industry_id: formData.industry_id,
+      industry: formData.industry_id,
       citizenship: formData.citizenship,
     };
 

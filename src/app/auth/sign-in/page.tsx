@@ -1,4 +1,5 @@
 import LoginForm from "@/components/auth/LoginForm";
+import { redirectIfUserHasBusiness } from "@/lib/auth";
 import React from "react";
 
 interface SignInPageProps {
@@ -17,6 +18,8 @@ const googleErrorMessages: Record<string, string> = {
 
 async function SignIn({ searchParams }: SignInPageProps) {
   const { error } = await searchParams;
+
+  await redirectIfUserHasBusiness();
 
   return (
     <div>

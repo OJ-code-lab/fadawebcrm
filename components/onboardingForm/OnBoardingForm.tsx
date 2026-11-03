@@ -170,7 +170,7 @@ function OnBoardingForm({
       companySecondName: formData.companySecondName,
       state: formData.state,
       registration_type: formData.registration_type,
-      industry_id: formData.industry_id,
+      industry: formData.industry_id,
     };
 
     try {
